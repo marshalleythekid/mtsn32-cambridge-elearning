@@ -37,7 +37,7 @@ button, input { font: inherit; color: inherit; }
 .auth { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .auth--mirror .panel { order: 2; }
 .panel {
-  background: var(--color-paper-2); border-right: 1px solid var(--color-rule);
+  background: var(--color-band); border-right: 1px solid var(--color-band-rule);
   padding: var(--space-xl) var(--space-xl) var(--space-2xl); display: flex; flex-direction: column; justify-content: center; gap: var(--space-lg);
 }
 .auth--mirror .panel { border-right: 0; border-left: 1px solid var(--color-rule); }
