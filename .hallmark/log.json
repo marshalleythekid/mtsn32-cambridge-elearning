@@ -1,4 +1,32 @@
 [
-  { "date": "2026-09-28", "macrostructure": "Ecosystem Index", "theme": "custom", "theme_axes": "light / rounded-sans / cool (blue) + warm action", "vibe": "friendly school library, navy + brand blue + gold", "nav": "N13", "footer": "Ft5", "enrichment": "none", "brief": "MTsN 32 Cambridge e-learning homepage · resume or find a lesson" },
-  { "date": "2026-09-27", "macrostructure": "split hero + catalogue rows (audit pass)", "theme": "brand (navy + #0399ff)", "nav": "N1a", "footer": "Ft1", "enrichment": "E5 hand-built SVG", "brief": "MTsN 32 Cambridge e-learning homepage · audit fixes" }
+  {
+    "date": "2026-09-28",
+    "macrostructure": "Split Studio",
+    "theme": "custom (shared brand system, tokens.css)",
+    "theme_axes": "light / rounded-sans / cool (blue) + warm action",
+    "nav": "N9",
+    "footer": "Ft2",
+    "enrichment": "H9 Tier-A pure-CSS 3D subject cube",
+    "brief": "Student (NISN) and teacher/admin (NIP or email) login pages \u00b7 teacher-reset passwords, no sign-up"
+  },
+  {
+    "date": "2026-09-28",
+    "macrostructure": "Ecosystem Index",
+    "theme": "custom",
+    "theme_axes": "light / rounded-sans / cool (blue) + warm action",
+    "vibe": "friendly school library, navy + brand blue + gold",
+    "nav": "N13",
+    "footer": "Ft5",
+    "enrichment": "none",
+    "brief": "MTsN 32 Cambridge e-learning homepage \u00b7 resume or find a lesson"
+  },
+  {
+    "date": "2026-09-27",
+    "macrostructure": "split hero + catalogue rows (audit pass)",
+    "theme": "brand (navy + #0399ff)",
+    "nav": "N1a",
+    "footer": "Ft1",
+    "enrichment": "E5 hand-built SVG",
+    "brief": "MTsN 32 Cambridge e-learning homepage \u00b7 audit fixes"
+  }
 ]

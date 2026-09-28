@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student login | MTsN 32 Cambridge E-Learning</title>
+  <meta name="description" content="Log in with your NISN to rewatch Cambridge lessons from MTsN 32 Jakarta Selatan." />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body data-role="student">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A9.7 9.7 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-3 3.9M6.6 6.6A17 17 0 0 0 2.5 12S6 19 12 19a9.4 9.4 0 0 0 4.4-1.1M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16v.5"/></symbol>
+    <symbol id="i-door" viewBox="0 0 24 24"><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17M3 21h18M15 12h.01"/></symbol>
+    <symbol id="g-math" viewBox="0 0 48 48"><path d="M8 40 40 8M8 8v32h32M14 20h8M18 16v8M28 34h8"/></symbol>
+    <symbol id="g-eng" viewBox="0 0 48 48"><path d="M6 10c6-3 12-3 18 1 6-4 12-4 18-1v28c-6-3-12-3-18 1-6-4-12-4-18-1zM24 11v28"/></symbol>
+    <symbol id="g-sci" viewBox="0 0 48 48"><path d="M19 6h10M21 6v13L9 38a3 3 0 0 0 2.6 4.5h24.8A3 3 0 0 0 39 38L27 19V6M14 30h20"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="in">
+      <a href="index.html" class="brand" aria-label="MTsN 32 E-Learning, home">
+        <img src="assets/logo.png" alt="" />
+        <span><strong>MTsN 32 E-Learning</strong><small>Cambridge Programme</small></span>
+      </a>
+      <a href="index.html" class="back" aria-label="Back to lessons"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg><span>Back to lessons</span></a>
+    </div>
+  </header>
+
+  <main class="auth">
+    <!-- Panel: 3D cube + how accounts work -->
+    <section class="panel" aria-labelledby="panelH">
+      <div class="panel-in">
+        <div>
+          <h1 id="panelH">Rewatch what you <span class="hl">learned today.</span></h1>
+          <p class="lead">Log in to open the lessons your Cambridge teachers recorded, and carry on from the minute you stopped.</p>
+        </div>
+
+        <div class="stage">
+          <div class="scene" id="scene" tabindex="0" role="img"
+               aria-label="A cube with the three Cambridge subjects: English, Mathematics and Science. Drag it, or use the arrow keys, to turn it.">
+            <div class="cube" id="cube">
+              <div class="face f-front s-math"><span class="code">Maths</span><svg aria-hidden="true"><use href="#g-math"/></svg><strong>Mathematics</strong></div>
+              <div class="face f-right s-eng"><span class="code">English</span><svg aria-hidden="true"><use href="#g-eng"/></svg><strong>English</strong></div>
+              <div class="face f-back s-sci"><span class="code">Science</span><svg aria-hidden="true"><use href="#g-sci"/></svg><strong>Science</strong></div>
+              <div class="face f-left f-logo"><img src="assets/logo.png" alt="" /></div>
+              <div class="face f-top f-cam"><span class="code">MTsN 32</span><strong>Cambridge</strong></div>
+              <div class="face f-bottom f-cam"><span class="code">Lower Secondary</span><strong>Rewatch</strong></div>
+            </div>
+          </div>
+          <p class="stage-hint">Drag the cube, or focus it and press <kbd>←</kbd> <kbd>→</kbd></p>
+        </div>
+
+        <ol class="how" aria-label="How student accounts work">
+          <li><span class="n">1</span><span><b>Your teacher makes your account.</b> Ask your Cambridge teacher for your first password.</span></li>
+          <li><span class="n">2</span><span><b>Log in with your NISN,</b> the 10-digit number on your student card.</span></li>
+          <li><span class="n">3</span><span><b>Forgot your password?</b> A teacher resets it in the Cambridge Room or the Teachers’ Room.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section class="form-side" aria-labelledby="formH">
+      <div class="form-card">
+        <span class="who">Student login</span>
+        <h2 id="formH">Log in with your NISN</h2>
+        <p class="sub">Use the password your teacher gave you.</p>
+
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <div class="label-row"><label for="identifier">NISN</label><span class="count mono" id="idCount" aria-hidden="true">0/10</span></div>
+            <div class="control">
+              <input class="input" id="identifier" name="nisn" inputmode="numeric" autocomplete="username" maxlength="10"
+                     placeholder="10 digits" aria-describedby="idHelp" aria-invalid="false" required autofocus />
+              <span class="slot"><svg class="icon ok" id="idOk" hidden aria-hidden="true"><use href="#i-check"/></svg></span>
+            </div>
+            <p class="helper" id="idHelp" aria-live="polite">The 10-digit number on your student card.</p>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="password">Password</label></div>
+            <div class="control">
+              <input class="input" id="password" name="password" type="password" autocomplete="current-password"
+                     aria-describedby="pwHelp" aria-invalid="false" required />
+              <span class="slot">
+                <button class="eye" id="eye" type="button" aria-label="Show password" aria-pressed="false">
+                  <svg class="icon i-show" aria-hidden="true"><use href="#i-eye"/></svg>
+                  <svg class="icon i-hide" aria-hidden="true"><use href="#i-eye-off"/></svg>
+                </button>
+              </span>
+            </div>
+            <p class="helper" id="pwHelp" aria-live="polite">Passwords are case-sensitive.</p>
+          </div>
+
+          <label class="check">
+            <input type="checkbox" name="remember" />
+            <span>Keep me logged in on this computer<small>Leave this off on school computers.</small></span>
+          </label>
+
+          <div class="form-alert" id="formAlert" role="alert">
+            <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+            <span>That NISN and password don’t match. Check both, or ask a teacher to reset your password.</span>
+          </div>
+
+          <button class="btn btn--push" id="submitBtn" type="submit" data-state="idle">Log in</button>
+        </form>
+
+        <div class="help">
+          <button class="help-q" id="forgotQ" type="button" aria-expanded="false" aria-controls="forgotA">Forgot your password?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <div class="help-a" id="forgotA" hidden>
+            <p>Your teachers reset passwords. There’s no reset email. Come and see any Cambridge teacher, and bring your student card:</p>
+            <ul class="rooms">
+              <li><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Cambridge Room</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Teachers’ Room</li>
+            </ul>
+          </div>
+          <button class="help-q" type="button" aria-expanded="false" aria-controls="accountA">Don’t have an account yet?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <div class="help-a" id="accountA" hidden>
+            <p>Student accounts are made by your Cambridge teacher, so there’s no sign-up page. Ask your teacher to create yours. They’ll give you your first password.</p>
+          </div>
+        </div>
+
+        <p class="switch-role">Teacher or admin? <a href="teacher.html">Use the teacher login</a></p>
+
+        <p class="demo"><b>Demo only:</b> there are no real accounts yet. Any 10-digit NISN and any password logs you in. Type <code>wrong</code> as the password to see the error.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="in">
+      <span>© <span id="year">2026</span> MTs Negeri 32 Jakarta Selatan</span><span class="sep" aria-hidden="true">·</span>
+      <span>Cambridge Lower Secondary Programme</span>
+    </div>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

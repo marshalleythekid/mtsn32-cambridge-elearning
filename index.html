@@ -426,7 +426,7 @@
           <li><a href="#latest">Latest</a></li>
         </ul>
         <div class="nav-actions">
-          <a href="#" class="btn btn--push btn--sm">Log in</a>
+          <a href="login.html" class="btn btn--push btn--sm">Log in</a>
         </div>
       </nav>
     </div>
@@ -525,7 +525,7 @@
             <h2 id="teachH">Teaching a Cambridge class at MTsN 32?</h2>
             <p>Upload a lesson once, sort it by unit, and see which students have watched it.</p>
           </div>
-          <a href="#" class="btn btn--soft"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Teacher login</a>
+          <a href="teacher.html" class="btn btn--soft"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Teacher login</a>
         </div>
       </div>
     </section>
@@ -549,9 +549,9 @@
           <span>Office: Mon–Fri, 07.00–15.00 WIB</span>
         </div>
         <ul class="foot-links">
-          <li><a href="#">Student login</a></li>
-          <li><a href="#">Teacher login</a></li>
-          <li><a href="#">Forgot password</a></li>
+          <li><a href="login.html">Student login</a></li>
+          <li><a href="teacher.html">Teacher login</a></li>
+          <li><a href="login.html#forgot">Forgot password</a></li>
         </ul>
       </div>
       <p class="foot-copy">© <span id="year"></span> MTs Negeri 32 Jakarta Selatan</p>
@@ -730,7 +730,7 @@
       student: { lead: "Every Cambridge lesson your teachers record, sorted by subject and teacher, and saved at the minute you stopped.",
                  note: `New here? <a href="#library">Browse the library</a>` },
       teacher: { lead: "Record a lesson once and every Cambridge class can rewatch it. Sort it by unit and see who has watched it.",
-                 note: `<a href="#">Upload a lesson</a> or open the teacher dashboard` },
+                 note: `<a href="teacher.html">Log in as a teacher</a> to upload a lesson` },
     };
     const roleBtns = document.querySelectorAll(".role-switch button");
     function setRole(r) {
