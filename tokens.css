@@ -1,7 +1,8 @@
-/* Hallmark · tokens · theme: custom (vibe: "madrasah library: cream paper, forest green, gold")
- * paper oklch(97% 0.012 90) cream · anchor oklch(33% 0.07 155) forest green · action oklch(83% 0.15 85) gold
- * brand blue kept for the logo world: owl + Maths · display + body: Plus Jakarta Sans · labels: JetBrains Mono
- * axes: light / rounded-sans / chromatic-other (green) with warm action
+/* Hallmark · tokens · theme: custom (vibe: "friendly school library, navy + brand blue + gold")
+ * paper oklch(97% 0.012 90) · accent oklch(66% 0.17 245) brand blue · action oklch(83% 0.15 85) gold
+ * display + body: Plus Jakarta Sans · labels: JetBrains Mono
+ * axes: light / rounded-sans / cool (blue) with warm action
+ * light blue sky surfaces: hero, running text bar, footer (navy text on all three)
  */
 :root {
   /* Paper + ink (neutrals tinted, never pure white or black) */
@@ -9,30 +10,31 @@
   --color-paper-2: oklch(94.5% 0.018 90);
   --color-paper-3: oklch(91.5% 0.022 90);
   --color-card:    oklch(99% 0.006 90);
-  --color-ink:     oklch(24% 0.04 160);    /* green-black text */
-  --color-ink-2:   oklch(40% 0.03 160);
-  --color-muted:   oklch(47% 0.025 150);
+  --color-ink:     oklch(25% 0.065 255);   /* school navy */
+  --color-ink-2:   oklch(42% 0.04 255);
+  --color-muted:   oklch(50% 0.03 255);
   --color-rule:    oklch(88% 0.02 90);
   --color-rule-2:  oklch(80% 0.025 90);
 
   /* Brand */
-  --color-accent:      oklch(52% 0.11 155);  /* green for marks + hover mixes */
-  --color-accent-deep: oklch(42% 0.09 155);  /* links, labels, checkbox on paper (7:1) */
-  --color-accent-tint: oklch(93% 0.035 145);
-  --color-band:        oklch(93.5% 0.03 140); /* pale sage band behind the library */
-  --color-band-rule:   oklch(85% 0.035 140);
+  --color-accent:      oklch(66% 0.17 245);  /* brand blue #0399ff: marks, progress, highlights on dark */
+  --color-accent-deep: oklch(50% 0.15 250);  /* blue that carries light text / link text on paper */
+  --color-accent-tint: oklch(93% 0.035 245);
   --color-action:      oklch(83% 0.15 85);   /* gold: the one primary push button */
   --color-action-deep: oklch(64% 0.14 70);
   --color-action-cast: oklch(70% 0.14 80 / 0.4);
   --color-action-tint: oklch(94% 0.05 90);
   --color-pop:         oklch(52% 0.19 25);   /* coral: "new today" only (4.5:1 on paper and under light text) */
-  --color-on-dark:     oklch(96% 0.02 90);   /* cream text on green */
-  --color-on-dark-2:   oklch(84% 0.035 110);
-  --color-night:       oklch(33% 0.07 155);  /* forest green: ticker, footer, teacher panel, teacher band */
-  --color-focus:       oklch(42% 0.09 155);
+  --color-on-dark:     oklch(97% 0.01 250);
+  --color-on-dark-2:   oklch(80% 0.03 250);
+  --color-night:       oklch(21% 0.055 255); /* teacher login panel */
+  --color-sky:         oklch(93% 0.035 240); /* hero + footer background */
+  --color-sky-2:       oklch(89% 0.045 240); /* running text bar, pressed chips on sky */
+  --color-sky-rule:    oklch(84% 0.045 240);
+  --color-focus:       oklch(50% 0.15 250);
   --color-focus-dark:  oklch(85% 0.14 85);
-  --color-scrim:       oklch(20% 0.04 160 / 0.45);
-  --color-shadow:      oklch(24% 0.04 160 / 0.14);
+  --color-scrim:       oklch(20% 0.05 255 / 0.45);
+  --color-shadow:      oklch(25% 0.065 255 / 0.14);
   --color-error:       oklch(50% 0.18 25);   /* 4.5:1 on paper + card */
   --color-error-tint:  oklch(95% 0.03 25);
   --color-success:     oklch(48% 0.11 160);
@@ -47,9 +49,9 @@
   --color-math:     oklch(52% 0.15 250);
   --color-math-ink: oklch(97% 0.01 250);
   --color-eng:      oklch(83% 0.15 85);
-  --color-eng-ink:  oklch(24% 0.04 160);
-  --color-sci:      oklch(74% 0.1 195);    /* light teal, kept clear of the forest green */
-  --color-sci-ink:  oklch(24% 0.04 160);
+  --color-eng-ink:  oklch(25% 0.065 255);
+  --color-sci:      oklch(74% 0.1 195);    /* light teal, dark text */
+  --color-sci-ink:  oklch(25% 0.065 255);
 
   /* Type */
   --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
