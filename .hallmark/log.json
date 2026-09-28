@@ -1,6 +1,15 @@
 [
   {
     "date": "2026-09-28",
+    "macrostructure": "(palette update, no structure change)",
+    "theme": "custom",
+    "theme_axes": "light / rounded-sans / chromatic-other (forest green) + warm action",
+    "vibe": "madrasah library: cream, forest green, gold",
+    "enrichment": "unchanged",
+    "brief": "Forest green replaces navy as the dark anchor; cream kept as paper; blue kept for owl + Maths"
+  },
+  {
+    "date": "2026-09-28",
     "macrostructure": "Ecosystem Index (hero update)",
     "theme": "custom (shared brand system, tokens.css)",
     "theme_axes": "light / rounded-sans / cool (blue) + warm action",
