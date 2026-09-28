@@ -1,9 +1,9 @@
 /* The e-learning owl: a small three.js mascot built from primitives (no model file).
  * Follows the cursor, breathes, blinks, and hops when clicked. Colours come from tokens.css.
- * Talks to the page through window events: dispatches "owl:poke" on click, listens for "owl:hop". */
+ * Two copies share one model: the big hero owl (#owlStage) and the mini owl in the corner dock (#owlMini).
+ * Page events: hero dispatches "owl:poke" on click and listens for "owl:hop"; the mini owl listens for "owl:mini-hop". */
 import * as THREE from "./vendor/three/three.module.min.js";
 
-const stage = document.getElementById("owlStage");
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Resolve a CSS colour token (oklch) to an sRGB THREE.Color via a 1px canvas.
@@ -17,7 +17,8 @@ function token(name) {
   return new THREE.Color().setRGB(r / 255, g / 255, b / 255, THREE.SRGBColorSpace);
 }
 
-function start() {
+function mountOwl(stage, { mini = false } = {}) {
+  if (!stage) return;
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -26,15 +27,19 @@ function start() {
   }
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.domElement.setAttribute("role", "img");
-  renderer.domElement.setAttribute("aria-label", "The e-learning owl, wearing round glasses and standing on three subject books. Click it for a tip.");
+  if (mini) renderer.domElement.setAttribute("aria-hidden", "true");   // the dock button carries the label
+  else {
+    renderer.domElement.setAttribute("role", "img");
+    renderer.domElement.setAttribute("aria-label", "The e-learning owl, wearing round glasses and standing on three subject books. Click it for a tip.");
+  }
   stage.appendChild(renderer.domElement);
   stage.classList.add("has-3d");
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-  camera.position.set(0, 0.35, 8.2);
-  camera.lookAt(0, 0.15, 0);
+  // the mini owl is framed tight on head + body (no books)
+  if (mini) { camera.position.set(0, 0.4, 7.2); camera.lookAt(0, 0.4, 0); }
+  else { camera.position.set(0, 0.35, 8.2); camera.lookAt(0, 0.15, 0); }
 
   scene.add(new THREE.HemisphereLight(0xffffff, token("--color-paper-3"), 1.6));
   const key = new THREE.DirectionalLight(0xffffff, 2.2);
@@ -51,6 +56,7 @@ function start() {
     face: mat("--color-owl-face"), eye: mat("--color-card"), ink: mat("--color-ink"),
     gold: mat("--color-action"), goldDeep: mat("--color-action-deep"),
     math: mat("--color-math"), eng: mat("--color-eng"), sci: mat("--color-sci"), page: mat("--color-card"),
+    branch: mat("--color-branch"), leaf: mat("--color-leaf"), leaf2: mat("--color-leaf-2"),
   };
   const sphere = new THREE.SphereGeometry(1, 40, 28);
   const mesh = (geo, m, [x, y, z] = [0, 0, 0], [sx, sy, sz] = [1, 1, 1]) => {
@@ -130,8 +136,34 @@ function start() {
     b.add(mesh(new THREE.BoxGeometry(1.7 - i * 0.08, 0.16, 1.05), M.page, [0.06, 0, 0.02]));
     books.add(b);
   });
-  owl.add(books);
-  owl.position.y = 0.05;
+  if (!mini) owl.add(books);
+
+  // Mini owl perches on a small branch with leaves instead of books
+  if (mini) {
+    const perch = new THREE.Group();
+    perch.position.set(0, -1.2, 0.35);
+    perch.rotation.z = -0.06;
+    perch.scale.set(0.8, 0.9, 0.9);   // keep both leafy ends inside the frame
+    const limb = mesh(new THREE.CylinderGeometry(0.1, 0.14, 4.4, 14), M.branch);
+    limb.rotation.z = Math.PI / 2;
+    perch.add(limb);
+    const twig = mesh(new THREE.CylinderGeometry(0.04, 0.07, 1.0, 10), M.branch, [1.55, 0.36, 0]);
+    twig.rotation.z = -0.9;
+    perch.add(twig);
+    // leaf clusters: flattened ellipsoids, two greens
+    const leaves = [
+      [-2.15, 0.08, 0.1, 0.5, M.leaf], [-1.95, 0.3, -0.1, -0.4, M.leaf2], [-2.3, -0.2, 0.05, 1.2, M.leaf2],
+      [1.95, 0.72, 0.05, -0.6, M.leaf], [2.1, 0.5, 0.15, 0.3, M.leaf2], [2.25, 0.02, 0, 1.0, M.leaf],
+      [1.1, -0.18, 0.2, 2.4, M.leaf2],
+    ];
+    for (const [x, y, z, rot, m] of leaves) {
+      const leaf = mesh(sphere, m, [x, y, z], [0.34, 0.14, 0.18]);
+      leaf.rotation.set(0.3, 0.2, rot);
+      perch.add(leaf);
+    }
+    owl.add(perch);
+  }
+  owl.position.y = mini ? -0.05 : 0.05;
 
   // Soft ground shadow under the books (radial canvas texture in the ink colour)
   const sc = document.createElement("canvas"); sc.width = sc.height = 128;
@@ -143,13 +175,14 @@ function start() {
   const shadow = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.6), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
   shadow.rotation.x = -Math.PI / 2;
   shadow.position.y = -1.95;
-  scene.add(shadow);
+  if (!mini) scene.add(shadow);
 
   // ---- Size ----
   function resize() {
     const { width, height } = stage.getBoundingClientRect();
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
+    if (mini) { camera.updateProjectionMatrix(); renderer.render(scene, camera); return; }
     // keep the whole owl in frame on narrow stages
     camera.position.z = camera.aspect < 0.9 ? 8.2 / Math.max(camera.aspect, 0.55) * 0.9 : 8.2;
     // sit the owl right of centre so the speech bubble on the left never covers its face
@@ -175,10 +208,10 @@ function start() {
 
   let hopStart = -1e9;
   const hop = () => { hopStart = performance.now(); };
-  addEventListener("owl:hop", hop);
+  addEventListener(mini ? "owl:mini-hop" : "owl:hop", hop);
 
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
-  renderer.domElement.addEventListener("click", e => {
+  if (!mini) renderer.domElement.addEventListener("click", e => {
     const r = renderer.domElement.getBoundingClientRect();
     ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     ray.setFromCamera(ptr, camera);
@@ -192,10 +225,12 @@ function start() {
 
   // ---- Animate (only while on screen) ----
   let visible = true, nextBlink = 2500, blinkAt = -1;
-  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(stage);
+  const dock = mini && stage.closest(".owl-dock");
+  if (!mini) new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(stage);
   const yaw = { v: 0 }, pitch = { v: 0 };
 
   renderer.setAnimationLoop(t => {
+    if (dock) visible = dock.classList.contains("show");
     if (!visible || document.hidden) return;
     // wander gently when the cursor has been still for a while
     const idle = t - lastMove > 4000;
@@ -209,7 +244,7 @@ function start() {
 
     // breathe + bob
     body.scale.set(1, 1 + Math.sin(t / 700) * 0.015, 1);
-    let y = 0.05 + Math.sin(t / 900) * 0.03;
+    let y = (mini ? -0.05 : 0.05) + Math.sin(t / 900) * 0.03;
 
     // blink
     if (t > nextBlink) { blinkAt = t; nextBlink = t + 2600 + Math.random() * 2600; }
@@ -220,7 +255,7 @@ function start() {
     // hop + flap after a click
     const h = (t - hopStart) / 650;
     if (h >= 0 && h < 1) {
-      y += Math.sin(h * Math.PI) * 0.45;
+      y += Math.sin(h * Math.PI) * (mini ? 0.3 : 0.45);
       const flap = Math.sin(h * Math.PI * 4) * 0.9 * (1 - h);
       wings[0].rotation.z = -flap; wings[1].rotation.z = flap;
     } else {
@@ -231,4 +266,5 @@ function start() {
   });
 }
 
-start();
+mountOwl(document.getElementById("owlStage"));
+mountOwl(document.getElementById("owlMini"), { mini: true });

@@ -325,6 +325,54 @@
     .foot-links a { white-space: nowrap; color: var(--color-on-dark); }
     .foot-copy { margin-top: var(--space-lg); font-size: var(--text-xs); }
 
+    /* ============ MINI OWL DOCK (bottom-right, appears once the hero owl scrolls away) ============ */
+    .owl-dock {
+      position: fixed; right: var(--space-sm); bottom: var(--space-sm); z-index: 400;
+      display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2xs);
+      pointer-events: none; opacity: 0; transform: translateY(16px); visibility: hidden;
+      transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out), visibility var(--dur-med);
+    }
+    .owl-dock.show { opacity: 1; transform: none; visibility: visible; transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out), visibility 0s; }
+    .owl-dock.show > * { pointer-events: auto; }
+    .dock-bubble {
+      position: relative; width: min(224px, calc(100vw - 2 * var(--space-sm)));
+      background: var(--color-card); border: 1px solid var(--color-rule-2); border-radius: var(--radius-card);
+      padding: var(--space-xs) var(--space-lg) var(--space-xs) var(--space-xs); box-shadow: 0 12px 24px -14px var(--color-shadow);
+      opacity: 0; transform: translateY(6px) scale(.98); transform-origin: bottom right; visibility: hidden;
+      transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out), visibility var(--dur-med);
+    }
+    .dock-bubble.open { opacity: 1; transform: none; visibility: visible; transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out), visibility 0s; }
+    .dock-bubble::after { /* tail pointing down at the owl */
+      content: ""; position: absolute; right: 62px; bottom: -7px; width: 12px; height: 12px; background: var(--color-card);
+      border-right: 1px solid var(--color-rule-2); border-bottom: 1px solid var(--color-rule-2); transform: rotate(45deg); border-radius: 0 0 4px 0;
+    }
+    .dock-bubble .kicker { font-size: 11px; font-weight: 700; color: var(--color-accent-deep); }
+    .dock-bubble p { font-size: 13px; font-weight: 600; line-height: 1.4; margin-top: 2px; }
+    .dock-bubble .row { display: flex; gap: var(--space-sm); margin-top: var(--space-2xs); align-items: center; }
+    .dock-bubble .bubble-more { margin-top: 0; font-size: 12px; }
+    .dock-close {
+      position: absolute; top: var(--space-3xs); right: var(--space-3xs); width: 28px; height: 28px; border: 0; border-radius: 50%;
+      background: transparent; color: var(--color-muted); cursor: pointer; display: grid; place-items: center;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+    .dock-close:hover { background: var(--color-paper-2); color: var(--color-ink); }
+    .dock-close .icon { width: 16px; height: 16px; }
+    .dock-btn { /* no frame: the owl sits on its branch in the corner */
+      position: relative; width: 150px; height: 126px; border: 0; padding: 0; cursor: pointer; background: transparent;
+      border-radius: var(--radius-card); filter: drop-shadow(0 8px 10px var(--color-shadow));
+      transition: transform var(--dur-fast) var(--ease-out);
+    }
+    .dock-btn:hover { transform: translateY(-2px); }
+    .dock-btn:active { transform: translateY(1px); }
+    .dock-btn canvas { width: 100% !important; height: 100% !important; display: block; }
+    .dock-btn .owl-fallback { width: 100%; height: 100%; display: block; }
+    .has-3d .owl-fallback { display: none; }
+    .dock-dot { /* unread tip */
+      position: absolute; top: 10px; right: 46px; width: 12px; height: 12px; border-radius: 50%;
+      background: var(--color-pop); border: 2px solid var(--color-card); display: none;
+    }
+    .owl-dock.unread .dock-dot { display: block; }
+
     /* ============ SEARCH MODAL ============ */
     .cmdk { position: fixed; inset: 0; z-index: 700; visibility: hidden; opacity: 0; transition: opacity var(--dur-med) var(--ease-out), visibility var(--dur-med); }
     .cmdk.open { visibility: visible; opacity: 1; transition: opacity var(--dur-med) var(--ease-out), visibility 0s; }
@@ -409,6 +457,10 @@
       .brand img { width: 34px; height: 34px; }
       .brand strong { font-size: 13px; }
       .icon-btn { width: 40px; height: 40px; }
+    }
+    @media (max-width: 560px) {
+      .dock-btn { width: 118px; height: 100px; }
+      .owl-dock { right: var(--space-xs); bottom: var(--space-xs); }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -610,6 +662,34 @@
       <p class="foot-copy">© <span id="year"></span> MTs Negeri 32 Jakarta Selatan</p>
     </div>
   </footer>
+
+  <!-- ================= MINI OWL DOCK ================= -->
+  <aside class="owl-dock" id="owlDock" aria-label="Owl tips">
+    <div class="dock-bubble" id="dockBubble" role="status" aria-live="polite">
+      <span class="kicker" id="dockKicker">Tip</span>
+      <p id="dockSays"></p>
+      <div class="row">
+        <button class="bubble-more" id="dockMore" type="button">Another tip <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      </div>
+      <button class="dock-close" id="dockClose" type="button" aria-label="Close tip"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <button class="dock-btn" id="dockBtn" type="button" aria-label="Ask the owl for a tip" aria-expanded="false" aria-controls="dockBubble">
+      <span id="owlMini" style="display:block;width:100%;height:100%">
+        <svg class="owl-fallback" viewBox="0 0 240 200" aria-hidden="true">
+          <ellipse cx="120" cy="100" rx="52" ry="60" fill="var(--color-owl-body)"/>
+          <ellipse cx="120" cy="116" rx="34" ry="40" fill="var(--color-owl-belly)"/>
+          <circle cx="102" cy="74" r="18" fill="var(--color-card)"/><circle cx="138" cy="74" r="18" fill="var(--color-card)"/>
+          <circle cx="104" cy="76" r="8" fill="var(--color-ink)"/><circle cx="136" cy="76" r="8" fill="var(--color-ink)"/>
+          <path d="M113 88h14l-7 11z" fill="var(--color-action)"/>
+          <path d="M20 166 Q120 150 220 160" stroke="var(--color-branch)" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <ellipse cx="30" cy="158" rx="18" ry="7" fill="var(--color-leaf)" transform="rotate(-20 30 158)"/>
+          <ellipse cx="212" cy="150" rx="18" ry="7" fill="var(--color-leaf-2)" transform="rotate(25 212 150)"/>
+          <ellipse cx="196" cy="168" rx="16" ry="6" fill="var(--color-leaf)" transform="rotate(-10 196 168)"/>
+        </svg>
+      </span>
+      <span class="dock-dot" aria-hidden="true"></span>
+    </button>
+  </aside>
 
   <!-- ================= SEARCH MODAL ================= -->
   <div class="cmdk" id="cmdk" aria-hidden="true">
@@ -822,6 +902,68 @@
     window.addEventListener("owl:poke", () => say(tipIndex + 1));
     roleBtns.forEach(b => b.addEventListener("click", () => { tipRole = b.dataset.role; say(0); }));
 
+    /* ---------- Mini owl dock: follows the scroll once the hero owl is off screen ---------- */
+    const dock = $("owlDock"), dockBubble = $("dockBubble"), dockBtn = $("dockBtn");
+    const SECTION_TIPS = {
+      continue: { kicker: "Reminder", text: inProgress[1] ? `“${inProgress[1].title}” is ${inProgress[1].progress}% done. Want to finish it?` : TIPS.student[0] },
+      library:  { kicker: "Tip", text: "Pick a subject tab to narrow the library, or press / to search every lesson." },
+      teachers: { kicker: "Tip", text: "Tap a teacher to see only their lessons in the library." },
+      latest:   { kicker: "New", text: today ? `“${today.title}” from ${teacherOf(today).name} was uploaded today.` : "New lessons appear here first." },
+    };
+    const GENERAL = [
+      { kicker: "Reminder", text: `You stopped “${last.title}” at ${last.at}. Pick up where you left off?` },
+      { kicker: "Tip", text: "Rewatch a lesson the evening after class. It sticks better." },
+      { kicker: "Tip", text: "Press / anywhere to search lessons, units or teachers." },
+    ];
+    let dockSection = null, generalIndex = 0, dockMuted = false, autoTimer = 0;
+    const seen = new Set();
+    function dockSay(tip) {
+      $("dockKicker").textContent = tip.kicker;
+      $("dockSays").textContent = tip.text;
+    }
+    function openBubble(open) {
+      dockBubble.classList.toggle("open", open);
+      dockBtn.setAttribute("aria-expanded", open);
+      dock.classList.remove("unread");
+      clearTimeout(autoTimer);
+    }
+    dockBtn.addEventListener("click", () => {
+      const opening = !dockBubble.classList.contains("open");
+      if (opening) dockSay(SECTION_TIPS[dockSection] || GENERAL[generalIndex]);
+      openBubble(opening);
+      window.dispatchEvent(new Event("owl:mini-hop"));
+    });
+    $("dockMore").addEventListener("click", () => {
+      generalIndex = (generalIndex + 1) % GENERAL.length;
+      dockSay(GENERAL[generalIndex]);
+      window.dispatchEvent(new Event("owl:mini-hop"));
+    });
+    $("dockClose").addEventListener("click", () => { openBubble(false); dockMuted = true; dockBtn.focus(); });
+    dockBubble.addEventListener("pointerenter", () => clearTimeout(autoTimer));
+    dockBubble.addEventListener("focusin", () => clearTimeout(autoTimer));
+
+    // Section-aware tips: each pops up by itself once, then fades; closing the bubble stops the pop-ups
+    function autoTip() {
+      if (!dockSection || seen.has(dockSection) || !dock.classList.contains("show")) return;
+      seen.add(dockSection);
+      dockSay(SECTION_TIPS[dockSection]);
+      if (dockMuted) { dock.classList.add("unread"); return; }
+      openBubble(true);
+      window.dispatchEvent(new Event("owl:mini-hop"));
+      autoTimer = setTimeout(() => openBubble(false), 6000);
+    }
+
+    // Show the dock only while the hero owl is out of view
+    new IntersectionObserver(([e]) => {
+      dock.classList.toggle("show", !e.isIntersecting);
+      if (e.isIntersecting) openBubble(false); else autoTip();
+    }, { threshold: 0.15 }).observe($("owlStage"));
+
+    const sectionObserver = new IntersectionObserver(entries => {
+      for (const e of entries) if (e.isIntersecting) { dockSection = e.target.id; autoTip(); }
+    }, { rootMargin: "-40% 0px -40% 0px" });
+    ["continue", "library", "teachers", "latest"].forEach(id => sectionObserver.observe($(id)));
+
     /* ---------- Search (N13) ---------- */
     const cmdk = $("cmdk"), input = $("cmdkInput"), results = $("cmdkResults");
     let active = 0, hits = [], opener = null;
@@ -873,7 +1015,7 @@
     document.addEventListener("keydown", e => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); cmdk.classList.contains("open") ? closeSearch() : openSearch(); }
       else if (e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
-      else if (e.key === "Escape") { closeSearch(); setMenu(false); }
+      else if (e.key === "Escape") { closeSearch(); setMenu(false); if (dockBubble.classList.contains("open")) { openBubble(false); dockMuted = true; } }
     });
     if (/Mac|iPhone|iPad/.test(navigator.platform)) document.querySelector(".searchpill .kbd kbd").textContent = "⌘";
 
