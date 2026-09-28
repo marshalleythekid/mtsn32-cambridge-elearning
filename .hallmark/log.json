@@ -3,6 +3,15 @@
     "date": "2026-09-28",
     "macrostructure": "(palette update, no structure change)",
     "theme": "custom",
+    "theme_axes": "light / rounded-sans / cool (light blue + navy) + warm action",
+    "vibe": "cream paper, light blue sky surfaces, navy text, gold",
+    "enrichment": "unchanged",
+    "brief": "User-approved mockup 'Light blue A': light blue hero, running text bar, footer and student login panel; navy text back; green removed"
+  },
+  {
+    "date": "2026-09-28",
+    "macrostructure": "(palette update, no structure change)",
+    "theme": "custom",
     "theme_axes": "light / rounded-sans / chromatic-other (forest green) + warm action",
     "vibe": "madrasah library: cream, forest green, gold",
     "enrichment": "unchanged",
