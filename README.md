@@ -17,3 +17,15 @@ python -m http.server 5500
 ```
 
 Video data is sample data in the `<script>` block of `index.html`, ready to be replaced with a backend.
+
+## Deploy to Vercel
+This is a static site with no build step, and `vercel.json` holds its config.
+
+1. On [vercel.com/new](https://vercel.com/new), import `marshalleythekid/mtsn32-cambridge-elearning`.
+2. Framework Preset: **Other**. Leave Build Command and Output Directory empty.
+3. Click **Deploy**. After that, every push to the production branch redeploys the site automatically.
+
+Or use the CLI: `npx vercel --prod`
+
+## Design rules
+The [Hallmark](https://github.com/Nutlope/hallmark) design skill (MIT) is kept in `.claude/skills/hallmark/`. Claude Code sessions in this repo load it on their own, so new pages follow its anti-AI-slop rules. `.vercelignore` keeps it off the deployed site.
