@@ -31,6 +31,9 @@
   --color-focus-dark:  oklch(85% 0.14 85);
   --color-scrim:       oklch(20% 0.05 255 / 0.45);
   --color-shadow:      oklch(25% 0.065 255 / 0.14);
+  --color-error:       oklch(50% 0.18 25);   /* 4.5:1 on paper + card */
+  --color-error-tint:  oklch(95% 0.03 25);
+  --color-success:     oklch(48% 0.11 160);
 
   /* Subjects: one colour each */
   --color-math:     oklch(52% 0.15 250);
