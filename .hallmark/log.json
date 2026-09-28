@@ -1,6 +1,16 @@
 [
   {
     "date": "2026-09-28",
+    "macrostructure": "Ecosystem Index (hero update)",
+    "theme": "custom (shared brand system, tokens.css)",
+    "theme_axes": "light / rounded-sans / cool (blue) + warm action",
+    "nav": "N13",
+    "footer": "Ft5",
+    "enrichment": "H9 Tier-D three.js owl mascot (cursor-follow, idle, click hop, speech bubble)",
+    "brief": "Landing page hero mascot for students; cube removed from login pages"
+  },
+  {
+    "date": "2026-09-28",
     "macrostructure": "Split Studio",
     "theme": "custom (shared brand system, tokens.css)",
     "theme_axes": "light / rounded-sans / cool (blue) + warm action",

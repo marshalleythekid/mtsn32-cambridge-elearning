@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="tokens.css" />
   <style>
     /* Hallmark · genre: playful · macrostructure: Ecosystem Index · theme: custom (brand navy + blue, gold action, cream paper)
-     * surfaces: resume · continue rail · library by subject · by teacher · latest list · enrichment: none (thumbnails carry imagery)
+     * surfaces: resume · continue rail · library by subject · by teacher · latest list
+     * enrichment: H9 custom centrepiece, Tier-D three.js owl mascot built from primitives (mascot.js), SVG fallback
      * nav: N13 inline search pill (+ running-text ticker) · footer: Ft5 statement
      * tone: soft/playful · audience: MTsN 32 Cambridge students (12–15), teachers · use: resume or find a lesson
      * pre-emit critique: P4 H5 E4 S5 R4 V5 · contrast: pass (40–41) · honest: pass (46) · mobile: pass (34, 49–57)
@@ -130,7 +131,7 @@
 
     /* ============ HERO · positioning + featured resume ============ */
     .hero { padding-block: var(--space-xl) var(--space-2xl); }
-    .hero .shell { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-xl); align-items: center; }
+    .hero .shell { display: grid; grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); gap: var(--space-xl); align-items: center; }
     .hero-eyebrow { font-size: var(--text-sm); font-weight: 600; color: var(--color-muted); margin-bottom: var(--space-sm); }
     .hero h1 {
       font-size: var(--text-display); line-height: 1.04; font-weight: 800; letter-spacing: -.03em;
@@ -154,18 +155,45 @@
     .role-note { font-size: var(--text-sm); color: var(--color-muted); }
     .role-note a { color: var(--color-accent-deep); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 
+    /* compact resume card under the headline */
     .resume {
-      background: var(--color-card); border: 1px solid var(--color-rule); border-radius: var(--radius-card);
-      padding: var(--space-xs); box-shadow: 0 16px 40px -20px var(--color-shadow);
+      margin-top: var(--space-lg); display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: var(--space-sm); align-items: center;
+      background: var(--color-card); border: 1px solid var(--color-rule); border-radius: var(--radius-card); padding: var(--space-xs);
+      max-width: 520px; box-shadow: 0 12px 32px -20px var(--color-shadow);
     }
-    .resume-label { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3xs) var(--space-2xs) var(--space-xs); font-size: var(--text-sm); font-weight: 700; }
-    .resume-label .mono { font-size: var(--text-xs); color: var(--color-muted); font-weight: 500; }
-    .resume .thumb { aspect-ratio: 16/9; }
-    .resume .thumb .unit { font-size: 4.5rem; }
-    .resume-body { padding: var(--space-sm) var(--space-2xs) var(--space-2xs); display: grid; gap: var(--space-sm); }
-    .resume-body h2 { font-size: var(--text-lg); line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
-    .resume-body p { font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-3xs); }
+    .resume .thumb { aspect-ratio: 16/10; padding: var(--space-2xs) var(--space-xs); }
+    .resume .thumb .unit { font-size: 2.25rem; }
+    .resume .thumb .glyph { display: none; }
+    .resume-body { display: grid; gap: var(--space-xs); min-width: 0; }
+    .resume-label { font-size: var(--text-xs); font-weight: 700; color: var(--color-muted); display: flex; gap: var(--space-2xs); flex-wrap: wrap; }
+    .resume-body h2 { font-size: var(--text-md); line-height: 1.3; font-weight: 800; }
+    .resume-body p { font-size: 13px; color: var(--color-muted); }
     .resume-body .btn { justify-self: start; }
+
+    /* ============ OWL MASCOT (three.js, see mascot.js) ============ */
+    .owl-stage { position: relative; height: 480px; display: grid; }
+    .owl-stage canvas { width: 100% !important; height: 100% !important; display: block; cursor: pointer; touch-action: pan-y; }
+    .owl-fallback { place-self: center; width: min(62%, 260px); height: auto; }
+    .has-3d .owl-fallback { display: none; }
+    .bubble {
+      position: absolute; top: 6%; left: 0; max-width: 240px; z-index: 2;
+      background: var(--color-card); border: 1px solid var(--color-rule-2); border-radius: var(--radius-card);
+      padding: var(--space-sm); box-shadow: 0 12px 28px -16px var(--color-shadow);
+      transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
+    }
+    .bubble::after { /* tail pointing at the owl */
+      content: ""; position: absolute; right: -9px; bottom: 26px; width: 16px; height: 16px; background: var(--color-card);
+      border-right: 1px solid var(--color-rule-2); border-bottom: 1px solid var(--color-rule-2); transform: rotate(-45deg); border-radius: 0 0 4px 0;
+    }
+    .bubble.swap { opacity: 0; transform: translateY(4px); }
+    .bubble p { font-size: 15px; font-weight: 600; line-height: 1.45; color: var(--color-ink); }
+    .bubble-more {
+      margin-top: var(--space-xs); display: inline-flex; align-items: center; gap: var(--space-3xs); border: 0; background: none; cursor: pointer;
+      font-size: 13px; font-weight: 700; color: var(--color-accent-deep); padding: 2px 0; border-radius: 4px; white-space: nowrap;
+    }
+    .bubble-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .bubble-more:active { color: var(--color-ink); }
+    .bubble-more .icon { width: 14px; height: 14px; }
 
     /* ============ THUMBNAILS + CARDS ============ */
     .thumb {
@@ -346,7 +374,9 @@
       .nav-links { flex-direction: column; align-items: stretch; margin-bottom: var(--space-xs); }
       .nav-links a { padding: var(--space-xs); font-size: 15px; border-radius: var(--radius-input); }
       .nav-actions .btn { flex: 1; }
-      .hero .shell { grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
+      .hero .shell { grid-template-columns: minmax(0, 1fr); gap: var(--space-md); }
+      .owl-stage { height: 360px; order: -1; }
+      .bubble { top: 2%; max-width: 230px; }
       .hero { padding-block: var(--space-lg) var(--space-xl); }
     }
     @media (min-width: 901px) {
@@ -354,6 +384,11 @@
     }
     @media (max-width: 560px) {
       .brand small, .ticker-label .txt, .resume-label .mono { display: none; }
+      .owl-stage { height: 300px; }
+      .bubble { max-width: 60%; padding: var(--space-xs); }
+      .bubble p { font-size: 14px; }
+      .resume { grid-template-columns: 112px minmax(0, 1fr); }
+      .resume .thumb .unit { font-size: 1.75rem; }
       .latest a { grid-template-columns: 5.25rem minmax(0, 1fr) 3.5rem; gap: var(--space-xs); }
       .brand strong { font-size: 14px; }
       .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xs); }
@@ -459,19 +494,37 @@
             </div>
             <p class="role-note" id="roleNote" aria-live="polite"></p>
           </div>
+
+          <article class="resume" aria-labelledby="resumeTitle">
+            <a href="#" id="resumeThumbLink" tabindex="-1" aria-hidden="true"><div class="thumb" id="resumeThumb"></div></a>
+            <div class="resume-body">
+              <div>
+                <p class="resume-label"><span>Pick up where you stopped</span><span class="mono" id="resumeWhen"></span></p>
+                <h2 id="resumeTitle"></h2>
+                <p id="resumeMeta"></p>
+              </div>
+              <a href="#" class="btn btn--push btn--sm" id="resumeBtn"><svg class="icon icon-fill" aria-hidden="true"><use href="#i-play"/></svg><span></span></a>
+            </div>
+          </article>
         </div>
 
-        <article class="resume" aria-labelledby="resumeTitle">
-          <div class="resume-label"><span>Pick up where you stopped</span><span class="mono" id="resumeWhen"></span></div>
-          <a href="#" id="resumeThumbLink" tabindex="-1" aria-hidden="true"><div class="thumb" id="resumeThumb"></div></a>
-          <div class="resume-body">
-            <div>
-              <h2 id="resumeTitle"></h2>
-              <p id="resumeMeta"></p>
-            </div>
-            <a href="#" class="btn btn--push" id="resumeBtn"><svg class="icon icon-fill" aria-hidden="true"><use href="#i-play"/></svg><span></span></a>
+        <div class="owl-stage" id="owlStage">
+          <div class="bubble" id="owlBubble">
+            <p id="owlSays" aria-live="polite"></p>
+            <button class="bubble-more" id="owlMore" type="button">Another tip <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
           </div>
-        </article>
+          <!-- Static owl if WebGL is unavailable; mascot.js hides it once the 3D owl draws -->
+          <svg class="owl-fallback" viewBox="0 0 200 220" role="img" aria-label="The e-learning owl, wearing round glasses">
+            <ellipse cx="100" cy="130" rx="70" ry="78" fill="var(--color-owl-body)"/>
+            <ellipse cx="100" cy="150" rx="46" ry="52" fill="var(--color-owl-belly)"/>
+            <path d="M44 70 58 34 78 62ZM156 70 142 34 122 62Z" fill="var(--color-owl-body)"/>
+            <circle cx="76" cy="92" r="24" fill="var(--color-card)"/><circle cx="124" cy="92" r="24" fill="var(--color-card)"/>
+            <circle cx="78" cy="94" r="10" fill="var(--color-ink)"/><circle cx="122" cy="94" r="10" fill="var(--color-ink)"/>
+            <circle cx="76" cy="92" r="27" fill="none" stroke="var(--color-ink)" stroke-width="4"/><circle cx="124" cy="92" r="27" fill="none" stroke="var(--color-ink)" stroke-width="4"/>
+            <path d="M92 110h16l-8 14z" fill="var(--color-action)"/>
+          </svg>
+        </div>
+
       </div>
     </section>
 
@@ -741,6 +794,34 @@
     roleBtns.forEach(b => b.addEventListener("click", () => setRole(b.dataset.role)));
     setRole("student");
 
+    /* ---------- Owl speech bubble (mascot.js fires "owl:poke" when the owl is clicked) ---------- */
+    const today = LESSONS.find(l => l.daysAgo === 0);
+    const weekCount = LESSONS.filter(l => l.daysAgo <= 7).length;
+    const TIPS = {
+      student: [
+        `You’re ${last.progress}% through “${last.title}”. Finish it today?`,
+        today && `New today: “${today.title}” from ${teacherOf(today).name}.`,
+        "Missed a class? Every recorded lesson stays in the library.",
+        "Tip: press / to search any lesson, unit or teacher.",
+      ].filter(Boolean),
+      teacher: [
+        `Hi! ${weekCount} lessons were uploaded this week.`,
+        "Log in as a teacher to upload a lesson or reset a student’s password.",
+        "Students can rewatch any lesson you record, as often as they need.",
+      ],
+    };
+    let tipRole = "student", tipIndex = 0;
+    function say(i) {
+      const list = TIPS[tipRole]; tipIndex = (i + list.length) % list.length;
+      const bubble = $("owlBubble");
+      bubble.classList.add("swap");
+      setTimeout(() => { $("owlSays").textContent = list[tipIndex]; bubble.classList.remove("swap"); }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 160);
+    }
+    $("owlSays").textContent = TIPS.student[0];
+    $("owlMore").addEventListener("click", () => { say(tipIndex + 1); window.dispatchEvent(new Event("owl:hop")); });
+    window.addEventListener("owl:poke", () => say(tipIndex + 1));
+    roleBtns.forEach(b => b.addEventListener("click", () => { tipRole = b.dataset.role; say(0); }));
+
     /* ---------- Search (N13) ---------- */
     const cmdk = $("cmdk"), input = $("cmdkInput"), results = $("cmdkResults");
     let active = 0, hits = [], opener = null;
@@ -809,5 +890,6 @@
     renderTabs(); renderLibrary();
     $("year").textContent = new Date().getFullYear();
   </script>
+  <script type="module" src="mascot.js"></script>
 </body>
 </html>
