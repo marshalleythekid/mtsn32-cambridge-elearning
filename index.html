@@ -4,387 +4,429 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cambridge E-Learning | MTsN 32 Jakarta Selatan</title>
-  <meta name="description" content="Recorded Cambridge Lower Secondary lessons from the teachers of MTs Negeri 32 Jakarta Selatan." />
+  <meta name="description" content="Recorded Cambridge Lower Secondary lessons from the teachers of MTs Negeri 32 Jakarta Selatan, sorted by subject and teacher." />
   <link rel="icon" href="assets/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
   <style>
-    /* Hallmark · audit pass · macrostructure: split hero + catalogue rows · nav: N1a (+ ticker) · footer: Ft1 mast-headed
-       · icons: one hand-drawn 24px stroke set, no emoji · honest: no invented metrics · contrast: pass (40–41) */
-    :root {
-      /* Brand */
-      --blue: #0399ff;          /* accent on dark surfaces only */
-      --blue-dark: #0070c0;     /* fills that carry light text (4.9:1) */
-      --blue-deep: #005a9c;     /* hover / active */
-      --blue-tint: #e6f2fc;
-      --navy: #0b2545;
-      --navy-2: #103a6b;
-      --navy-3: #081a33;
-      --gold: #f5b700;
-      --gold-tint: #fdf3d6;
-
-      /* Subjects (one colour each, used for thumbnails + ticker tags) */
-      --sub-math: var(--blue-dark);
-      --sub-eng: var(--gold);
-      --sub-sci: #0f766e;
-
-      /* Neutrals, tinted toward the navy anchor */
-      --ink: #1c2433;
-      --muted: #566273;
-      --paper: #f5f8fc;
-      --surface: #fcfdff;
-      --line: #dfe6ef;
-      --on-dark: #f4f8fd;
-      --on-dark-muted: #b9c8da;
-      --focus: #0070c0;
-      --focus-on-dark: #ffd24d;
-
-      /* Spacing (4px scale) */
-      --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px;
-      --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-16: 64px; --s-20: 80px; --s-24: 96px;
-
-      --radius: 12px;
-      --radius-sm: 8px;
-      --nav-h: 72px;
-      --ticker-h: 44px;
-      --ease: cubic-bezier(.2, .7, .2, 1);
-      --font: "Plus Jakarta Sans", system-ui, sans-serif;
-    }
+    /* Hallmark · genre: playful · macrostructure: Ecosystem Index · theme: custom (brand navy + blue, gold action, cream paper)
+     * surfaces: resume · continue rail · library by subject · by teacher · latest list · enrichment: none (thumbnails carry imagery)
+     * nav: N13 inline search pill (+ running-text ticker) · footer: Ft5 statement
+     * tone: soft/playful · audience: MTsN 32 Cambridge students (12–15), teachers · use: resume or find a lesson
+     * pre-emit critique: P4 H5 E4 S5 R4 V5 · contrast: pass (40–41) · honest: pass (46) · mobile: pass (34, 49–57)
+     */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; overflow-x: clip; }
+    html { scroll-behavior: smooth; overflow-x: clip; scroll-padding-top: calc(var(--nav-h) + var(--ticker-h) + var(--space-sm)); }
     body {
-      font-family: var(--font);
-      color: var(--ink);
-      background: var(--paper);
-      line-height: 1.6;
-      padding-top: calc(var(--nav-h) + var(--ticker-h));
-      overflow-x: clip;
+      font-family: var(--font-body); color: var(--color-ink); background: var(--color-paper);
+      line-height: 1.55; overflow-x: clip; padding-top: calc(var(--nav-h) + var(--ticker-h));
     }
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
-    :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-    .container { width: min(1200px, 100% - 32px); margin-inline: auto; }
+    button { font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .shell { max-width: var(--shell); margin-inline: auto; padding-inline: var(--gutter); }
     .icon { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-fill { fill: currentColor; stroke: none; }
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-    /* ============ NAVBAR (fixed) ============ */
-    .navbar {
-      position: fixed; inset: 0 0 auto 0; z-index: 100;
-      height: var(--nav-h);
-      background: color-mix(in srgb, var(--surface) 96%, transparent);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--line);
-    }
-    .navbar .container { height: 100%; display: flex; align-items: center; gap: var(--s-6); }
-    .brand { display: flex; align-items: center; gap: var(--s-3); flex-shrink: 0; border-radius: var(--radius-sm); }
-    .brand img { width: 46px; height: 46px; object-fit: contain; }
-    .brand-text strong { display: block; font-size: 15px; font-weight: 800; color: var(--navy); line-height: 1.2; }
-    .brand-text span { font-size: 12px; color: var(--muted); font-weight: 500; }
-    .nav-links { display: flex; gap: var(--s-1); margin-left: auto; list-style: none; }
-    .nav-links a {
-      display: block; padding: var(--s-2) var(--s-3); border-radius: var(--radius-sm);
-      font-size: 14px; font-weight: 600; color: var(--muted); white-space: nowrap; line-height: 1.4;
-      transition: background-color .15s var(--ease), color .15s var(--ease);
-    }
-    .nav-links a:hover { background: var(--blue-tint); color: var(--blue-deep); }
-    .nav-links a[aria-current="page"] { color: var(--navy); box-shadow: inset 0 -2px 0 var(--blue-dark); border-radius: 0; }
-    .nav-actions { display: flex; align-items: center; gap: var(--s-2); }
-
+    /* ============ BUTTONS ============ */
     .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
-      min-height: 44px; padding: 0 var(--s-5); border-radius: var(--radius-sm);
-      font: 700 14px/1 var(--font); white-space: nowrap;
-      border: 1px solid transparent; cursor: pointer;
-      transition: background-color .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease);
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2xs);
+      min-height: 44px; padding: 0 var(--space-md); border-radius: var(--radius-pill); border: 1px solid transparent;
+      font-weight: 700; font-size: var(--text-sm); line-height: 1; white-space: nowrap; cursor: pointer;
+      transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out),
+                  background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
     }
-    .btn:active { transform: translateY(1px); }
     .btn[aria-disabled="true"], .btn:disabled { opacity: .55; cursor: not-allowed; }
-    .btn-primary { background: var(--blue-dark); color: var(--on-dark); }
-    .btn-primary:hover { background: var(--blue-deep); }
-    .btn-outline { border-color: var(--line); color: var(--navy); background: var(--surface); }
-    .btn-outline:hover { border-color: var(--blue-dark); color: var(--blue-deep); }
-    .btn-light { background: var(--on-dark); color: var(--navy); }
-    .btn-light:hover { background: var(--blue-tint); }
-    .btn-ghost { border-color: rgba(244, 248, 253, .45); color: var(--on-dark); }
-    .btn-ghost:hover { background: rgba(244, 248, 253, .1); border-color: var(--on-dark); }
-    .hero .btn:focus-visible, .ticker :focus-visible, footer :focus-visible { outline-color: var(--focus-on-dark); }
+    /* push: the one chunky primary action */
+    .btn--push { background: var(--color-action); color: var(--color-ink); box-shadow: 0 4px 0 0 var(--color-action-deep), 0 6px 12px -3px var(--color-action-cast); }
+    .btn--push:hover { transform: translateY(-2px); box-shadow: 0 6px 0 0 var(--color-action-deep), 0 12px 22px -4px var(--color-action-cast); }
+    .btn--push:active { transform: translateY(3px); box-shadow: 0 1px 0 0 var(--color-action-deep), 0 2px 6px -2px var(--color-action-cast); transition-duration: 70ms; }
+    .btn--soft { background: var(--color-card); border-color: var(--color-rule); color: var(--color-ink); }
+    .btn--soft:hover { border-color: var(--color-rule-2); background: var(--color-paper-2); }
+    .btn--soft:active { background: var(--color-paper-3); }
+    .btn--sm { min-height: 40px; padding: 0 var(--space-sm); }
+    .link {
+      display: inline-flex; align-items: center; gap: var(--space-3xs); font-weight: 700; font-size: var(--text-sm);
+      color: var(--color-accent-deep); white-space: nowrap; border-radius: 4px; text-underline-offset: 3px;
+    }
+    .link:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+    .link .icon { width: 16px; height: 16px; transition: transform var(--dur-fast) var(--ease-out); }
+    .link:hover .icon { transform: translateX(3px); }
 
-    .menu-toggle {
-      display: none; margin-left: auto; width: 44px; height: 44px; border-radius: var(--radius-sm);
-      border: 1px solid var(--line); background: var(--surface); cursor: pointer;
-      align-items: center; justify-content: center;
+    /* ============ NAV · N13 inline search pill ============ */
+    .nav {
+      position: fixed; inset: 0 0 auto 0; z-index: 300; height: var(--nav-h);
+      background: color-mix(in oklch, var(--color-paper) 94%, transparent); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--color-rule);
     }
-    .menu-toggle span, .menu-toggle span::before, .menu-toggle span::after {
-      display: block; width: 20px; height: 2px; background: var(--navy); border-radius: 2px;
-      position: relative; transition: transform .2s var(--ease), background-color .2s var(--ease);
+    .nav .shell { height: 100%; display: flex; align-items: center; gap: var(--space-md); }
+    .brand { display: flex; align-items: center; gap: var(--space-xs); flex-shrink: 0; border-radius: var(--radius-input); }
+    .brand img { width: 40px; height: 40px; object-fit: contain; }
+    .brand strong { display: block; font-size: 15px; font-weight: 800; line-height: 1.15; }
+    .brand small { display: block; font-size: var(--text-xs); color: var(--color-muted); font-weight: 500; }
+    .searchpill {
+      flex: 1; max-width: 420px; margin-inline: auto; display: flex; align-items: center; gap: var(--space-2xs);
+      height: 42px; padding: 0 var(--space-2xs) 0 var(--space-sm); border-radius: var(--radius-pill);
+      background: var(--color-card); border: 1px solid var(--color-rule); color: var(--color-muted);
+      font-size: var(--text-sm); cursor: pointer; text-align: left;
+      transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
     }
-    .menu-toggle span::before, .menu-toggle span::after { content: ""; position: absolute; left: 0; }
-    .menu-toggle span::before { transform: translateY(-6px); }
-    .menu-toggle span::after { transform: translateY(6px); }
-    .menu-open .menu-toggle span { background: transparent; }
-    .menu-open .menu-toggle span::before { transform: rotate(45deg); }
-    .menu-open .menu-toggle span::after { transform: rotate(-45deg); }
+    .searchpill:hover { border-color: var(--color-rule-2); box-shadow: 0 4px 16px -10px var(--color-shadow); }
+    .searchpill:active { background: var(--color-paper-2); }
+    .searchpill span:first-of-type { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kbd { display: inline-flex; gap: 2px; }
+    .kbd kbd {
+      font-family: var(--font-mono); font-size: 11px; line-height: 1; padding: 4px 6px; border-radius: 6px;
+      background: var(--color-paper-2); border: 1px solid var(--color-rule); color: var(--color-ink-2);
+    }
+    .nav-links { display: flex; align-items: center; gap: var(--space-3xs); list-style: none; }
+    .nav-links a {
+      display: block; padding: var(--space-2xs) var(--space-xs); border-radius: var(--radius-pill);
+      font-size: var(--text-sm); font-weight: 600; color: var(--color-ink-2); white-space: nowrap; line-height: 1.3;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+    .nav-links a:hover { background: var(--color-paper-2); color: var(--color-ink); }
+    .nav-actions { display: flex; align-items: center; gap: var(--space-2xs); }
+    .icon-btn {
+      display: none; width: 44px; height: 44px; border-radius: var(--radius-pill); border: 1px solid var(--color-rule);
+      background: var(--color-card); cursor: pointer; align-items: center; justify-content: center; flex-shrink: 0;
+      transition: background-color var(--dur-fast) var(--ease-out);
+    }
+    .icon-btn:hover { background: var(--color-paper-2); }
 
     /* ============ RUNNING TEXT ============ */
     .ticker {
-      position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 99;
-      height: var(--ticker-h); background: var(--navy); color: var(--on-dark);
-      display: flex; align-items: center; overflow: hidden;
+      position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 290; height: var(--ticker-h);
+      background: var(--color-night); color: var(--color-on-dark); display: flex; align-items: center; overflow: hidden;
     }
+    .ticker :focus-visible { outline-color: var(--color-focus-dark); }
     .ticker-label {
-      flex-shrink: 0; height: 100%; display: flex; align-items: center; gap: var(--s-2);
-      padding: 0 var(--s-2) 0 var(--s-4); background: var(--blue-dark); font-weight: 800; font-size: 12px;
-      letter-spacing: .06em; text-transform: uppercase; position: relative; z-index: 2;
+      flex-shrink: 0; height: 100%; display: flex; align-items: center; gap: var(--space-2xs);
+      padding: 0 var(--space-2xs) 0 var(--space-sm); font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--color-action);
+      border-right: 1px solid color-mix(in oklch, var(--color-on-dark) 18%, transparent);
     }
     .ticker-pause {
-      width: 28px; height: 28px; border-radius: 6px; border: 0; cursor: pointer;
-      display: grid; place-items: center; background: rgba(244, 248, 253, .14); color: var(--on-dark);
-      transition: background-color .15s var(--ease);
+      width: 28px; height: 28px; border: 0; border-radius: var(--radius-pill); cursor: pointer; display: grid; place-items: center;
+      background: color-mix(in oklch, var(--color-on-dark) 12%, transparent); color: var(--color-on-dark);
+      transition: background-color var(--dur-fast) var(--ease-out);
     }
-    .ticker-pause:hover { background: rgba(244, 248, 253, .26); }
+    .ticker-pause:hover { background: color-mix(in oklch, var(--color-on-dark) 24%, transparent); }
     .ticker-pause .icon { width: 14px; height: 14px; }
-    .ticker-pause .i-play { display: none; }
+    .ticker-pause .i-play, .ticker.paused .ticker-pause .i-pause { display: none; }
     .ticker.paused .ticker-pause .i-play { display: block; }
-    .ticker.paused .ticker-pause .i-pause { display: none; }
-    .ticker-track { flex: 1; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
-    .ticker-move { display: flex; width: max-content; animation: scroll 60s linear infinite; }
+    .ticker-track { flex: 1; overflow: hidden; mask-image: linear-gradient(90deg, transparent, black 3%, black 97%, transparent); }
+    .ticker-move { display: flex; width: max-content; animation: ticker 60s linear infinite; }
     .ticker:hover .ticker-move, .ticker:focus-within .ticker-move, .ticker.paused .ticker-move { animation-play-state: paused; }
-    .ticker-item { display: flex; align-items: center; gap: var(--s-3); padding: 0 var(--s-6); font-size: 14px; white-space: nowrap; line-height: 1; }
-    .ticker-item + .ticker-item { border-left: 1px solid rgba(244, 248, 253, .18); }
-    .ticker-item .tag { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--on-dark-muted); }
-    .tag-welcome { color: var(--gold) !important; }
-    .tag-new { color: #6ee7c8 !important; }
-    @keyframes scroll { to { transform: translateX(-50%); } }
+    .ticker-item { display: flex; align-items: center; gap: var(--space-xs); padding: 0 var(--space-md); font-size: var(--text-sm); white-space: nowrap; line-height: 1; }
+    .ticker-item b { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--color-on-dark-2); }
+    .ticker-item b.t-new { color: var(--color-action); }
+    @keyframes ticker { to { transform: translateX(-50%); } }
 
-    /* ============ HERO ============ */
-    .hero {
-      position: relative;
-      background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 60%, var(--blue-deep) 100%);
-      color: var(--on-dark);
-    }
-    .hero .container {
-      display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--s-12);
-      align-items: center; padding-block: var(--s-16) var(--s-24);
-    }
-    .hero-eyebrow { font-size: 13px; font-weight: 600; color: var(--on-dark-muted); margin-bottom: var(--s-4); }
-    .hero-eyebrow b { color: var(--gold); font-weight: 800; }
+    /* ============ HERO · positioning + featured resume ============ */
+    .hero { padding-block: var(--space-xl) var(--space-2xl); }
+    .hero .shell { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-xl); align-items: center; }
+    .hero-eyebrow { font-size: var(--text-sm); font-weight: 600; color: var(--color-muted); margin-bottom: var(--space-sm); }
     .hero h1 {
-      font-size: clamp(32px, 4.6vw, 52px); line-height: 1.08; font-weight: 800; letter-spacing: -.025em;
+      font-size: var(--text-display); line-height: 1.04; font-weight: 800; letter-spacing: -.03em;
       overflow-wrap: anywhere; min-width: 0; text-wrap: balance;
     }
-    .hero h1 .hl { color: var(--blue); }
-    .hero p.lead { margin-top: var(--s-4); font-size: 17px; color: var(--on-dark-muted); max-width: 52ch; }
-
-    .role-switch {
-      margin-top: var(--s-8); display: inline-flex; padding: var(--s-1); border-radius: var(--radius);
-      background: rgba(244, 248, 253, .08); border: 1px solid rgba(244, 248, 253, .16);
+    .hl {
+      background-image: linear-gradient(var(--color-action) 0 0); background-repeat: no-repeat;
+      background-size: 100% 0.3em; background-position: 0 86%;
+      -webkit-box-decoration-break: clone; box-decoration-break: clone;
     }
+    .hero .lead { margin-top: var(--space-sm); font-size: 1.0625rem; color: var(--color-ink-2); max-width: 54ch; }
+    .role-row { margin-top: var(--space-lg); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }
+    .role-switch { display: inline-flex; padding: var(--space-3xs); border-radius: var(--radius-pill); background: var(--color-paper-2); border: 1px solid var(--color-rule); }
     .role-switch button {
-      border: 0; background: transparent; color: var(--on-dark-muted); font: 700 14px/1 var(--font);
-      min-height: 36px; padding: 0 var(--s-4); border-radius: var(--radius-sm); cursor: pointer;
-      transition: background-color .15s var(--ease), color .15s var(--ease);
+      border: 0; background: transparent; cursor: pointer; min-height: 36px; padding: 0 var(--space-sm);
+      border-radius: var(--radius-pill); font-weight: 700; font-size: var(--text-sm); color: var(--color-muted); line-height: 1;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
     }
-    .role-switch button:hover { color: var(--on-dark); }
-    .role-switch button[aria-pressed="true"] { background: var(--on-dark); color: var(--navy); }
-    .role-switch button:focus-visible { outline-color: var(--focus-on-dark); }
-    .hero-cta { margin-top: var(--s-4); display: flex; gap: var(--s-3); flex-wrap: wrap; align-items: center; }
+    .role-switch button:hover { color: var(--color-ink); }
+    .role-switch button[aria-pressed="true"] { background: var(--color-card); color: var(--color-ink); box-shadow: 0 1px 3px var(--color-shadow); }
+    .role-note { font-size: var(--text-sm); color: var(--color-muted); }
+    .role-note a { color: var(--color-accent-deep); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 
-    .hero-subjects {
-      margin-top: var(--s-10); padding-top: var(--s-5); border-top: 1px solid rgba(244, 248, 253, .14);
-      display: flex; gap: var(--s-6); flex-wrap: wrap; list-style: none; font-size: 14px; font-weight: 600;
+    .resume {
+      background: var(--color-card); border: 1px solid var(--color-rule); border-radius: var(--radius-card);
+      padding: var(--space-xs); box-shadow: 0 16px 40px -20px var(--color-shadow);
     }
-    .hero-subjects li { display: flex; align-items: center; gap: var(--s-2); }
-    .hero-subjects li::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
-    .hero-subjects .label { color: var(--on-dark-muted); font-weight: 500; }
-    .hero-subjects .label::before { display: none; }
+    .resume-label { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3xs) var(--space-2xs) var(--space-xs); font-size: var(--text-sm); font-weight: 700; }
+    .resume-label .mono { font-size: var(--text-xs); color: var(--color-muted); font-weight: 500; }
+    .resume .thumb { aspect-ratio: 16/9; }
+    .resume .thumb .unit { font-size: 4.5rem; }
+    .resume-body { padding: var(--space-sm) var(--space-2xs) var(--space-2xs); display: grid; gap: var(--space-sm); }
+    .resume-body h2 { font-size: var(--text-lg); line-height: 1.25; font-weight: 800; letter-spacing: -.01em; }
+    .resume-body p { font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-3xs); }
+    .resume-body .btn { justify-self: start; }
 
-    .hero-art { position: relative; }
-    .hero-art svg { width: 100%; height: auto; filter: drop-shadow(0 24px 32px rgba(3, 12, 26, .35)); }
-    .resume-card {
-      position: absolute; right: 0; bottom: 4%;
-      display: flex; align-items: center; gap: var(--s-3);
-      background: var(--surface); color: var(--ink); border-radius: var(--radius);
-      padding: var(--s-3) var(--s-4) var(--s-3) var(--s-3); box-shadow: 0 16px 32px rgba(3, 12, 26, .28);
-      font-size: 13px; font-weight: 700; line-height: 1.3; max-width: 260px;
-      transition: box-shadow .15s var(--ease);
+    /* ============ THUMBNAILS + CARDS ============ */
+    .thumb {
+      position: relative; aspect-ratio: 16/10; border-radius: var(--radius-thumb); overflow: hidden;
+      background: var(--c); color: var(--t); padding: var(--space-xs) var(--space-sm);
+      display: flex; flex-direction: column; justify-content: space-between;
     }
-    .resume-card:hover { box-shadow: 0 16px 32px rgba(3, 12, 26, .28), 0 0 0 2px var(--gold); }
-    .resume-card .ic { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; background: var(--gold); color: var(--navy); }
-    .resume-card .ic .icon { fill: currentColor; stroke: none; }
-    .resume-card small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+    .s-math { --c: var(--color-math); --t: var(--color-math-ink); }
+    .s-eng  { --c: var(--color-eng);  --t: var(--color-eng-ink); }
+    .s-sci  { --c: var(--color-sci);  --t: var(--color-sci-ink); }
+    .thumb .code { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+    .thumb .unit { font-size: 2.75rem; font-weight: 800; line-height: .95; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+    .thumb .unit small { font-size: var(--text-sm); font-weight: 700; letter-spacing: 0; margin-right: var(--space-3xs); opacity: .85; }
+    .thumb .glyph { position: absolute; right: -10px; bottom: -16px; width: 42%; aspect-ratio: 1; opacity: .18; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .thumb .dur {
+      position: absolute; right: var(--space-2xs); bottom: var(--space-xs); font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      background: color-mix(in oklch, var(--color-night) 78%, transparent); color: var(--color-on-dark); padding: 3px 6px; border-radius: 6px;
+    }
+    .thumb .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: color-mix(in oklch, var(--color-night) 25%, transparent); }
+    .thumb .bar i { display: block; height: 100%; background: var(--color-on-dark); border-radius: 0 3px 3px 0; }
+    .s-eng .bar i { background: var(--color-ink); }
+    .badge-new {
+      position: absolute; right: var(--space-2xs); top: var(--space-2xs); font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .06em; padding: 3px 6px; border-radius: 6px; background: var(--color-card); color: var(--color-ink);
+    }
+    .badge-new.today { background: var(--color-pop); color: var(--color-on-dark); }
+
+    .card { display: block; border-radius: var(--radius-card); padding: var(--space-2xs); transition: background-color var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out); }
+    .card:hover { background: var(--color-card); transform: translateY(-3px); }
+    .card:active { transform: translateY(0); }
+    .card h3 { font-size: 15px; font-weight: 700; line-height: 1.3; margin-top: var(--space-xs); padding-inline: var(--space-3xs); }
+    .card .meta { font-size: 13px; color: var(--color-muted); margin-top: var(--space-3xs); padding-inline: var(--space-3xs); }
+    .card.flash { animation: flash 1.2s var(--ease-out); }
+    @keyframes flash { 0%, 40% { background: var(--color-action-tint); } 100% { background: transparent; } }
 
     /* ============ SECTIONS ============ */
-    section.block { padding-block: var(--s-16); }
-    section.block + section.block { border-top: 1px solid var(--line); }
-    .section-head { display: flex; justify-content: space-between; align-items: end; gap: var(--s-4); margin-bottom: var(--s-6); flex-wrap: wrap; }
-    .section-head h2 { font-size: 26px; font-weight: 800; color: var(--navy); letter-spacing: -.015em; line-height: 1.2; }
-    .section-head p { color: var(--muted); font-size: 15px; margin-top: var(--s-1); }
-    .text-link {
-      display: inline-flex; align-items: center; gap: var(--s-1); color: var(--blue-dark); font-weight: 700; font-size: 14px;
-      white-space: nowrap; border-radius: 4px; text-underline-offset: 3px;
-    }
-    .text-link:hover { text-decoration: underline; text-decoration-thickness: 1px; }
-    .text-link .icon { width: 16px; height: 16px; }
+    .section { padding-block: var(--space-2xl); }
+    .band { background: var(--color-paper-2); border-block: 1px solid var(--color-rule); }
+    .rail-head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-sm); flex-wrap: wrap; margin-bottom: var(--space-md); }
+    .rail-head h2 { font-size: var(--text-2xl); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+    .rail-head p { color: var(--color-muted); font-size: 15px; margin-top: var(--space-3xs); }
 
-    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-5); }
-    .video-card {
-      display: block; background: var(--surface); border-radius: var(--radius); overflow: hidden;
-      border: 1px solid var(--line); transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
+    /* Continue rail: horizontal, snaps */
+    .rail {
+      display: grid; grid-auto-flow: column; grid-auto-columns: minmax(240px, calc((100% - 3 * var(--space-sm)) / 4));
+      gap: var(--space-sm); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--space-2xs);
+      margin-inline: calc(var(--space-2xs) * -1); padding-inline: var(--space-2xs); scrollbar-width: thin;
     }
-    .video-card:hover { border-color: #b7c6d8; box-shadow: 0 12px 28px rgba(11, 37, 69, .08); }
-    .video-card:focus-visible { outline-offset: 3px; }
+    .rail > * { scroll-snap-align: start; }
 
-    .thumb {
-      position: relative; aspect-ratio: 16/9; background: var(--c); color: var(--t, var(--on-dark));
-      padding: var(--s-3) var(--s-4); display: flex; flex-direction: column; justify-content: space-between;
-      overflow: hidden;
+    /* Library: subject tabs + teacher filter */
+    .tabs { display: flex; gap: var(--space-2xs); flex-wrap: wrap; margin-bottom: var(--space-sm); }
+    .tab {
+      display: inline-flex; align-items: center; gap: var(--space-2xs); min-height: 40px; padding: 0 var(--space-sm);
+      border-radius: var(--radius-pill); border: 1px solid var(--color-rule-2); background: var(--color-card);
+      font-weight: 700; font-size: var(--text-sm); cursor: pointer; white-space: nowrap; line-height: 1;
+      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
     }
-    .thumb .code { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
-    .thumb .unit { font-size: 44px; font-weight: 800; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-    .thumb .unit span { font-size: 13px; font-weight: 700; letter-spacing: 0; margin-right: var(--s-1); opacity: .8; }
-    .thumb .glyph { position: absolute; right: -8px; bottom: -18px; width: 108px; height: 108px; opacity: .16; stroke: currentColor; fill: none; stroke-width: 1.5; }
-    .thumb .play {
-      position: absolute; top: 50%; left: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%;
-      background: var(--surface); color: var(--navy); display: grid; place-items: center;
-      opacity: 0; transition: opacity .15s var(--ease);
+    .tab:hover { border-color: var(--color-ink-2); }
+    .tab .dot { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+    .tab .count { font-family: var(--font-mono); font-size: 11px; color: var(--color-muted); }
+    .tab[aria-selected="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-dark); }
+    .tab[aria-selected="true"] .count { color: var(--color-on-dark-2); }
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: var(--space-2xs); min-height: 36px; padding: 0 var(--space-2xs) 0 var(--space-sm);
+      border-radius: var(--radius-pill); background: var(--color-accent-tint); color: var(--color-accent-deep);
+      font-size: var(--text-sm); font-weight: 700; border: 0; cursor: pointer; margin-bottom: var(--space-sm); line-height: 1;
+      transition: background-color var(--dur-fast) var(--ease-out);
     }
-    .thumb .play .icon { fill: currentColor; stroke: none; margin-left: 2px; }
-    .video-card:hover .play, .video-card:focus-visible .play { opacity: 1; }
-    .thumb .dur {
-      position: absolute; right: var(--s-2); bottom: var(--s-3); background: rgba(8, 26, 51, .72); color: var(--on-dark);
-      font-size: 12px; font-weight: 600; padding: 2px var(--s-2); border-radius: 4px; font-variant-numeric: tabular-nums;
-    }
-    .thumb .new {
-      position: absolute; right: var(--s-2); top: var(--s-2); background: var(--surface); color: var(--navy);
-      font-size: 11px; font-weight: 800; letter-spacing: .06em; padding: 2px var(--s-2); border-radius: 4px;
-    }
-    .progress { position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; background: rgba(8, 26, 51, .28); }
-    .progress i { display: block; height: 100%; background: var(--on-dark); }
-    .video-body { padding: var(--s-3) var(--s-4) var(--s-4); }
-    .video-body h3 { font-size: 15px; font-weight: 700; line-height: 1.35; color: var(--ink); }
-    .meta { margin-top: var(--s-2); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .filter-chip:hover { background: color-mix(in oklch, var(--color-accent-tint) 70%, var(--color-accent)); }
+    .filter-chip .icon { width: 16px; height: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-xs) var(--space-sm); }
+    .empty { grid-column: 1 / -1; padding: var(--space-xl) var(--space-md); border: 1px dashed var(--color-rule-2); border-radius: var(--radius-card); text-align: center; }
+    .empty p { color: var(--color-muted); margin: var(--space-3xs) 0 var(--space-sm); }
 
-    /* Roles sit on their own surface so the page rhythm changes here */
-    #roles { background: var(--surface); }
-    .roles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-    .role-card { padding: var(--s-8); display: flex; flex-direction: column; gap: var(--s-3); }
-    .role-card + .role-card { border-left: 1px solid var(--line); background: var(--paper); }
-    .role-card .who { font-size: 13px; font-weight: 700; color: var(--blue-dark); }
-    .role-card h3 { font-size: 20px; line-height: 1.3; color: var(--navy); max-width: 32ch; }
-    .role-card ul { list-style: none; display: grid; gap: var(--s-2); color: var(--muted); font-size: 15px; margin-bottom: var(--s-2); }
-    .role-card li { display: flex; gap: var(--s-3); align-items: flex-start; }
-    .role-card li .icon { margin-top: 3px; color: var(--blue-dark); width: 16px; height: 16px; }
-    .role-card .btn { align-self: flex-start; margin-top: auto; }
-
-    /* ============ FOOTER ============ */
-    footer { background: var(--navy-3); color: var(--on-dark-muted); }
-    .footer-mast { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--s-12); padding-block: var(--s-16) var(--s-10); align-items: start; }
-    .footer-brand { display: flex; gap: var(--s-4); align-items: center; margin-bottom: var(--s-4); }
-    .footer-brand img { width: 56px; height: 56px; background: var(--on-dark); border-radius: var(--radius); padding: var(--s-1); }
-    .footer-brand strong { color: var(--on-dark); font-size: 18px; display: block; line-height: 1.25; }
-    .footer-mast p { font-size: 14px; max-width: 60ch; }
-    .contact { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3) var(--s-6); font-size: 14px; }
-    .contact dt { color: var(--on-dark-muted); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding-top: 2px; }
-    .contact dd { color: var(--on-dark); overflow-wrap: anywhere; }
-    .contact a:hover { text-decoration: underline; text-underline-offset: 3px; }
-    .footer-bottom {
-      border-top: 1px solid rgba(244, 248, 253, .1); padding-block: var(--s-5); font-size: 13px;
-      display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); flex-wrap: wrap;
+    /* By teacher */
+    .teachers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-sm); list-style: none; }
+    .teacher {
+      width: 100%; display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm);
+      border-radius: var(--radius-card); border: 1px solid var(--color-rule); background: var(--color-card);
+      cursor: pointer; text-align: left;
+      transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-med) var(--ease-out);
     }
-    .footer-links { display: flex; gap: var(--s-5); list-style: none; flex-wrap: wrap; }
-    .footer-links a { white-space: nowrap; border-radius: 4px; }
-    .footer-links a:hover { color: var(--on-dark); }
+    .teacher:hover { border-color: var(--color-rule-2); transform: translateY(-2px); }
+    .teacher:active { transform: none; }
+    .teacher[aria-pressed="true"] { border-color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-ink); }
+    .avatar {
+      width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0;
+      background: var(--c); color: var(--t); font-weight: 800; font-size: var(--text-md);
+    }
+    .teacher strong { display: block; font-size: 15px; line-height: 1.25; }
+    .teacher-sub { font-size: 13px; color: var(--color-muted); }
 
-    /* ============ RESPONSIVE / MOBILE ============ */
+    /* Latest: dense list */
+    .latest { list-style: none; border-top: 1px solid var(--color-rule); }
+    .latest a {
+      display: grid; grid-template-columns: 7.5rem 8.5rem minmax(0, 1fr) 9rem 4rem; gap: var(--space-sm); align-items: center;
+      padding: var(--space-sm) var(--space-2xs); border-bottom: 1px solid var(--color-rule); border-radius: 4px;
+      transition: background-color var(--dur-fast) var(--ease-out);
+    }
+    .latest a:hover { background: var(--color-paper-2); }
+    .latest .when { font-size: 13px; color: var(--color-muted); }
+    .latest .when.today { color: var(--color-pop); font-weight: 600; }
+    .latest .subj { display: inline-flex; align-items: center; gap: var(--space-2xs); font-size: 13px; font-weight: 700; }
+    .latest .subj::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+    .latest .title { font-weight: 700; min-width: 0; }
+    .latest .who { font-size: 13px; color: var(--color-muted); }
+    .latest .len { font-size: 13px; color: var(--color-muted); text-align: right; }
+
+    /* Teacher band */
+    .teach-band { background: var(--color-accent-tint); border-radius: var(--radius-card); padding: var(--space-lg); display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); flex-wrap: wrap; }
+    .teach-band h2 { font-size: var(--text-lg); font-weight: 800; line-height: 1.3; }
+    .teach-band p { color: var(--color-ink-2); font-size: 15px; margin-top: var(--space-3xs); max-width: 60ch; }
+
+    /* ============ FOOTER · Ft5 statement ============ */
+    footer { background: var(--color-night); color: var(--color-on-dark-2); padding-block: var(--space-2xl) var(--space-md); }
+    footer :focus-visible { outline-color: var(--color-focus-dark); }
+    .foot-line { font-size: clamp(1.75rem, 1rem + 3vw, 3rem); line-height: 1.05; font-weight: 800; letter-spacing: -.025em; color: var(--color-on-dark); max-width: 22ch; text-wrap: balance; }
+    .foot-line span { color: var(--color-action); }
+    .foot-meta { margin-top: var(--space-xl); padding-top: var(--space-md); border-top: 1px solid color-mix(in oklch, var(--color-on-dark) 14%, transparent); display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: var(--space-lg); font-size: var(--text-sm); }
+    .foot-brand { display: flex; gap: var(--space-xs); align-items: center; }
+    .foot-brand img { width: 44px; height: 44px; background: var(--color-on-dark); border-radius: var(--radius-input); padding: 3px; }
+    .foot-brand strong { color: var(--color-on-dark); display: block; line-height: 1.25; }
+    .foot-meta p { margin-top: var(--space-xs); max-width: 52ch; }
+    .foot-contact { display: grid; gap: var(--space-3xs); }
+    .foot-contact a { color: var(--color-on-dark); overflow-wrap: anywhere; }
+    .foot-contact a:hover, .foot-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .foot-links { list-style: none; display: grid; gap: var(--space-3xs); }
+    .foot-links a { white-space: nowrap; color: var(--color-on-dark); }
+    .foot-copy { margin-top: var(--space-lg); font-size: var(--text-xs); }
+
+    /* ============ SEARCH MODAL ============ */
+    .cmdk { position: fixed; inset: 0; z-index: 700; visibility: hidden; opacity: 0; transition: opacity var(--dur-med) var(--ease-out), visibility var(--dur-med); }
+    .cmdk.open { visibility: visible; opacity: 1; transition: opacity var(--dur-med) var(--ease-out), visibility 0s; }
+    .cmdk-scrim { position: absolute; inset: 0; background: var(--color-scrim); }
+    .cmdk-panel {
+      position: absolute; top: 12vh; left: 50%; width: min(600px, 100% - 2 * var(--gutter)); transform: translate(-50%, -8px);
+      background: var(--color-card); border-radius: var(--radius-card); box-shadow: 0 24px 60px -20px var(--color-shadow);
+      overflow: hidden; transition: transform var(--dur-med) var(--ease-out);
+    }
+    .cmdk.open .cmdk-panel { transform: translate(-50%, 0); }
+    .cmdk-field { display: flex; align-items: center; gap: var(--space-xs); padding: 0 var(--space-sm); border-bottom: 1px solid var(--color-rule); }
+    .cmdk-field .icon { color: var(--color-muted); }
+    .cmdk-field input { flex: 1; height: 56px; border: 0; background: transparent; font: inherit; font-size: var(--text-md); color: var(--color-ink); outline: none; }
+    .cmdk-field:focus-within { box-shadow: inset 0 -2px 0 var(--color-focus); }
+    .cmdk-results { max-height: min(56vh, 420px); overflow-y: auto; padding: var(--space-2xs); list-style: none; }
+    .cmdk-results li a { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs); border-radius: var(--radius-input); }
+    .cmdk-results li a .dot { width: 10px; height: 10px; border-radius: 3px; background: var(--c); flex-shrink: 0; }
+    .cmdk-results li a strong { font-size: 15px; display: block; line-height: 1.3; }
+    .cmdk-results li a span { font-size: 13px; color: var(--color-muted); }
+    .cmdk-results li a[aria-selected="true"], .cmdk-results li a:hover { background: var(--color-paper-2); }
+    .cmdk-empty { padding: var(--space-lg) var(--space-sm); text-align: center; color: var(--color-muted); font-size: var(--text-sm); }
+    .cmdk-foot { display: flex; gap: var(--space-md); padding: var(--space-xs) var(--space-sm); border-top: 1px solid var(--color-rule); font-size: var(--text-xs); color: var(--color-muted); }
+    .cmdk-foot span { display: inline-flex; align-items: center; gap: var(--space-3xs); }
+
+    /* ============ RESPONSIVE ============ */
     @media (max-width: 1024px) {
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid, .teachers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .latest a { grid-template-columns: 6.5rem minmax(0, 1fr) 4rem; }
+      .latest .subj, .latest .who { display: none; }
+      .foot-meta { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+      .foot-meta > :first-child { grid-column: 1 / -1; }
     }
     @media (max-width: 900px) {
-      :root { --nav-h: 64px; --ticker-h: 40px; }
-      .menu-toggle { display: inline-flex; }
-      .brand img { width: 40px; height: 40px; }
+      :root { --nav-h: 64px; }
+      .searchpill { display: none; }
+      .icon-btn { display: inline-flex; }
+      .nav .shell { gap: var(--space-2xs); }
+      .brand { margin-right: auto; }
       .nav-panel {
-        position: fixed; top: var(--nav-h); left: 0; right: 0; background: var(--surface);
-        border-bottom: 1px solid var(--line); padding: var(--s-3) var(--s-4) var(--s-5);
-        box-shadow: 0 20px 32px rgba(11, 37, 69, .12);
-        transform: translateY(-8px); opacity: 0; visibility: hidden; z-index: 101;
-        transition: transform .2s var(--ease), opacity .2s var(--ease), visibility .2s;
+        position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 310; background: var(--color-paper);
+        border-bottom: 1px solid var(--color-rule); padding: var(--space-xs) var(--gutter) var(--space-md);
+        box-shadow: 0 20px 32px -12px var(--color-shadow);
+        transform: translateY(-8px); opacity: 0; visibility: hidden;
+        transition: transform var(--dur-med) var(--ease-out), opacity var(--dur-med) var(--ease-out), visibility var(--dur-med);
       }
       .menu-open .nav-panel { transform: none; opacity: 1; visibility: visible; }
-      .nav-links { flex-direction: column; margin: 0 0 var(--s-3); }
-      .nav-links a { padding: var(--s-3); font-size: 15px; }
-      .nav-links a[aria-current="page"] { box-shadow: inset 2px 0 0 var(--blue-dark); background: var(--blue-tint); }
+      .nav-links { flex-direction: column; align-items: stretch; margin-bottom: var(--space-xs); }
+      .nav-links a { padding: var(--space-xs); font-size: 15px; border-radius: var(--radius-input); }
       .nav-actions .btn { flex: 1; }
-      .hero .container { grid-template-columns: minmax(0, 1fr); padding-block: var(--s-10) var(--s-16); gap: var(--s-8); }
-      .hero-art { max-width: 520px; width: 100%; }
-      .footer-mast { grid-template-columns: minmax(0, 1fr); gap: var(--s-8); }
+      .hero .shell { grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); }
+      .hero { padding-block: var(--space-lg) var(--space-xl); }
     }
     @media (min-width: 901px) {
-      .nav-panel { display: flex; align-items: center; gap: var(--s-5); margin-left: auto; }
-    }
-    @media (max-width: 720px) {
-      .roles { grid-template-columns: minmax(0, 1fr); }
-      .role-card + .role-card { border-left: 0; border-top: 1px solid var(--line); }
+      .nav-panel { display: flex; align-items: center; gap: var(--space-sm); }
     }
     @media (max-width: 560px) {
-      .brand-text span { display: none; }
-      .brand-text strong { font-size: 14px; }
-      .ticker-label .txt { display: none; }
-      .ticker-label { padding: 0 var(--s-2); }
-      .grid { grid-template-columns: minmax(0, 1fr); }
-      .role-card { padding: var(--s-6); }
-      .resume-card { position: static; margin-top: var(--s-3); max-width: none; }
-      .hero-cta .btn { flex: 1; }
+      .brand small, .ticker-label .txt, .resume-label .mono { display: none; }
+      .latest a { grid-template-columns: 5.25rem minmax(0, 1fr) 3.5rem; gap: var(--space-xs); }
+      .brand strong { font-size: 14px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xs); }
+      .grid .thumb .unit { font-size: 2rem; }
+      .grid .thumb .glyph { display: none; }
+      .card { padding: var(--space-3xs); }
+      .card h3 { font-size: 14px; }
+      .teachers { grid-template-columns: minmax(0, 1fr); }
+      .rail { grid-auto-columns: 72%; }
+      .section { padding-block: var(--space-xl); }
+      .teach-band { padding: var(--space-md); }
+      .teach-band .btn { width: 100%; }
+      .foot-meta { grid-template-columns: minmax(0, 1fr); gap: var(--space-md); }
+      .cmdk-panel { top: var(--space-sm); }
+      .cmdk-foot { display: none; }
+    }
+    @media (max-width: 374px) {
+      .brand img { width: 34px; height: 34px; }
+      .brand strong { font-size: 13px; }
+      .icon-btn { width: 40px; height: 40px; }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .ticker-move { animation: none; }
       .ticker-track { overflow-x: auto; mask-image: none; }
       .ticker-pause { display: none; }
+      .card.flash { animation: none; background: var(--color-action-tint); }
       *, *::before, *::after { transition-duration: 0s !important; }
-      .btn:active { transform: none; }
+      .btn--push:hover, .btn--push:active, .card:hover, .teacher:hover, .link:hover .icon { transform: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- One icon set, drawn once, referenced everywhere -->
+  <!-- One icon set, drawn once -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></symbol>
     <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
-    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 20h16"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
-    <!-- Subject glyphs for thumbnails -->
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 20h16"/></symbol>
     <symbol id="g-math" viewBox="0 0 48 48"><path d="M8 40 40 8M8 8v32h32M14 20h8M18 16v8M28 34h8"/></symbol>
     <symbol id="g-eng" viewBox="0 0 48 48"><path d="M6 10c6-3 12-3 18 1 6-4 12-4 18-1v28c-6-3-12-3-18 1-6-4-12-4-18-1zM24 11v28"/></symbol>
     <symbol id="g-sci" viewBox="0 0 48 48"><path d="M19 6h10M21 6v13L9 38a3 3 0 0 0 2.6 4.5h24.8A3 3 0 0 0 39 38L27 19V6M14 30h20"/></symbol>
   </svg>
 
-  <!-- ================= NAVBAR ================= -->
-  <header class="navbar" id="navbar">
-    <div class="container">
+  <!-- ================= NAV ================= -->
+  <header class="nav">
+    <div class="shell">
       <a href="#" class="brand" aria-label="MTsN 32 E-Learning, home">
         <img src="assets/logo.png" alt="" />
-        <div class="brand-text">
-          <strong>MTsN 32 E-Learning</strong>
-          <span>Cambridge Programme · Jakarta Selatan</span>
-        </div>
+        <span><strong>MTsN 32 E-Learning</strong><small>Cambridge Programme</small></span>
       </a>
 
-      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navPanel"><span></span></button>
+      <button class="searchpill" id="searchPill" type="button" aria-haspopup="dialog">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+        <span>Search lessons, units, teachers…</span>
+        <span class="kbd" aria-hidden="true"><kbd>Ctrl</kbd><kbd>K</kbd></span>
+      </button>
+
+      <button class="icon-btn" id="searchIcon" type="button" aria-label="Search lessons" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></button>
+      <button class="icon-btn" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navPanel"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></button>
 
       <nav class="nav-panel" id="navPanel" aria-label="Main">
         <ul class="nav-links">
-          <li><a href="#" aria-current="page">Home</a></li>
-          <li><a href="#new">Videos</a></li>
-          <li><a href="#continue">My Learning</a></li>
-          <li><a href="#roles">Subjects</a></li>
-          <li><a href="#footer">About</a></li>
+          <li><a href="#library">Library</a></li>
+          <li><a href="#teachers">Teachers</a></li>
+          <li><a href="#latest">Latest</a></li>
         </ul>
         <div class="nav-actions">
-          <a href="#" class="btn btn-outline">Teacher login</a>
-          <a href="#" class="btn btn-primary">Student login</a>
+          <a href="#" class="btn btn--push btn--sm">Log in</a>
         </div>
       </nav>
     </div>
@@ -394,274 +436,378 @@
   <div class="ticker" id="ticker" role="region" aria-label="Announcements">
     <div class="ticker-label">
       <span class="txt">Updates</span>
-      <button class="ticker-pause" id="tickerPause" aria-label="Pause announcements" aria-pressed="false">
+      <button class="ticker-pause" id="tickerPause" type="button" aria-label="Pause announcements" aria-pressed="false">
         <svg class="icon i-pause" aria-hidden="true"><use href="#i-pause"/></svg>
-        <svg class="icon i-play" aria-hidden="true" style="fill:currentColor;stroke:none"><use href="#i-play"/></svg>
+        <svg class="icon icon-fill i-play" aria-hidden="true"><use href="#i-play"/></svg>
       </button>
     </div>
-    <div class="ticker-track">
-      <div class="ticker-move" id="tickerMove"></div>
-    </div>
+    <div class="ticker-track"><div class="ticker-move" id="tickerMove"></div></div>
   </div>
 
-  <!-- ================= HERO ================= -->
-  <section class="hero">
-    <div class="container">
-      <div>
-        <p class="hero-eyebrow"><b>Cambridge</b> Lower Secondary · MTs Negeri 32</p>
-        <h1>Your Cambridge lessons, recorded by <span class="hl">the teachers you already know.</span></h1>
-        <p class="lead">Rewatch a lesson before a test, catch up on a day you missed, and pick up at the exact minute you stopped.</p>
-
-        <div class="role-switch" aria-label="Show options for">
-          <button type="button" aria-pressed="true" data-role="student">I’m a student</button>
-          <button type="button" aria-pressed="false" data-role="teacher">I’m a teacher</button>
-        </div>
-        <div class="hero-cta" id="heroCta" aria-live="polite"></div>
-
-        <ul class="hero-subjects">
-          <li class="label">Subjects</li>
-          <li style="--c: var(--gold)">English</li>
-          <li style="--c: var(--blue)">Mathematics</li>
-          <li style="--c: #2bb3a3">Science</li>
-        </ul>
-      </div>
-
-      <!-- Illustrated placeholder (replace with a real classroom photo later) -->
-      <div class="hero-art">
-        <svg viewBox="0 0 560 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A teacher explaining a linear equation in a recorded video lesson">
-          <defs>
-            <linearGradient id="scr" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#0070c0"/><stop offset="1" stop-color="#0b2545"/>
-            </linearGradient>
-            <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#f4f8fd" stop-opacity=".16"/><stop offset="1" stop-color="#f4f8fd" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <!-- laptop -->
-          <rect x="110" y="60" width="340" height="215" rx="14" fill="#1c2433"/>
-          <rect x="122" y="72" width="316" height="191" rx="6" fill="url(#scr)"/>
-          <!-- whiteboard inside the video -->
-          <rect x="140" y="90" width="170" height="108" rx="6" fill="#fcfdff"/>
-          <text x="152" y="114" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="800" fill="#0b2545">Algebra · Unit 4</text>
-          <text x="152" y="140" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-weight="700" fill="#0070c0">2x + 5 = 17</text>
-          <text x="152" y="164" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-weight="700" fill="#0070c0">x = 6</text>
-          <rect x="152" y="176" width="90" height="6" rx="3" fill="#dfe6ef"/>
-          <!-- teacher -->
-          <path d="M340 200 q35 -50 70 0z" fill="#f5b700"/>
-          <path d="M343 132 q0 -48 32 -48 q32 0 32 48 q0 34 -32 44 q-32 -10 -32 -44z" fill="#f4f8fd" opacity=".95"/>
-          <circle cx="375" cy="132" r="21" fill="#f5c6a5"/>
-          <circle cx="368" cy="130" r="2.2" fill="#1c2433"/><circle cx="382" cy="130" r="2.2" fill="#1c2433"/>
-          <path d="M368 140 q7 6 14 0" stroke="#1c2433" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <!-- player controls (matches the resume card: 12:40 of 20:15) -->
-          <rect x="140" y="226" width="282" height="5" rx="2.5" fill="#f4f8fd" fill-opacity=".3"/>
-          <rect x="140" y="226" width="176" height="5" rx="2.5" fill="#f5b700"/>
-          <circle cx="316" cy="228.5" r="7" fill="#f4f8fd"/>
-          <path d="M142 242 l10 6 l-10 6z" fill="#f4f8fd"/>
-          <text x="162" y="252" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#f4f8fd" fill-opacity=".8">12:40 / 20:15</text>
-          <!-- base + desk -->
-          <path d="M80 275 h400 l-22 22 h-356z" fill="#2a3346"/>
-          <rect x="250" y="275" width="60" height="6" rx="3" fill="#1c2433"/>
-          <rect x="60" y="297" width="440" height="60" fill="url(#desk)"/>
-          <!-- books: one per subject -->
-          <rect x="455" y="233" width="70" height="16" rx="3" fill="#2bb3a3"/>
-          <rect x="462" y="249" width="64" height="16" rx="3" fill="#f5b700"/>
-          <rect x="450" y="265" width="74" height="16" rx="3" fill="#0399ff"/>
-          <!-- mug -->
-          <rect x="40" y="235" width="38" height="40" rx="8" fill="#f4f8fd"/>
-          <path d="M78 246 q16 0 16 12 q0 12 -16 12" stroke="#f4f8fd" stroke-width="5" fill="none"/>
-        </svg>
-
-        <a href="#continue" class="resume-card" id="resumeCard">
-          <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg></span>
-          <span><span id="resumeTitle">Solving Linear Equations</span><small id="resumeMeta">Resume at 12:40 · Ms. Aisyah</small></span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= CONTINUE WATCHING ================= -->
-  <section class="block" id="continue">
-    <div class="container">
-      <div class="section-head">
+  <main>
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <div class="shell">
         <div>
-          <h2>Continue watching</h2>
-          <p>Lessons you started. Each one opens where you stopped.</p>
+          <p class="hero-eyebrow">Cambridge Lower Secondary · MTs Negeri 32 Jakarta Selatan</p>
+          <h1>Missed a lesson? <span class="hl">Watch it again.</span></h1>
+          <p class="lead" id="heroLead">Every Cambridge lesson your teachers record, sorted by subject and teacher, and saved at the minute you stopped.</p>
+          <div class="role-row">
+            <div class="role-switch" role="group" aria-label="I am a">
+              <button type="button" data-role="student" aria-pressed="true">Student</button>
+              <button type="button" data-role="teacher" aria-pressed="false">Teacher</button>
+            </div>
+            <p class="role-note" id="roleNote" aria-live="polite"></p>
+          </div>
         </div>
-        <a href="#" class="text-link">Watch history <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      </div>
-      <div class="grid" id="recentGrid"></div>
-    </div>
-  </section>
 
-  <!-- ================= NEW VIDEOS ================= -->
-  <section class="block" id="new">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>New this week</h2>
-          <p>Uploaded by your teachers in the last few days.</p>
-        </div>
-        <a href="#" class="text-link">All videos <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <article class="resume" aria-labelledby="resumeTitle">
+          <div class="resume-label"><span>Pick up where you stopped</span><span class="mono" id="resumeWhen"></span></div>
+          <a href="#" id="resumeThumbLink" tabindex="-1" aria-hidden="true"><div class="thumb" id="resumeThumb"></div></a>
+          <div class="resume-body">
+            <div>
+              <h2 id="resumeTitle"></h2>
+              <p id="resumeMeta"></p>
+            </div>
+            <a href="#" class="btn btn--push" id="resumeBtn"><svg class="icon icon-fill" aria-hidden="true"><use href="#i-play"/></svg><span></span></a>
+          </div>
+        </article>
       </div>
-      <div class="grid" id="newGrid"></div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ================= ROLES ================= -->
-  <section class="block" id="roles">
-    <div class="container">
-      <div class="section-head"><div><h2>Students watch. Teachers upload.</h2><p>Same site, a different view for each.</p></div></div>
-      <div class="roles">
-        <div class="role-card">
-          <span class="who">Students</span>
-          <h3>Catch up on any lesson, at home or on your phone.</h3>
-          <ul>
-            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Every recorded Cambridge lesson in one place</li>
-            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Resume from the minute you stopped</li>
-            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>See new uploads in the running text</li>
-          </ul>
-          <a href="#" class="btn btn-primary">Student login</a>
+    <!-- ================= CONTINUE ================= -->
+    <section class="section" id="continue" aria-labelledby="continueH">
+      <div class="shell">
+        <div class="rail-head">
+          <div><h2 id="continueH">Still watching</h2><p>Lessons you started. Each opens at the minute you stopped.</p></div>
+          <a href="#" class="link">Watch history <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
-        <div class="role-card">
-          <span class="who">Teachers</span>
-          <h3>Record once, and every class can rewatch it.</h3>
-          <ul>
-            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Upload and sort lessons by subject and unit</li>
-            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>See which students have watched each lesson</li>
-            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Post announcements to the running text</li>
-          </ul>
-          <a href="#" class="btn btn-outline">Teacher login</a>
+        <div class="rail" id="continueRail"></div>
+      </div>
+    </section>
+
+    <!-- ================= LIBRARY ================= -->
+    <section class="section band" id="library" aria-labelledby="libraryH">
+      <div class="shell">
+        <div class="rail-head">
+          <div><h2 id="libraryH">The library</h2><p>Every recorded lesson, by subject.</p></div>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Subject" id="subjectTabs"></div>
+        <div id="teacherFilter"></div>
+        <div class="grid" id="libraryGrid" role="tabpanel" aria-labelledby="libraryH"></div>
+      </div>
+    </section>
+
+    <!-- ================= TEACHERS ================= -->
+    <section class="section" id="teachers" aria-labelledby="teachersH">
+      <div class="shell">
+        <div class="rail-head">
+          <div><h2 id="teachersH">By teacher</h2><p>Pick a teacher to see only their lessons in the library.</p></div>
+        </div>
+        <ul class="teachers" id="teacherList"></ul>
+      </div>
+    </section>
+
+    <!-- ================= LATEST ================= -->
+    <section class="section" id="latest" aria-labelledby="latestH" style="padding-top:0">
+      <div class="shell">
+        <div class="rail-head">
+          <div><h2 id="latestH">Latest uploads</h2><p>Newest first.</p></div>
+        </div>
+        <ol class="latest" id="latestList"></ol>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0" aria-labelledby="teachH">
+      <div class="shell">
+        <div class="teach-band">
+          <div>
+            <h2 id="teachH">Teaching a Cambridge class at MTsN 32?</h2>
+            <p>Upload a lesson once, sort it by unit, and see which students have watched it.</p>
+          </div>
+          <a href="#" class="btn btn--soft"><svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>Teacher login</a>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
   <!-- ================= FOOTER ================= -->
   <footer id="footer">
-    <div class="container">
-      <div class="footer-mast">
+    <div class="shell">
+      <p class="foot-line">School ends at 15.00. <span>The lessons stay open.</span></p>
+      <div class="foot-meta">
         <div>
-          <div class="footer-brand">
+          <div class="foot-brand">
             <img src="assets/logo.png" alt="Logo MTsN 32 Jakarta Selatan" />
             <strong>MTs Negeri 32<br />Jakarta Selatan</strong>
           </div>
-          <p>A state Islamic junior high school (Madrasah Tsanawiyah Negeri) under the Ministry of Religious Affairs, running a Cambridge Lower Secondary class alongside the national curriculum.</p>
+          <p>A state Islamic junior high school under the Ministry of Religious Affairs, running a Cambridge Lower Secondary class alongside the national curriculum.</p>
         </div>
-        <dl class="contact">
-          <dt>Where</dt><dd>Jakarta Selatan, DKI Jakarta</dd>
-          <dt>Email</dt><dd><a href="mailto:elearning@mtsn32jakarta.sch.id">elearning@mtsn32jakarta.sch.id</a></dd>
-          <dt>Hours</dt><dd>Mon–Fri, 07.00–15.00 WIB</dd>
-        </dl>
-      </div>
-      <div class="footer-bottom">
-        <span>© <span id="year"></span> MTs Negeri 32 Jakarta Selatan</span>
-        <ul class="footer-links">
-          <li><a href="#new">New videos</a></li>
+        <div class="foot-contact">
+          <span>Jakarta Selatan, DKI Jakarta</span>
+          <a href="mailto:elearning@mtsn32jakarta.sch.id">elearning@mtsn32jakarta.sch.id</a>
+          <span>Office: Mon–Fri, 07.00–15.00 WIB</span>
+        </div>
+        <ul class="foot-links">
           <li><a href="#">Student login</a></li>
           <li><a href="#">Teacher login</a></li>
           <li><a href="#">Forgot password</a></li>
         </ul>
       </div>
+      <p class="foot-copy">© <span id="year"></span> MTs Negeri 32 Jakarta Selatan</p>
     </div>
   </footer>
+
+  <!-- ================= SEARCH MODAL ================= -->
+  <div class="cmdk" id="cmdk" aria-hidden="true">
+    <div class="cmdk-scrim" data-close></div>
+    <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="Search lessons">
+      <div class="cmdk-field">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+        <input id="cmdkInput" type="search" placeholder="Try “fractions”, “unit 3” or “Ms. Rina”" autocomplete="off"
+               role="combobox" aria-expanded="true" aria-controls="cmdkResults" aria-autocomplete="list" />
+        <span class="kbd" aria-hidden="true"><kbd>Esc</kbd></span>
+      </div>
+      <ul class="cmdk-results" id="cmdkResults" role="listbox" aria-label="Lessons"></ul>
+      <div class="cmdk-foot" aria-hidden="true">
+        <span class="kbd"><kbd>↑</kbd><kbd>↓</kbd></span><span>move</span>
+        <span class="kbd"><kbd>Enter</kbd></span><span>open</span>
+        <span class="kbd"><kbd>Esc</kbd></span><span>close</span>
+      </div>
+    </div>
+  </div>
 
   <script>
     /* ---------- Sample data (replace with data from your backend later) ---------- */
     const SUBJECTS = {
-      Mathematics: { code: "Maths", color: "var(--sub-math)", glyph: "g-math" },
-      English:     { code: "English", color: "var(--sub-eng)", text: "var(--navy)", glyph: "g-eng" },
-      Science:     { code: "Science", color: "var(--sub-sci)", glyph: "g-sci" },
+      eng:  { name: "English",     code: "English", cls: "s-eng",  glyph: "g-eng" },
+      math: { name: "Mathematics", code: "Maths",   cls: "s-math", glyph: "g-math" },
+      sci:  { name: "Science",     code: "Science", cls: "s-sci",  glyph: "g-sci" },
     };
-    const recentVideos = [
-      { title: "Solving Linear Equations", subject: "Mathematics", unit: 4, teacher: "Ms. Aisyah", dur: "20:15", at: "12:40", progress: 62 },
-      { title: "Reading for Main Idea",    subject: "English",     unit: 2, teacher: "Mr. Fajar",  dur: "15:40", at: "05:29", progress: 35 },
-      { title: "Cells and Organisms",      subject: "Science",     unit: 1, teacher: "Ms. Rina",   dur: "18:02", at: "15:52", progress: 88 },
-      { title: "Fractions and Decimals",   subject: "Mathematics", unit: 3, teacher: "Ms. Aisyah", dur: "22:30", at: "03:09", progress: 14 },
-    ];
-    const newVideos = [
-      { title: "States of Matter",        subject: "Science",     unit: 3, teacher: "Ms. Rina",   dur: "16:20", when: "Today" },
-      { title: "Writing a Formal Letter", subject: "English",     unit: 5, teacher: "Mr. Fajar",  dur: "12:55", when: "Yesterday" },
-      { title: "Angles in Triangles",     subject: "Mathematics", unit: 6, teacher: "Ms. Aisyah", dur: "19:10", when: "2 days ago" },
-      { title: "Forces and Motion",       subject: "Science",     unit: 4, teacher: "Mr. Budi",   dur: "21:45", when: "3 days ago" },
+    const TEACHERS = {
+      aisyah: { name: "Ms. Aisyah", subject: "math" },
+      fajar:  { name: "Mr. Fajar",  subject: "eng" },
+      rina:   { name: "Ms. Rina",   subject: "sci" },
+      budi:   { name: "Mr. Budi",   subject: "sci" },
+    };
+    // daysAgo = when it was uploaded; progress/at = where this student stopped
+    const LESSONS = [
+      { id: "sci-3", title: "States of Matter",          subject: "sci",  unit: 3, teacher: "rina",   dur: "16:20", daysAgo: 0 },
+      { id: "eng-5", title: "Writing a Formal Letter",   subject: "eng",  unit: 5, teacher: "fajar",  dur: "12:55", daysAgo: 1 },
+      { id: "mth-6", title: "Angles in Triangles",       subject: "math", unit: 6, teacher: "aisyah", dur: "19:10", daysAgo: 2 },
+      { id: "sci-4", title: "Forces and Motion",         subject: "sci",  unit: 4, teacher: "budi",   dur: "21:45", daysAgo: 3 },
+      { id: "mth-5", title: "Ratio and Proportion",      subject: "math", unit: 5, teacher: "aisyah", dur: "18:45", daysAgo: 6 },
+      { id: "eng-3", title: "Persuasive Writing",        subject: "eng",  unit: 3, teacher: "fajar",  dur: "17:30", daysAgo: 8 },
+      { id: "eng-4", title: "Poetry: Imagery and Tone",  subject: "eng",  unit: 4, teacher: "fajar",  dur: "16:05", daysAgo: 10 },
+      { id: "mth-4", title: "Solving Linear Equations",  subject: "math", unit: 4, teacher: "aisyah", dur: "20:15", daysAgo: 12, progress: 62, at: "12:40", watched: 0 },
+      { id: "sci-2", title: "The Particle Model",        subject: "sci",  unit: 2, teacher: "budi",   dur: "14:10", daysAgo: 13 },
+      { id: "eng-2", title: "Reading for Main Idea",     subject: "eng",  unit: 2, teacher: "fajar",  dur: "15:40", daysAgo: 16, progress: 35, at: "05:29", watched: 1 },
+      { id: "sci-1", title: "Cells and Organisms",       subject: "sci",  unit: 1, teacher: "rina",   dur: "18:02", daysAgo: 18, progress: 88, at: "15:52", watched: 2 },
+      { id: "mth-3", title: "Fractions and Decimals",    subject: "math", unit: 3, teacher: "aisyah", dur: "22:30", daysAgo: 21, progress: 14, at: "03:09", watched: 4 },
     ];
 
+    const $ = id => document.getElementById(id);
     const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const whenText = d => d === 0 ? "Today" : d === 1 ? "Yesterday" : `${d} days ago`;
+    const dateText = d => new Date(Date.now() - d * 864e5).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+    const teacherOf = l => TEACHERS[l.teacher];
 
-    function card(v, type) {
-      const s = SUBJECTS[v.subject];
-      const status = type === "recent" ? `${v.progress}% watched` : v.when;
-      return `
-        <a href="#" class="video-card" aria-label="${esc(v.title)}, ${esc(v.subject)} unit ${v.unit}, ${esc(v.teacher)}, ${esc(status)}">
-          <div class="thumb" style="--c:${s.color};${s.text ? `--t:${s.text}` : ""}">
-            <span class="code">${esc(s.code)}</span>
-            <span class="unit"><span>Unit</span>${v.unit}</span>
-            <svg class="glyph" aria-hidden="true"><use href="#${s.glyph}"/></svg>
-            <span class="play"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg></span>
-            ${type === "new" ? '<span class="new">NEW</span>' : ""}
-            <span class="dur">${esc(v.dur)}</span>
-            ${type === "recent" ? `<div class="progress"><i style="width:${v.progress}%"></i></div>` : ""}
-          </div>
-          <div class="video-body">
-            <h3>${esc(v.title)}</h3>
-            <div class="meta">${esc(v.teacher)} · ${esc(status)}</div>
-          </div>
+    function thumb(l, { withBar = false, withNew = false } = {}) {
+      const s = SUBJECTS[l.subject];
+      return `<div class="thumb ${s.cls}">
+          <span class="code">${s.code}</span>
+          <span class="unit"><small>Unit</small>${l.unit}</span>
+          <svg class="glyph" aria-hidden="true"><use href="#${s.glyph}"/></svg>
+          ${withNew && l.daysAgo <= 3 ? `<span class="badge-new${l.daysAgo === 0 ? " today" : ""}">${l.daysAgo === 0 ? "TODAY" : "NEW"}</span>` : ""}
+          <span class="dur">${l.dur}</span>
+          ${withBar ? `<span class="bar"><i style="width:${l.progress}%"></i></span>` : ""}
+        </div>`;
+    }
+    function card(l, mode) {
+      const status = mode === "continue" ? `${l.progress}% watched` : whenText(l.daysAgo);
+      return `<a href="#" class="card"${mode === "library" ? ` id="lesson-${l.id}"` : ""}
+          aria-label="${esc(l.title)}, ${SUBJECTS[l.subject].name} unit ${l.unit}, ${esc(teacherOf(l).name)}, ${status}">
+          ${thumb(l, { withBar: mode === "continue", withNew: mode === "library" })}
+          <h3>${esc(l.title)}</h3>
+          <p class="meta">${esc(teacherOf(l).name)} · ${status}</p>
         </a>`;
     }
-    document.getElementById("recentGrid").innerHTML = recentVideos.map(v => card(v, "recent")).join("");
-    document.getElementById("newGrid").innerHTML = newVideos.map(v => card(v, "new")).join("");
 
-    // Hero resume card follows the most recent video
-    const last = recentVideos[0];
-    document.getElementById("resumeTitle").textContent = last.title;
-    document.getElementById("resumeMeta").textContent = `Resume at ${last.at} · ${last.teacher}`;
+    /* ---------- Hero resume + continue rail ---------- */
+    const inProgress = LESSONS.filter(l => l.progress != null).sort((a, b) => a.watched - b.watched);
+    const last = inProgress[0];
+    $("resumeThumb").outerHTML = thumb(last, { withBar: true });
+    $("resumeTitle").textContent = last.title;
+    $("resumeMeta").textContent = `${SUBJECTS[last.subject].name} · Unit ${last.unit} · ${teacherOf(last).name}`;
+    $("resumeWhen").textContent = `${last.progress}% · ${last.at} / ${last.dur}`;
+    $("resumeBtn").querySelector("span").textContent = `Resume at ${last.at}`;
+    $("continueRail").innerHTML = inProgress.slice(1).map(l => card(l, "continue")).join("");
 
-    /* ---------- Running text (welcome + new uploads + recently watched) ---------- */
-    const tickerItems = [
-      { tag: "welcome", label: "Welcome", text: "Selamat datang at MTsN 32 Cambridge E-Learning" },
-      ...newVideos.map(v => ({ tag: "new", label: "New", text: `${v.subject}: “${v.title}”, ${v.teacher}, ${v.when.toLowerCase()}` })),
-      ...recentVideos.slice(0, 3).map(v => ({ tag: "recent", label: "Recently watched", text: `${v.title}, ${v.progress}% done` })),
+    /* ---------- Library: subject tabs + teacher filter ---------- */
+    const state = { subject: "all", teacher: null };
+    const tabDefs = [["all", "All subjects"], ...Object.entries(SUBJECTS).map(([k, s]) => [k, s.name])];
+    function renderTabs() {
+      $("subjectTabs").innerHTML = tabDefs.map(([k, label]) => {
+        const n = LESSONS.filter(l => k === "all" || l.subject === k).length;
+        const dot = k === "all" ? "" : `<span class="dot ${SUBJECTS[k].cls}" style="background:var(--c)"></span>`;
+        const sel = state.subject === k;
+        return `<button class="tab" role="tab" type="button" data-subject="${k}" aria-selected="${sel}" tabindex="${sel ? 0 : -1}">${dot}${label}<span class="count">${n}</span></button>`;
+      }).join("");
+    }
+    function renderLibrary() {
+      const list = LESSONS.filter(l => (state.subject === "all" || l.subject === state.subject) && (!state.teacher || l.teacher === state.teacher));
+      $("teacherFilter").innerHTML = state.teacher
+        ? `<button class="filter-chip" type="button" id="clearTeacher" aria-label="Remove filter: ${esc(TEACHERS[state.teacher].name)}">Teacher: ${esc(TEACHERS[state.teacher].name)}<svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>`
+        : "";
+      $("libraryGrid").innerHTML = list.length ? list.map(l => card(l, "library")).join("")
+        : `<div class="empty"><strong>No ${state.subject === "all" ? "" : SUBJECTS[state.subject].name + " "}lessons from ${esc(TEACHERS[state.teacher].name)} yet.</strong>
+             <p>${esc(TEACHERS[state.teacher].name)} teaches ${SUBJECTS[TEACHERS[state.teacher].subject].name}.</p>
+             <button class="btn btn--soft btn--sm" type="button" data-subject-jump="${TEACHERS[state.teacher].subject}">Show ${SUBJECTS[TEACHERS[state.teacher].subject].name}</button></div>`;
+      document.querySelectorAll(".teacher").forEach(b => b.setAttribute("aria-pressed", b.dataset.teacher === state.teacher));
+    }
+    function setSubject(k, focus) {
+      state.subject = k; renderTabs(); renderLibrary();
+      if (focus) $("subjectTabs").querySelector(`[data-subject="${k}"]`).focus();
+    }
+    $("subjectTabs").addEventListener("click", e => { const t = e.target.closest(".tab"); if (t) setSubject(t.dataset.subject); });
+    $("subjectTabs").addEventListener("keydown", e => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+      e.preventDefault();
+      const i = tabDefs.findIndex(([k]) => k === state.subject), n = tabDefs.length;
+      const next = e.key === "Home" ? 0 : e.key === "End" ? n - 1 : (i + (e.key === "ArrowRight" ? 1 : -1) + n) % n;
+      setSubject(tabDefs[next][0], true);
+    });
+    $("library").addEventListener("click", e => {
+      if (e.target.closest("#clearTeacher")) { state.teacher = null; renderLibrary(); $("subjectTabs").querySelector('[aria-selected="true"]').focus(); }
+      const j = e.target.closest("[data-subject-jump]"); if (j) setSubject(j.dataset.subjectJump);
+    });
+
+    /* ---------- By teacher ---------- */
+    $("teacherList").innerHTML = Object.entries(TEACHERS).map(([k, t]) => {
+      const n = LESSONS.filter(l => l.teacher === k).length;
+      const initials = t.name.replace(/^(Ms|Mr)\.\s*/, "").slice(0, 1);
+      return `<li><button class="teacher" type="button" data-teacher="${k}" aria-pressed="false">
+          <span class="avatar ${SUBJECTS[t.subject].cls}" aria-hidden="true">${initials}</span>
+          <span><strong>${esc(t.name)}</strong><span class="teacher-sub">${SUBJECTS[t.subject].name} · ${n} lesson${n === 1 ? "" : "s"}</span></span>
+        </button></li>`;
+    }).join("");
+    $("teacherList").addEventListener("click", e => {
+      const b = e.target.closest(".teacher"); if (!b) return;
+      state.teacher = state.teacher === b.dataset.teacher ? null : b.dataset.teacher;
+      if (state.teacher) state.subject = "all";
+      renderTabs(); renderLibrary();
+      if (state.teacher) $("library").scrollIntoView();
+    });
+
+    /* ---------- Latest ---------- */
+    $("latestList").innerHTML = [...LESSONS].sort((a, b) => a.daysAgo - b.daysAgo).slice(0, 6).map(l => {
+      const s = SUBJECTS[l.subject];
+      return `<li><a href="#" aria-label="${esc(l.title)}, ${s.name}, ${esc(teacherOf(l).name)}, uploaded ${whenText(l.daysAgo).toLowerCase()}">
+          <span class="when mono${l.daysAgo === 0 ? " today" : ""}">${l.daysAgo <= 1 ? whenText(l.daysAgo) : dateText(l.daysAgo)}</span>
+          <span class="subj ${s.cls}">${s.name}</span>
+          <span class="title">${esc(l.title)}</span>
+          <span class="who">${esc(teacherOf(l).name)}</span>
+          <span class="len mono">${l.dur}</span>
+        </a></li>`;
+    }).join("");
+
+    /* ---------- Running text ---------- */
+    const tick = [
+      { tag: "Welcome", text: "Selamat datang at MTsN 32 Cambridge E-Learning" },
+      ...LESSONS.filter(l => l.daysAgo <= 3).map(l => ({ tag: "New", cls: "t-new", text: `${SUBJECTS[l.subject].name}: “${l.title}”, ${teacherOf(l).name}, ${whenText(l.daysAgo).toLowerCase()}` })),
+      ...inProgress.slice(0, 3).map(l => ({ tag: "Recently watched", text: `${l.title}, ${l.progress}% done` })),
     ];
-    const tickerHTML = tickerItems.map(i =>
-      `<span class="ticker-item"><span class="tag tag-${i.tag}">${i.label}</span>${esc(i.text)}</span>`).join("");
-    const tickerMove = document.getElementById("tickerMove");
-    tickerMove.innerHTML = tickerHTML + `<span aria-hidden="true" style="display:contents">${tickerHTML}</span>`; // duplicate for seamless loop
-
-    const ticker = document.getElementById("ticker");
-    const pauseBtn = document.getElementById("tickerPause");
-    pauseBtn.addEventListener("click", () => {
-      const paused = ticker.classList.toggle("paused");
-      pauseBtn.setAttribute("aria-pressed", paused);
-      pauseBtn.setAttribute("aria-label", paused ? "Play announcements" : "Pause announcements");
+    const tickHTML = tick.map(i => `<span class="ticker-item"><b class="${i.cls || ""}">${i.tag}</b>${esc(i.text)}</span>`).join("");
+    $("tickerMove").innerHTML = tickHTML + `<span aria-hidden="true" style="display:contents">${tickHTML}</span>`;
+    $("tickerPause").addEventListener("click", () => {
+      const paused = $("ticker").classList.toggle("paused");
+      $("tickerPause").setAttribute("aria-pressed", paused);
+      $("tickerPause").setAttribute("aria-label", paused ? "Play announcements" : "Pause announcements");
     });
 
-    /* ---------- Role switch (Student / Teacher) ---------- */
-    const icon = id => `<svg class="icon" aria-hidden="true"${id === "i-play" ? ' style="fill:currentColor;stroke:none"' : ""}><use href="#${id}"/></svg>`;
-    const ctas = {
-      student: `<a href="#continue" class="btn btn-light">${icon("i-play")}Continue learning</a><a href="#new" class="btn btn-ghost">See new videos</a>`,
-      teacher: `<a href="#" class="btn btn-light">${icon("i-upload")}Upload a lesson</a><a href="#" class="btn btn-ghost">Teacher dashboard</a>`,
+    /* ---------- Role switch ---------- */
+    const ROLE = {
+      student: { lead: "Every Cambridge lesson your teachers record, sorted by subject and teacher, and saved at the minute you stopped.",
+                 note: `New here? <a href="#library">Browse the library</a>` },
+      teacher: { lead: "Record a lesson once and every Cambridge class can rewatch it. Sort it by unit and see who has watched it.",
+                 note: `<a href="#">Upload a lesson</a> or open the teacher dashboard` },
     };
-    const heroCta = document.getElementById("heroCta");
-    heroCta.innerHTML = ctas.student;
-    const roleButtons = document.querySelectorAll(".role-switch button");
-    roleButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        roleButtons.forEach(b => b.setAttribute("aria-pressed", b === btn));
-        heroCta.innerHTML = ctas[btn.dataset.role];
-      });
+    const roleBtns = document.querySelectorAll(".role-switch button");
+    function setRole(r) {
+      roleBtns.forEach(b => b.setAttribute("aria-pressed", b.dataset.role === r));
+      $("heroLead").textContent = ROLE[r].lead;
+      $("roleNote").innerHTML = ROLE[r].note;
+    }
+    roleBtns.forEach(b => b.addEventListener("click", () => setRole(b.dataset.role)));
+    setRole("student");
+
+    /* ---------- Search (N13) ---------- */
+    const cmdk = $("cmdk"), input = $("cmdkInput"), results = $("cmdkResults");
+    let active = 0, hits = [], opener = null;
+    const haystack = l => `${l.title} ${SUBJECTS[l.subject].name} ${SUBJECTS[l.subject].code} unit ${l.unit} ${teacherOf(l).name}`.toLowerCase();
+    function renderResults() {
+      const q = input.value.trim().toLowerCase();
+      hits = q ? LESSONS.filter(l => q.split(/\s+/).every(w => haystack(l).includes(w))) : [...LESSONS].sort((a, b) => a.daysAgo - b.daysAgo).slice(0, 5);
+      active = Math.min(active, Math.max(hits.length - 1, 0));
+      results.innerHTML = hits.length ? hits.map((l, i) => `<li role="none"><a href="#lesson-${l.id}" role="option" id="opt-${l.id}" data-id="${l.id}" aria-selected="${i === active}">
+            <span class="dot ${SUBJECTS[l.subject].cls}" style="background:var(--c)"></span>
+            <span><strong>${esc(l.title)}</strong><span>${SUBJECTS[l.subject].name} · Unit ${l.unit} · ${esc(teacherOf(l).name)}</span></span></a></li>`).join("")
+        : `<li class="cmdk-empty" role="none">No lessons match “${esc(input.value)}”. Try a subject, a unit number or a teacher’s name.</li>`;
+      input.setAttribute("aria-activedescendant", hits.length ? `opt-${hits[active].id}` : "");
+    }
+    function openSearch() {
+      opener = document.activeElement;
+      cmdk.classList.add("open"); cmdk.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      input.value = ""; active = 0; renderResults(); input.focus();
+    }
+    function closeSearch() {
+      if (!cmdk.classList.contains("open")) return;
+      cmdk.classList.remove("open"); cmdk.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (opener) opener.focus();
+    }
+    function goTo(id) {
+      closeSearch();
+      state.subject = "all"; state.teacher = null; renderTabs(); renderLibrary();
+      const el = $("lesson-" + id);
+      el.scrollIntoView({ block: "center" }); el.focus({ preventScroll: true });
+      el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+    }
+    $("searchPill").addEventListener("click", openSearch);
+    $("searchIcon").addEventListener("click", openSearch);
+    cmdk.addEventListener("click", e => {
+      if (e.target.closest("[data-close]")) closeSearch();
+      const a = e.target.closest("a[data-id]"); if (a) { e.preventDefault(); goTo(a.dataset.id); }
     });
+    input.addEventListener("input", () => { active = 0; renderResults(); });
+    input.addEventListener("keydown", e => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault(); if (!hits.length) return;
+        active = (active + (e.key === "ArrowDown" ? 1 : -1) + hits.length) % hits.length; renderResults();
+        $("opt-" + hits[active].id).scrollIntoView({ block: "nearest" });
+      } else if (e.key === "Enter" && hits.length) { e.preventDefault(); goTo(hits[active].id); }
+    });
+    cmdk.addEventListener("keydown", e => { if (e.key === "Tab") { e.preventDefault(); input.focus(); } });
+    document.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); cmdk.classList.contains("open") ? closeSearch() : openSearch(); }
+      else if (e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); openSearch(); }
+      else if (e.key === "Escape") { closeSearch(); setMenu(false); }
+    });
+    if (/Mac|iPhone|iPad/.test(navigator.platform)) document.querySelector(".searchpill .kbd kbd").textContent = "⌘";
 
     /* ---------- Mobile menu ---------- */
-    const toggle = document.getElementById("menuToggle");
-    const setMenu = open => {
+    const toggle = $("menuToggle");
+    function setMenu(open) {
       document.body.classList.toggle("menu-open", open);
       toggle.setAttribute("aria-expanded", open);
       toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    };
+    }
     toggle.addEventListener("click", () => setMenu(!document.body.classList.contains("menu-open")));
     document.querySelectorAll("#navPanel a").forEach(a => a.addEventListener("click", () => setMenu(false)));
-    document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
 
-    document.getElementById("year").textContent = new Date().getFullYear();
+    renderTabs(); renderLibrary();
+    $("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
