@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-09-28",
+    "macrostructure": "Ecosystem Index (addition)",
+    "theme": "custom (unchanged)",
+    "enrichment": "mini 3D owl dock on a leafy branch (same model as the hero owl)",
+    "brief": "Floating mini owl bottom-right with section-aware tips and reminders; appears once the hero owl scrolls away"
+  },
+  {
+    "date": "2026-09-28",
     "macrostructure": "(palette update, no structure change)",
     "theme": "custom",
     "theme_axes": "light / rounded-sans / cool (light blue + deep blue + navy) + warm action",
