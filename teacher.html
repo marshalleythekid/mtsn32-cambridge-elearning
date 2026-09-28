@@ -22,9 +22,6 @@
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16v.5"/></symbol>
     <symbol id="i-door" viewBox="0 0 24 24"><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17M3 21h18M15 12h.01"/></symbol>
-    <symbol id="g-math" viewBox="0 0 48 48"><path d="M8 40 40 8M8 8v32h32M14 20h8M18 16v8M28 34h8"/></symbol>
-    <symbol id="g-eng" viewBox="0 0 48 48"><path d="M6 10c6-3 12-3 18 1 6-4 12-4 18-1v28c-6-3-12-3-18 1-6-4-12-4-18-1zM24 11v28"/></symbol>
-    <symbol id="g-sci" viewBox="0 0 48 48"><path d="M19 6h10M21 6v13L9 38a3 3 0 0 0 2.6 4.5h24.8A3 3 0 0 0 39 38L27 19V6M14 30h20"/></symbol>
   </svg>
 
   <header class="topbar">
@@ -38,27 +35,12 @@
   </header>
 
   <main class="auth auth--mirror">
-    <!-- Panel: 3D cube + how accounts work -->
+    <!-- Panel: headline + how accounts work -->
     <section class="panel panel--night" aria-labelledby="panelH">
       <div class="panel-in">
         <div>
           <h1 id="panelH">Record it once. <span class="hl">Every class can rewatch.</span></h1>
           <p class="lead">The teacher login is also the admin login. From here you manage lessons and student accounts.</p>
-        </div>
-
-        <div class="stage">
-          <div class="scene" id="scene" tabindex="0" role="img"
-               aria-label="A cube with the three Cambridge subjects: English, Mathematics and Science. Drag it, or use the arrow keys, to turn it.">
-            <div class="cube" id="cube">
-              <div class="face f-front s-math"><span class="code">Maths</span><svg aria-hidden="true"><use href="#g-math"/></svg><strong>Mathematics</strong></div>
-              <div class="face f-right s-eng"><span class="code">English</span><svg aria-hidden="true"><use href="#g-eng"/></svg><strong>English</strong></div>
-              <div class="face f-back s-sci"><span class="code">Science</span><svg aria-hidden="true"><use href="#g-sci"/></svg><strong>Science</strong></div>
-              <div class="face f-left f-logo"><img src="assets/logo.png" alt="" /></div>
-              <div class="face f-top f-cam"><span class="code">MTsN 32</span><strong>Cambridge</strong></div>
-              <div class="face f-bottom f-cam"><span class="code">Lower Secondary</span><strong>Rewatch</strong></div>
-            </div>
-          </div>
-          <p class="stage-hint">Drag the cube, or focus it and press <kbd>←</kbd> <kbd>→</kbd></p>
         </div>
 
         <ol class="how" aria-label="What teachers do here">

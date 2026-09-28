@@ -35,6 +35,12 @@
   --color-error-tint:  oklch(95% 0.03 25);
   --color-success:     oklch(48% 0.11 160);
 
+  /* Owl mascot (read by mascot.js, so the 3D owl uses the same system) */
+  --color-owl-body:  oklch(52% 0.14 250);   /* brand blue, deeper */
+  --color-owl-wing:  oklch(34% 0.09 255);
+  --color-owl-belly: oklch(95% 0.03 85);
+  --color-owl-face:  oklch(90% 0.05 85);
+
   /* Subjects: one colour each */
   --color-math:     oklch(52% 0.15 250);
   --color-math-ink: oklch(97% 0.01 250);

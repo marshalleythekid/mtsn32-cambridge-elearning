@@ -1,42 +1,6 @@
-/* Login pages: 3D subject cube + form behaviour. Front-end only for now. */
+/* Login pages: form behaviour. Front-end only for now. */
 (() => {
   const $ = id => document.getElementById(id);
-  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ---------- Cube: slow turn, drag or arrow keys to spin ---------- */
-  const scene = $("scene"), cube = $("cube");
-  if (scene && cube) {
-    let rx = -22, ry = 35, vy = reduceMotion ? 0 : 0.12, dragging = false, lastX = 0, lastY = 0, idleSince = 0;
-    const paint = () => { cube.style.setProperty("--rx", rx + "deg"); cube.style.setProperty("--ry", ry + "deg"); };
-    const clampX = v => Math.max(-70, Math.min(70, v));
-    const loop = t => {
-      if (!dragging && !reduceMotion && t - idleSince > 1200) {
-        vy += (0.12 - vy) * 0.04;                 // ease back to the slow idle turn
-        ry += vy; rx += (-22 - rx) * 0.02;
-        paint();
-      }
-      requestAnimationFrame(loop);
-    };
-    scene.addEventListener("pointerdown", e => {
-      dragging = true; lastX = e.clientX; lastY = e.clientY; scene.setPointerCapture(e.pointerId);
-    });
-    scene.addEventListener("pointermove", e => {
-      if (!dragging) return;
-      const dx = e.clientX - lastX, dy = e.clientY - lastY;
-      ry += dx * 0.6; rx = clampX(rx - dy * 0.6); vy = dx * 0.12;
-      lastX = e.clientX; lastY = e.clientY; paint();
-    });
-    const end = () => { dragging = false; idleSince = performance.now(); };
-    scene.addEventListener("pointerup", end);
-    scene.addEventListener("pointercancel", end);
-    scene.addEventListener("keydown", e => {
-      const step = { ArrowLeft: [0, -30], ArrowRight: [0, 30], ArrowUp: [15, 0], ArrowDown: [-15, 0] }[e.key];
-      if (!step) return;
-      e.preventDefault(); rx = clampX(rx + step[0]); ry += step[1]; vy = 0; idleSince = performance.now(); paint();
-    });
-    paint();
-    requestAnimationFrame(loop);
-  }
 
   /* ---------- Form ---------- */
   const form = $("loginForm");

@@ -1,6 +1,6 @@
 /* Hallmark · genre: playful (calm) · macrostructure: Split Studio · theme: shared brand system (tokens.css)
  * pages: login.html (students, NISN) · teacher.html (teachers/admins, NIP or email) — mirrored halves
- * enrichment: H9 custom centrepiece, Tier-A pure-CSS 3D subject cube (drag / arrow keys to turn)
+ * enrichment: none (typography only; the 3D owl lives on the landing page)
  * nav: N9 edge-aligned minimal · footer: Ft2 inline single line
  * tone: calm/soft · audience: MTsN 32 Cambridge students 12–15 (mostly school/home computers), teachers
  * pre-emit critique: P5 H5 E4 S5 R4 V5 · contrast: pass (40–41) · inputs: pass (39) · mobile: pass (34, 49–57)
@@ -61,43 +61,6 @@ button, input { font: inherit; color: inherit; }
   background: var(--color-card); border: 1px solid var(--color-rule-2); font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--color-ink);
 }
 .panel--night .how .n { background: transparent; border-color: color-mix(in oklch, var(--color-on-dark) 30%, transparent); color: var(--color-on-dark); }
-
-/* ============ 3D CUBE (Tier A, CSS only) ============ */
-.stage { display: grid; justify-items: center; gap: var(--space-sm); padding-block: var(--space-sm); }
-.scene {
-  --size: 176px; width: var(--size); height: var(--size); perspective: 900px; position: relative;
-  cursor: grab; touch-action: none; border-radius: var(--radius-card); outline-offset: 24px;
-}
-.scene:active { cursor: grabbing; }
-.scene::after { /* ground shadow */
-  content: ""; position: absolute; left: 10%; right: 10%; bottom: calc(var(--size) * -0.42); height: 18px; border-radius: 50%;
-  background: radial-gradient(closest-side, var(--color-shadow), transparent); filter: blur(4px);
-}
-.cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(var(--rx, -22deg)) rotateY(var(--ry, 35deg)); }
-.face {
-  position: absolute; inset: 0; border-radius: 22px; display: flex; flex-direction: column; justify-content: space-between;
-  padding: calc(var(--size) * 0.09); background: var(--c); color: var(--t); backface-visibility: hidden;
-  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--t) 14%, transparent);
-}
-.face .code { font-family: var(--font-mono); font-size: max(9px, calc(var(--size) * 0.0625)); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
-.face svg { width: 56%; height: auto; align-self: flex-end; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
-.face strong { font-size: calc(var(--size) * 0.108); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
-.f-front  { transform: translateZ(calc(var(--size) / 2)); }
-.f-right  { transform: rotateY(90deg)  translateZ(calc(var(--size) / 2)); }
-.f-back   { transform: rotateY(180deg) translateZ(calc(var(--size) / 2)); }
-.f-left   { transform: rotateY(-90deg) translateZ(calc(var(--size) / 2)); }
-.f-top    { transform: rotateX(90deg)  translateZ(calc(var(--size) / 2)); }
-.f-bottom { transform: rotateX(-90deg) translateZ(calc(var(--size) / 2)); }
-.f-logo { --c: var(--color-card); --t: var(--color-ink); align-items: center; justify-content: center; }
-.f-logo img { width: 62%; height: auto; }
-.f-cam { --c: var(--color-night); --t: var(--color-on-dark); }
-.s-math { --c: var(--color-math); --t: var(--color-math-ink); }
-.s-eng  { --c: var(--color-eng);  --t: var(--color-eng-ink); }
-.s-sci  { --c: var(--color-sci);  --t: var(--color-sci-ink); }
-.stage-hint { font-size: 13px; color: var(--color-muted); display: flex; align-items: center; gap: var(--space-2xs); margin-top: var(--space-lg); }
-.panel--night .stage-hint { color: var(--color-on-dark-2); }
-.stage-hint kbd { font-family: var(--font-mono); font-size: 11px; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--color-rule-2); background: var(--color-card); color: var(--color-ink-2); }
-.panel--night .stage-hint kbd { background: transparent; color: var(--color-on-dark); border-color: color-mix(in oklch, var(--color-on-dark) 30%, transparent); }
 
 /* ============ FORM SIDE ============ */
 .form-side { display: flex; align-items: center; justify-content: center; padding: var(--space-xl) var(--gutter) var(--space-2xl); }
@@ -199,16 +162,10 @@ label, .label { font-size: var(--text-sm); font-weight: 700; }
   .auth { grid-template-columns: minmax(0, 1fr); }
   .panel, .auth--mirror .panel { order: 2; border: 0; border-top: 1px solid var(--color-rule); padding: var(--space-xl) var(--gutter); }
   .form-side { padding-block: var(--space-lg) var(--space-xl); }
-  .panel-in { grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-lg); }
-  .panel-in > .how { grid-column: 1 / -1; }
-  .scene { --size: 128px; }
 }
 @media (max-width: 560px) {
   :root { --nav-h: 60px; }
   .brand small { display: none; }
-  .panel-in { grid-template-columns: minmax(0, 1fr); }
-  .stage { order: -1; padding-bottom: calc(var(--space-2xl) + var(--space-2xs)); }
-  .stage-hint { display: none; }
   .back span { display: none; }
   .back { width: 44px; height: 44px; justify-content: center; padding: 0; }
 }
