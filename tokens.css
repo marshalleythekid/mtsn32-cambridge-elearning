@@ -2,7 +2,7 @@
  * paper oklch(97% 0.012 90) · accent oklch(66% 0.17 245) brand blue · action oklch(83% 0.15 85) gold
  * display + body: Plus Jakarta Sans · labels: JetBrains Mono
  * axes: light / rounded-sans / cool (blue) with warm action
- * light blue sky surfaces: hero, running text bar, footer (navy text on all three)
+ * light blue sky: hero + student login panel · deep blue: running text bar + footer
  */
 :root {
   /* Paper + ink (neutrals tinted, never pure white or black) */
@@ -28,9 +28,11 @@
   --color-on-dark:     oklch(97% 0.01 250);
   --color-on-dark-2:   oklch(80% 0.03 250);
   --color-night:       oklch(21% 0.055 255); /* teacher login panel */
-  --color-sky:         oklch(93% 0.035 240); /* hero + footer background */
-  --color-sky-2:       oklch(89% 0.045 240); /* running text bar, pressed chips on sky */
+  --color-sky:         oklch(93% 0.035 240); /* hero + student login panel */
+  --color-sky-2:       oklch(89% 0.045 240); /* role switch on sky */
   --color-sky-rule:    oklch(84% 0.045 240);
+  --color-deep:        oklch(38% 0.12 252);  /* deep blue: running text bar + footer */
+  --color-on-deep-2:   oklch(86% 0.04 245);  /* secondary text on deep blue */
   --color-focus:       oklch(50% 0.15 250);
   --color-focus-dark:  oklch(85% 0.14 85);
   --color-scrim:       oklch(20% 0.05 255 / 0.45);

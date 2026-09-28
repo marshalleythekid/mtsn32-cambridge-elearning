@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="tokens.css" />
   <style>
-    /* Hallmark · genre: playful · macrostructure: Ecosystem Index · theme: custom (cream paper, light blue hero + ticker + footer, navy text, gold action)
+    /* Hallmark · genre: playful · macrostructure: Ecosystem Index · theme: custom (cream paper, light blue hero, deep blue running text + footer, navy text, gold action)
      * surfaces: resume · continue rail · library by subject · by teacher · latest list
      * enrichment: H9 custom centrepiece, Tier-D three.js owl mascot built from primitives (mascot.js), SVG fallback
      * nav: N13 inline search pill (+ running-text ticker) · footer: Ft5 statement
@@ -103,21 +103,21 @@
     /* ============ RUNNING TEXT ============ */
     .ticker {
       position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 290; height: var(--ticker-h);
-      background: var(--color-sky-2); color: var(--color-ink); display: flex; align-items: center; overflow: hidden;
-      border-bottom: 1px solid var(--color-sky-rule);
+      background: var(--color-deep); color: var(--color-on-dark); display: flex; align-items: center; overflow: hidden;
     }
+    .ticker :focus-visible { outline-color: var(--color-focus-dark); }
     .ticker-label {
       flex-shrink: 0; height: 100%; display: flex; align-items: center; gap: var(--space-2xs);
       padding: 0 var(--space-2xs) 0 var(--space-sm); font-family: var(--font-mono); font-size: 11px; font-weight: 600;
-      letter-spacing: .08em; text-transform: uppercase; color: var(--color-ink);
-      border-right: 1px solid var(--color-sky-rule);
+      letter-spacing: .08em; text-transform: uppercase; color: var(--color-action);
+      border-right: 1px solid color-mix(in oklch, var(--color-on-dark) 18%, transparent);
     }
     .ticker-pause {
       width: 28px; height: 28px; border: 0; border-radius: var(--radius-pill); cursor: pointer; display: grid; place-items: center;
-      background: var(--color-sky); color: var(--color-ink);
+      background: color-mix(in oklch, var(--color-on-dark) 14%, transparent); color: var(--color-on-dark);
       transition: background-color var(--dur-fast) var(--ease-out);
     }
-    .ticker-pause:hover { background: var(--color-card); }
+    .ticker-pause:hover { background: color-mix(in oklch, var(--color-on-dark) 26%, transparent); }
     .ticker-pause .icon { width: 14px; height: 14px; }
     .ticker-pause .i-play, .ticker.paused .ticker-pause .i-pause { display: none; }
     .ticker.paused .ticker-pause .i-play { display: block; }
@@ -125,8 +125,8 @@
     .ticker-move { display: flex; width: max-content; animation: ticker 60s linear infinite; }
     .ticker:hover .ticker-move, .ticker:focus-within .ticker-move, .ticker.paused .ticker-move { animation-play-state: paused; }
     .ticker-item { display: flex; align-items: center; gap: var(--space-xs); padding: 0 var(--space-md); font-size: var(--text-sm); white-space: nowrap; line-height: 1; }
-    .ticker-item b { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--color-ink-2); }
-    .ticker-item b.t-new { color: var(--color-ink); }
+    .ticker-item b { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--color-on-deep-2); }
+    .ticker-item b.t-new { color: var(--color-action); }
     @keyframes ticker { to { transform: translateX(-50%); } }
 
     /* ============ HERO · positioning + featured resume ============ */
@@ -309,19 +309,20 @@
     .teach-band p { color: var(--color-ink-2); font-size: 15px; margin-top: var(--space-3xs); max-width: 60ch; }
 
     /* ============ FOOTER · Ft5 statement ============ */
-    footer { background: var(--color-sky); color: var(--color-ink-2); padding-block: var(--space-2xl) var(--space-md); border-top: 1px solid var(--color-sky-rule); }
-    .foot-line { font-size: clamp(1.75rem, 1rem + 3vw, 3rem); line-height: 1.05; font-weight: 800; letter-spacing: -.025em; color: var(--color-ink); max-width: 22ch; text-wrap: balance; }
-    .foot-line span { color: var(--color-accent-deep); }
-    .foot-meta { margin-top: var(--space-xl); padding-top: var(--space-md); border-top: 1px solid var(--color-sky-rule); display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: var(--space-lg); font-size: var(--text-sm); }
+    footer { background: var(--color-deep); color: var(--color-on-deep-2); padding-block: var(--space-2xl) var(--space-md); }
+    footer :focus-visible { outline-color: var(--color-focus-dark); }
+    .foot-line { font-size: clamp(1.75rem, 1rem + 3vw, 3rem); line-height: 1.05; font-weight: 800; letter-spacing: -.025em; color: var(--color-on-dark); max-width: 22ch; text-wrap: balance; }
+    .foot-line span { color: var(--color-action); }
+    .foot-meta { margin-top: var(--space-xl); padding-top: var(--space-md); border-top: 1px solid color-mix(in oklch, var(--color-on-dark) 16%, transparent); display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: var(--space-lg); font-size: var(--text-sm); }
     .foot-brand { display: flex; gap: var(--space-xs); align-items: center; }
     .foot-brand img { width: 44px; height: 44px; background: var(--color-card); border-radius: var(--radius-input); padding: 3px; }
-    .foot-brand strong { color: var(--color-ink); display: block; line-height: 1.25; }
+    .foot-brand strong { color: var(--color-on-dark); display: block; line-height: 1.25; }
     .foot-meta p { margin-top: var(--space-xs); max-width: 52ch; }
     .foot-contact { display: grid; gap: var(--space-3xs); }
-    .foot-contact a { color: var(--color-ink); overflow-wrap: anywhere; }
+    .foot-contact a { color: var(--color-on-dark); overflow-wrap: anywhere; }
     .foot-contact a:hover, .foot-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
     .foot-links { list-style: none; display: grid; gap: var(--space-3xs); }
-    .foot-links a { white-space: nowrap; color: var(--color-ink); }
+    .foot-links a { white-space: nowrap; color: var(--color-on-dark); }
     .foot-copy { margin-top: var(--space-lg); font-size: var(--text-xs); }
 
     /* ============ SEARCH MODAL ============ */

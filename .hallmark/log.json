@@ -3,6 +3,14 @@
     "date": "2026-09-28",
     "macrostructure": "(palette update, no structure change)",
     "theme": "custom",
+    "theme_axes": "light / rounded-sans / cool (light blue + deep blue + navy) + warm action",
+    "enrichment": "unchanged",
+    "brief": "User-approved mockup B: deep blue running text bar and footer; light blue hero kept"
+  },
+  {
+    "date": "2026-09-28",
+    "macrostructure": "(palette update, no structure change)",
+    "theme": "custom",
     "theme_axes": "light / rounded-sans / cool (light blue + navy) + warm action",
     "vibe": "cream paper, light blue sky surfaces, navy text, gold",
     "enrichment": "unchanged",
