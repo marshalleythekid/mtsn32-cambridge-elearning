@@ -28,4 +28,4 @@ This is a static site with no build step, and `vercel.json` holds its config.
 Or use the CLI: `npx vercel --prod`
 
 ## Design rules
-The [Hallmark](https://github.com/Nutlope/hallmark) design skill (MIT) is kept in `.claude/skills/hallmark/`. Claude Code sessions in this repo load it on their own, so new pages follow its anti-AI-slop rules. `.vercelignore` keeps it off the deployed site.
+The [Hallmark](https://github.com/Nutlope/hallmark) design skill (MIT) is kept in `.claude/skills/hallmark/`. The [three.js skills](https://github.com/CloudAI-X/threejs-skills) (MIT) used for the 3D owl are in `.claude/skills/threejs-*/`. Claude Code sessions in this repo load it on their own, so new pages follow its anti-AI-slop rules. `.vercelignore` keeps it off the deployed site.
