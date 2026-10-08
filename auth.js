@@ -11,7 +11,7 @@
   const submit = $("submitBtn"), alertBox = $("formAlert");
   const idDefault = idHelp.textContent, pwDefault = pwHelp.textContent;
 
-  // Rules per role. A NISN is 10 digits; a NIP is 18 digits.
+  // Rules per role. A NISN is 10 digits. Teachers and staff use their email (Gmail works); a NIP (18 digits) is optional.
   const rules = {
     student: {
       clean: v => v.replace(/\D/g, "").slice(0, 10),
@@ -25,10 +25,10 @@
     teacher: {
       clean: v => /^[\d\s]+$/.test(v) ? v.replace(/\D/g, "").slice(0, 18) : v.trimStart(),
       check(v) {
-        if (!v) return "Enter your NIP or school email.";
+        if (!v) return "Enter your email, or your NIP if you have one.";
         if (/^\d+$/.test(v)) return v.length === 18 ? "" : `A NIP has 18 digits. You typed ${v.length}.`;
-        if (v.includes("@")) return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "" : "That email looks incomplete. Check it has a name, @ and a domain.";
-        return "Enter your 18-digit NIP, or an email with @.";
+        if (v.includes("@")) return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "" : "That email looks incomplete. Check it has a name, @ and a domain, like name@gmail.com.";
+        return "Enter an email with @, like name@gmail.com, or your 18-digit NIP.";
       },
       counter: v => /^\d+$/.test(v) ? `NIP ${v.length}/18` : v.includes("@") ? "Email" : "",
     },

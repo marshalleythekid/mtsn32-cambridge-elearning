@@ -121,7 +121,7 @@
 
       <nav class="nav-group" aria-label="Sections">
         <button class="nav-item" type="button" data-go="overview" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Overview</button>
-        <button class="nav-item" type="button" data-go="teachers"><svg class="icon" aria-hidden="true"><use href="#i-teacher"/></svg>Teachers<span class="count" data-count="teachers"></span></button>
+        <button class="nav-item" type="button" data-go="teachers"><svg class="icon" aria-hidden="true"><use href="#i-teacher"/></svg>Teachers &amp; staff<span class="count" data-count="teachers"></span></button>
         <button class="nav-item" type="button" data-go="students"><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>Students<span class="count" data-count="students"></span></button>
         <button class="nav-item" type="button" data-go="classes"><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Classes<span class="count" data-count="classes"></span></button>
         <button class="nav-item" type="button" data-go="lessons"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Lessons<span class="count" data-count="lessons"></span></button>
@@ -131,7 +131,7 @@
 
       <div class="nav-group" aria-label="Other rooms">
         <p class="nav-label">Switch room</p>
-        <a class="nav-item" href="teacher-dashboard.html"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>My classes</a>
+        <a class="nav-item" href="teacher-dashboard.html" id="myClassesLink"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>My classes</a>
         <a class="nav-item" href="index.html"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg>Student view</a>
       </div>
 
@@ -151,7 +151,7 @@
           <button class="btn btn--sm btn--sky" type="button" id="owlAction">Show them</button>
         </div>
         <button class="nav-item" type="button" id="helpBtn"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>What admins can do</button>
-        <div class="me"><span class="avatar" aria-hidden="true">A</span>Ms. Aisyah<a href="teacher.html">Log out</a></div>
+        <div class="me"><span class="avatar" aria-hidden="true" id="meInitial"></span><span id="meName"></span><a href="teacher.html">Log out</a></div>
       </div>
     </aside>
     <div class="scrim" id="scrim"></div>
@@ -211,7 +211,7 @@
           <h2 class="sr" id="workH">Manage the programme</h2>
           <div class="work-head">
             <div class="tabs" role="tablist" aria-label="Manage">
-              <button class="tab" role="tab" type="button" id="tab-teachers" data-tab="teachers" aria-selected="true" aria-controls="panel">Teachers<span class="count" data-count="teachers"></span></button>
+              <button class="tab" role="tab" type="button" id="tab-teachers" data-tab="teachers" aria-selected="true" aria-controls="panel">Teachers &amp; staff<span class="count" data-count="teachers"></span></button>
               <button class="tab" role="tab" type="button" id="tab-students" data-tab="students" aria-selected="false" aria-controls="panel" tabindex="-1">Students<span class="count" data-count="students"></span></button>
               <button class="tab" role="tab" type="button" id="tab-classes" data-tab="classes" aria-selected="false" aria-controls="panel" tabindex="-1">Classes<span class="count" data-count="classes"></span></button>
               <button class="tab" role="tab" type="button" id="tab-lessons" data-tab="lessons" aria-selected="false" aria-controls="panel" tabindex="-1">Lessons<span class="count" data-count="lessons"></span></button>
@@ -250,13 +250,17 @@
 
   <dialog id="dlgTeacher" aria-labelledby="dlgTeacherH">
     <form class="dlg-in" method="dialog" novalidate id="formTeacher">
-      <h2 id="dlgTeacherH">Add a teacher</h2>
-      <p class="sub">They log in on the teacher page with their NIP or school email and the temporary password.</p>
-      <div class="field"><label for="tName">Full name</label><input id="tName" autocomplete="off" placeholder="Ms. / Mr. …" aria-describedby="tNameHelp" /><p class="help" id="tNameHelp">How students see it, e.g. Ms. Dewi.</p></div>
-      <div class="field"><label for="tNip">NIP <span id="nipCount">0 / 18</span></label><input id="tNip" inputmode="numeric" maxlength="18" autocomplete="off" aria-describedby="tNipHelp" /><p class="help" id="tNipHelp">18 digits.</p></div>
-      <div class="field"><label for="tEmail">School email</label><input id="tEmail" type="email" autocomplete="off" aria-describedby="tEmailHelp" /><p class="help" id="tEmailHelp">Either the NIP or this email works for logging in.</p></div>
-      <div class="field"><label for="tSubject">Subject</label><select id="tSubject"><option value="math">Mathematics</option><option value="eng">English</option><option value="sci">Science</option></select></div>
-      <label class="check-row"><input type="checkbox" id="tAdmin" /><div>Also an admin<span>Can manage accounts, classes and lessons for the whole programme.</span></div></label>
+      <h2 id="dlgTeacherH">Add a teacher or office staff</h2>
+      <p class="sub">They log in on the teacher page with their email (or NIP, if they have one) and the temporary password.</p>
+      <div id="tKindSlot"></div>
+      <div class="field"><label for="tName">Full name</label><input id="tName" autocomplete="off" placeholder="Ms. / Mr. …" aria-describedby="tNameHelp" /><p class="help" id="tNameHelp">How students and colleagues see it, e.g. Ms. Dewi.</p></div>
+      <div class="field"><label for="tEmail">Email (username)</label><input id="tEmail" type="email" autocomplete="off" placeholder="name@gmail.com" aria-describedby="tEmailHelp" /><p class="help" id="tEmailHelp">Their username for logging in. Gmail works.</p></div>
+      <div class="field"><label for="tNip">NIP, optional <span id="nipCount">0 / 18</span></label><input id="tNip" inputmode="numeric" maxlength="18" autocomplete="off" aria-describedby="tNipHelp" /><p class="help" id="tNipHelp">Optional. If they have one, they can log in with it too.</p></div>
+      <div id="tTeachOnly" style="display:grid;gap:var(--space-sm)">
+        <div class="field"><label for="tSubject">Subject</label><select id="tSubject"><option value="math">Mathematics</option><option value="eng">English</option><option value="sci">Science</option></select></div>
+        <label class="check-row"><input type="checkbox" id="tAdmin" /><div>Also an admin<span>Can manage accounts, classes and lessons for the whole programme.</span></div></label>
+      </div>
+      <p class="note" id="tStaffNote" hidden>Office staff accounts are admins: they manage accounts, classes, lessons and announcements. No subject or classes.</p>
       <div class="done" hidden id="teacherDone">
         <p><b id="tDoneName"></b> can log in now with this temporary password. They choose their own after the first login.</p>
         <div class="temp"><code id="tDoneTemp"></code><button class="btn btn--sm" type="button" data-copy="tDoneTemp"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div>
@@ -338,7 +342,7 @@
     <div class="dlg-in">
       <h2 id="dlgHelpH">What admins can do</h2>
       <ul style="display:grid;gap:6px;font-size:var(--text-sm);list-style:disc;padding-left:1.2em">
-        <li><b>Teachers:</b> add accounts, reset passwords, make someone an admin, disable an account when a teacher leaves.</li>
+        <li><b>Teachers &amp; staff:</b> add accounts (email is the username, NIP is optional), edit details, reset passwords, make a teacher an admin, disable an account when someone leaves. Office staff accounts are admins without a subject.</li>
         <li><b>Students:</b> add one by one or import a class list, reset passwords, move to another class, disable when they leave.</li>
         <li><b>Classes:</b> add classes and set the homeroom teacher.</li>
         <li><b>Lessons:</b> hide a lesson from students without deleting it.</li>
@@ -353,15 +357,16 @@
   <script src="dashboard.js"></script>
   <script>
     /* ---------- Sample data (replace with data from your backend later) ---------- */
-    const ME = "aisyah";
+    const ME = "nur";
     const SUBJECTS = { math: "Mathematics", eng: "English", sci: "Science" };
     const TEACHERS = [
-      { id: "aisyah", name: "Ms. Aisyah", nip: "198703122010012004", email: "aisyah@mtsn32.example", subject: "math", classes: ["8A", "8B", "9A"], admin: true,  active: true, last: 0 },
-      { id: "hendra", name: "Mr. Hendra", nip: "198105202008011007", email: "hendra@mtsn32.example", subject: "math", classes: ["7A", "7B"],       admin: true,  active: true, last: 5 },
-      { id: "fajar",  name: "Mr. Fajar",  nip: "199002142015031002", email: "fajar@mtsn32.example",  subject: "eng",  classes: ["7A", "8A", "8B"], admin: false, active: true, last: 1 },
-      { id: "dewi",   name: "Ms. Dewi",   nip: "198811302014022001", email: "dewi@mtsn32.example",   subject: "eng",  classes: ["7B", "9A"],       admin: false, active: true, last: 34 },
-      { id: "rina",   name: "Ms. Rina",   nip: "199207082019032003", email: "rina@mtsn32.example",   subject: "sci",  classes: ["7A", "7B", "8A"], admin: false, active: true, last: 0 },
-      { id: "budi",   name: "Mr. Budi",   nip: "198512012011011005", email: "budi@mtsn32.example",   subject: "sci",  classes: ["8B", "9A"],       admin: false, active: true, last: 3 },
+      { id: "nur",    name: "Ms. Nur",    kind: "staff",   nip: "",                   email: "contoh.nur@gmail.com",  subject: null,   classes: [],                 admin: true,  active: true, last: 0 },
+      { id: "aisyah", name: "Ms. Aisyah", kind: "teacher", nip: "198703122010012004", email: "aisyah@mtsn32.example", subject: "math", classes: ["8A", "8B", "9A"], admin: true,  active: true, last: 0 },
+      { id: "hendra", name: "Mr. Hendra", kind: "teacher", nip: "198105202008011007", email: "hendra@mtsn32.example", subject: "math", classes: ["7A", "7B"],       admin: true,  active: true, last: 5 },
+      { id: "fajar",  name: "Mr. Fajar",  kind: "teacher", nip: "199002142015031002", email: "fajar@mtsn32.example",  subject: "eng",  classes: ["7A", "8A", "8B"], admin: false, active: true, last: 1 },
+      { id: "dewi",   name: "Ms. Dewi",   kind: "teacher", nip: "",                   email: "contoh.dewi@gmail.com",  subject: "eng",  classes: ["7B", "9A"],       admin: false, active: true, last: 34 },
+      { id: "rina",   name: "Ms. Rina",   kind: "teacher", nip: "",                   email: "contoh.rina@gmail.com",  subject: "sci",  classes: ["7A", "7B", "8A"], admin: false, active: true, last: 0 },
+      { id: "budi",   name: "Mr. Budi",   kind: "teacher", nip: "198512012011011005", email: "budi@mtsn32.example",   subject: "sci",  classes: ["8B", "9A"],       admin: false, active: true, last: 3 },
     ];
     const CLASSES = [
       { name: "7A", home: "hendra" }, { name: "7B", home: "dewi" }, { name: "8A", home: "aisyah" }, { name: "8B", home: "fajar" }, { name: "9A", home: "budi" },
@@ -403,11 +408,11 @@
     const LOG = [
       { d: 0, who: "rina",   type: "lessons",   what: "Uploaded Science Unit 3 · States of Matter" },
       { d: 0, who: "fajar",  type: "passwords", what: "Reset the password for Raka Pratama (8A)" },
-      { d: 1, who: "aisyah", type: "accounts",  what: "Created 3 student accounts in 9A" },
+      { d: 1, who: "nur",    type: "accounts",  what: "Created 3 student accounts in 9A" },
       { d: 2, who: "hendra", type: "lessons",   what: "Hid “Number Patterns (old recording)”" },
       { d: 3, who: "budi",   type: "passwords", what: "Reset the password for a student in 9A" },
-      { d: 5, who: "aisyah", type: "accounts",  what: "Disabled one account in 9A (moved school)" },
-      { d: 8, who: "hendra", type: "accounts",  what: "Made Ms. Aisyah an admin" },
+      { d: 5, who: "nur",    type: "accounts",  what: "Disabled one account in 9A (moved school)" },
+      { d: 8, who: "nur",    type: "accounts",  what: "Made Ms. Aisyah an admin" },
     ];
 
     const T = id => TEACHERS.find(t => t.id === id);
@@ -418,6 +423,7 @@
       disabled: ["idle", "i-ban", "Disabled"],
       admin:    ["admin", "i-shield", "Admin"],
       teacher:  ["idle", "i-teacher", "Teacher"],
+      staff:    ["live", "i-door", "Office staff"],
       hidden:   ["idle", "i-eye-off", "Hidden"],
       away:     ["nudge", "i-alert", "Over a month ago"],
       accounts: ["live", "i-users", "Account"],
@@ -429,7 +435,8 @@
 
     /* ---------- Header, meters, owl ---------- */
     function renderMeters() {
-      const tAct = TEACHERS.filter(t => t.active), sAct = STUDENTS.filter(s => s.active);
+      const accAct = TEACHERS.filter(t => t.active), tAct = accAct.filter(t => t.kind === "teacher"), sAct = STUDENTS.filter(s => s.active);
+      const staffN = accAct.length - tAct.length;
       const tMonth = tAct.filter(t => t.last <= 30).length;
       const sWeek = sAct.filter(s => s.last != null && s.last <= 6).length;
       const pub = LESSONS.filter(l => l.status === "published").length;
@@ -438,15 +445,15 @@
         ["Students active this week", `${sWeek}<small> / ${sAct.length}</small>`, sWeek / sAct.length],
         ["Lessons published", `${pub}`, 1],
       ].map(([l, v, p]) => `<div class="meter"><span class="rail"><i style="height:${Math.round(p * 100)}%"></i></span><span>${l}</span><b>${v}</b></div>`).join("");
-      $("headSummary").textContent = `${CLASSES.length} classes · ${tAct.length} teachers · ${sAct.length} students`;
-      const away = tAct.filter(t => t.last > 30), never = sAct.filter(s => s.last == null);
+      $("headSummary").textContent = `${CLASSES.length} classes · ${tAct.length} teachers · ${staffN} office staff · ${sAct.length} students`;
+      const away = accAct.filter(t => t.last > 30), never = sAct.filter(s => s.last == null);
       $("owlTip").textContent = away.length
         ? `${away.map(t => t.name).join(", ")} ${away.length === 1 ? "hasn’t" : "haven’t"} logged in for a month, and ${never.length} students have never opened a lesson.`
         : `${never.length} students have never opened a lesson. Their class teachers may want to check in.`;
-      const counts = { teachers: tAct.length, students: sAct.length, classes: CLASSES.length, lessons: LESSONS.length, news: NEWS.filter(n => n.status === "live").length };
+      const counts = { teachers: accAct.length, students: sAct.length, classes: CLASSES.length, lessons: LESSONS.length, news: NEWS.filter(n => n.status === "live").length };
       Object.entries(counts).forEach(([k, n]) => document.querySelectorAll(`[data-count="${k}"]`).forEach(e => e.textContent = n));
       document.querySelectorAll("[data-classes]").forEach(s => { const v = s.value; s.innerHTML = CLASSES.map(c => `<option>${c.name}</option>`).join(""); if (v) s.value = v; });
-      document.querySelectorAll("[data-teachers]").forEach(s => s.innerHTML = TEACHERS.filter(t => t.active).map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join(""));
+      document.querySelectorAll("[data-teachers]").forEach(s => s.innerHTML = TEACHERS.filter(t => t.active && t.kind === "teacher").map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join(""));
       $("bulkClass").innerHTML = `<option value="">Move to class…</option>` + CLASSES.map(c => `<option>${c.name}</option>`).join("");
     }
 
@@ -465,20 +472,22 @@
     const manageBtn = (kind, id) => `<button class="btn btn--sm" type="button" data-manage="${kind}:${id}">Manage</button>`;
     const VIEWS = {
       teachers: {
-        add: "Add teacher", dlg: "dlgTeacher",
-        filters: [["all", "All teachers"], ["admin", "Admins"], ["away", "Not logged in for a month"], ["disabled", "Disabled accounts"]],
-        head: `<tr><th>Teacher</th><th>Logs in with</th><th>Teaches</th><th>Role</th><th>Last login</th><th>Account</th><th><span class="sr">Actions</span></th></tr>`,
+        add: "Add account", dlg: "dlgTeacher",
+        filters: [["all", "Everyone"], ["teacher", "Teachers"], ["staff", "Office staff"], ["admin", "Admins"], ["nonip", "No NIP"], ["away", "Not logged in for a month"], ["disabled", "Disabled accounts"]],
+        head: `<tr><th>Name</th><th>Logs in with</th><th>Teaches</th><th>Role</th><th>Last login</th><th><span class="sr">Actions</span></th></tr>`,
         rows: () => TEACHERS,
-        match: (t, f, q) => (f === "all" ? true : f === "admin" ? t.admin : f === "away" ? t.active && t.last > 30 : !t.active)
+        match: (t, f, q) => ({ all: true, teacher: t.kind === "teacher", staff: t.kind === "staff", admin: t.admin, nonip: !t.nip, away: t.active && t.last > 30, disabled: !t.active }[f])
           && (!q || (t.name + t.nip + t.email).toLowerCase().includes(q)),
         row: t => `<tr class="${t.active ? "" : "row-off"}">
           <td><span class="who"><span class="avatar" aria-hidden="true">${initials(t.name)}</span>${esc(t.name)}</span>${t.id === ME ? '<span class="you">(you)</span>' : ""}</td>
-          <td><span class="mono" style="display:block;font-size:13px">${t.nip}</span><span class="classes">${esc(t.email)}</span></td><td><span class="subj">${dot(t.subject)}${SUBJECTS[t.subject]}</span><span class="classes" style="display:block">${t.classes.join(", ") || "No classes yet"}</span></td>
-          <td>${tag(t.admin ? "admin" : "teacher")}</td><td>${t.active && t.last > 30 ? tag("away") : ago(t.last)}</td>
-          <td>${tag(t.active ? "active" : "disabled")}</td><td class="act">${manageBtn("t", t.id)}</td></tr>`,
-        csvHead: ["NIP", "Teacher", "Email", "Subject", "Classes", "Role", "Last login", "Account"],
-        csv: t => [t.nip, t.name, t.email, SUBJECTS[t.subject], t.classes.join(" "), t.admin ? "Admin" : "Teacher", ago(t.last), t.active ? "Active" : "Disabled"],
-        noun: "teachers",
+          <td><span style="display:block;font-size:13px">${esc(t.email)}</span><span class="classes ${t.nip ? "mono" : ""}">${t.nip ? "NIP " + t.nip : "No NIP"}</span></td>
+          <td>${t.kind === "staff" ? `<span class="classes">Office staff · no classes</span>`
+            : `<span class="subj">${dot(t.subject)}${SUBJECTS[t.subject]}</span><span class="classes" style="display:block">${t.classes.join(", ") || "No classes yet"}</span>`}</td>
+          <td><span style="display:inline-flex;gap:4px;flex-wrap:wrap">${tag(t.kind)}${t.admin ? tag("admin") : ""}${t.active ? "" : tag("disabled")}</span></td><td>${t.active && t.last > 30 ? tag("away") : ago(t.last)}</td>
+          <td class="act">${manageBtn("t", t.id)}</td></tr>`,
+        csvHead: ["Name", "Type", "Email", "NIP", "Subject", "Classes", "Admin", "Last login", "Account"],
+        csv: t => [t.name, t.kind === "staff" ? "Office staff" : "Teacher", t.email, t.nip, t.subject ? SUBJECTS[t.subject] : "", t.classes.join(" "), t.admin ? "Yes" : "No", ago(t.last), t.active ? "Active" : "Disabled"],
+        noun: "accounts",
       },
       students: {
         add: "Add student", dlg: "dlgStudent", select: true,
@@ -645,18 +654,19 @@
       const p = kind === "t" ? T(id) : STUDENTS.find(s => s.nisn === id);
       const self = kind === "t" && id === ME;
       const admins = TEACHERS.filter(t => t.admin && t.active).length;
-      const sub = kind === "t" ? `${SUBJECTS[p.subject]} · NIP ${p.nip} · ${esc(p.email)}` : `Class ${p.cls} · NISN ${p.nisn}`;
+      const staff = kind === "t" && p.kind === "staff";
+      const sub = kind === "t" ? `${staff ? "Office staff" : SUBJECTS[p.subject]} · ${esc(p.email)}${p.nip ? ` · NIP ${p.nip}` : ""}` : `Class ${p.cls} · NISN ${p.nisn}`;
       const rows = [];
-      if (kind === "t") rows.push(`<div class="mrow"><div><b>Account details</b><span>Name, NIP, email, subject and classes.</span></div>
+      if (kind === "t") rows.push(`<div class="mrow"><div><b>Account details</b><span>${staff ? "Name, email and NIP." : "Name, email, NIP, subject and classes."}</span></div>
           <button class="btn btn--sm" type="button" id="mEdit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</button><div class="out" id="mEditOut"></div></div>`);
       rows.push(
         `<div class="mrow"><div><b>Reset password</b><span>Gives a new temporary password. The old one stops working.</span></div>
           <button class="btn btn--sm" type="button" id="mReset" ${p.active ? "" : "disabled"}><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>Reset</button><div class="out" id="mResetOut"></div></div>`);
       if (kind === "s") rows.push(`<div class="mrow"><div><b>Class</b><span>Moves the student and their progress.</span></div>
           <label class="sr" for="mClass">Class</label><select id="mClass">${CLASSES.map(c => `<option${c.name === p.cls ? " selected" : ""}>${c.name}</option>`).join("")}</select><div class="out" id="mClassOut"></div></div>`);
-      if (kind === "t") rows.push(`<div class="mrow"><div><b>Admin access</b><span>${self ? "You can’t remove your own admin access. Ask another admin." : p.admin && admins === 1 ? "This is the only admin. Make someone else an admin first." : "Can manage every account, class and lesson."}</span></div>
-          <button class="btn btn--sm" type="button" id="mRole" ${self || (p.admin && admins === 1) || !p.active ? "disabled" : ""}><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>${p.admin ? "Remove admin" : "Make admin"}</button><div class="out" id="mRoleOut"></div></div>`);
-      rows.push(`<div class="mrow"><div><b>${p.active ? "Disable account" : "Account disabled"}</b><span>${self ? "You can’t disable your own account." : p.active ? (kind === "t" ? "For a teacher who left. Their lessons stay up." : "For a student who left. Their history is kept.") : "They can’t log in. Enable to let them back in."}</span></div>
+      if (kind === "t") rows.push(`<div class="mrow"><div><b>Admin access</b><span>${staff ? "Office staff accounts are always admins. Disable the account if they leave." : self ? "You can’t remove your own admin access. Ask another admin." : p.admin && admins === 1 ? "This is the only admin. Make someone else an admin first." : "Can manage every account, class and lesson."}</span></div>
+          <button class="btn btn--sm" type="button" id="mRole" ${staff || self || (p.admin && admins === 1) || !p.active ? "disabled" : ""}><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>${staff ? "Always admin" : p.admin ? "Remove admin" : "Make admin"}</button><div class="out" id="mRoleOut"></div></div>`);
+      rows.push(`<div class="mrow"><div><b>${p.active ? "Disable account" : "Account disabled"}</b><span>${self ? "You can’t disable your own account." : p.active ? (staff ? "For staff who left." : kind === "t" ? "For a teacher who left. Their lessons stay up." : "For a student who left. Their history is kept.") : "They can’t log in. Enable to let them back in."}</span></div>
           <button class="btn btn--sm ${p.active ? "btn--danger" : ""}" type="button" id="mActive" ${self ? "disabled" : ""}><svg class="icon" aria-hidden="true"><use href="#${p.active ? "i-ban" : "i-check"}"/></svg>${p.active ? "Disable" : "Enable"}</button><div class="out" id="mActiveOut"></div></div>`);
       $("manageBody").innerHTML = `<div class="person"><span class="avatar" aria-hidden="true">${initials(p.name)}</span><div><h2 id="manageH">${esc(p.name)}</h2><p>${sub}</p></div></div>
         <div class="mrows">${rows.join("")}</div>
@@ -687,18 +697,39 @@
       if (!$("dlgManage").open) openDlg("dlgManage");
     }
 
+    /* ---------- Account rules: email is the username (Gmail works); NIP is optional ---------- */
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const HELP = { name: "How students and colleagues see it, e.g. Ms. Dewi.", email: "Their username for logging in. Gmail works.", nip: "Optional. If they have one, they can log in with it too." };
+    function validateAccount(px, v, except) {
+      const emailOk = EMAIL_RE.test(v.email), others = TEACHERS.filter(o => o !== except);
+      return [
+        check($(px + "Name"), !!v.name, px + "NameHelp", HELP.name, "Add their name."),
+        check($(px + "Email"), emailOk && !others.some(o => o.email.toLowerCase() === v.email.toLowerCase()), px + "EmailHelp", HELP.email,
+          emailOk ? "Another account already uses this email." : "Add an email with @ and a domain, like name@gmail.com."),
+        check($(px + "Nip"), (!v.nip || v.nip.length === 18) && !(v.nip && others.some(o => o.nip === v.nip)), px + "NipHelp", HELP.nip,
+          v.nip && v.nip.length !== 18 ? `A NIP has 18 digits; this has ${v.nip.length}. Leave it empty if they don’t have one.` : "Another account already has this NIP."),
+      ];
+    }
+    const kindPicks = (name, kind) => `<fieldset class="picks"><legend>Account type</legend>
+      <label class="pick"><input type="radio" name="${name}" value="teacher"${kind === "teacher" ? " checked" : ""} /><span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Teacher</span></label>
+      <label class="pick"><input type="radio" name="${name}" value="staff"${kind === "staff" ? " checked" : ""} /><span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Office staff (admin)</span></label></fieldset>`;
+
     /* ---------- Edit a teacher's details (inside the Manage dialog) ---------- */
     function editTeacher(id) {
       const t = T(id), self = id === ME;
       $("manageBody").innerHTML = `<form id="editForm" novalidate style="display:grid;gap:var(--space-sm)">
         <div><h2 id="manageH">Edit ${esc(t.name)}</h2><p class="sub" style="margin-top:4px">${self ? "These are your own details." : "Changes apply the next time they log in."}</p></div>
-        <div class="field"><label for="eName">Full name</label><input id="eName" value="${esc(t.name)}" autocomplete="off" aria-describedby="eNameHelp" /><p class="help" id="eNameHelp">How students see it, e.g. Ms. Dewi.</p></div>
-        <div class="field"><label for="eNip">NIP <span id="eNipCount">${t.nip.length} / 18</span></label><input id="eNip" value="${t.nip}" inputmode="numeric" maxlength="18" autocomplete="off" aria-describedby="eNipHelp" /><p class="help" id="eNipHelp">18 digits. They can log in with this.</p></div>
-        <div class="field"><label for="eEmail">School email</label><input id="eEmail" type="email" value="${esc(t.email)}" autocomplete="off" aria-describedby="eEmailHelp" /><p class="help" id="eEmailHelp">They can also log in with this.</p></div>
-        <div class="field"><label for="eSubject">Subject</label><select id="eSubject">${Object.entries(SUBJECTS).map(([k, v]) => `<option value="${k}"${k === t.subject ? " selected" : ""}>${v}</option>`).join("")}</select></div>
-        <fieldset class="picks"><legend>Teaches these classes</legend>
-          ${CLASSES.map(c => `<label class="pick"><input type="checkbox" value="${c.name}"${t.classes.includes(c.name) ? " checked" : ""} /><span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>${c.name}</span></label>`).join("")}
-        </fieldset>
+        ${kindPicks("eKind", t.kind)}
+        <div class="field"><label for="eName">Full name</label><input id="eName" value="${esc(t.name)}" autocomplete="off" aria-describedby="eNameHelp" /><p class="help" id="eNameHelp">${HELP.name}</p></div>
+        <div class="field"><label for="eEmail">Email (username)</label><input id="eEmail" type="email" value="${esc(t.email)}" autocomplete="off" placeholder="name@gmail.com" aria-describedby="eEmailHelp" /><p class="help" id="eEmailHelp">${HELP.email}</p></div>
+        <div class="field"><label for="eNip">NIP, optional <span id="eNipCount">${t.nip.length} / 18</span></label><input id="eNip" value="${t.nip}" inputmode="numeric" maxlength="18" autocomplete="off" aria-describedby="eNipHelp" /><p class="help" id="eNipHelp">${HELP.nip}</p></div>
+        <div id="eTeachOnly" style="display:grid;gap:var(--space-sm)">
+          <div class="field"><label for="eSubject">Subject</label><select id="eSubject">${Object.entries(SUBJECTS).map(([k, v]) => `<option value="${k}"${k === t.subject ? " selected" : ""}>${v}</option>`).join("")}</select></div>
+          <fieldset class="picks"><legend>Teaches these classes</legend>
+            ${CLASSES.map(c => `<label class="pick"><input type="checkbox" value="${c.name}"${t.classes.includes(c.name) ? " checked" : ""} /><span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>${c.name}</span></label>`).join("")}
+          </fieldset>
+        </div>
+        <p class="note" id="eStaffNote">Office staff are admins with no subject or classes.${CLASSES.some(c => c.home === id) ? ` They stop being homeroom teacher of ${CLASSES.filter(c => c.home === id).map(c => c.name).join(", ")}.` : ""}</p>
         <p class="changes" id="eChanges" aria-live="polite">No changes yet.</p>
         <div class="dlg-actions">
           <button class="btn btn--ghost" type="button" id="eBack">Back</button>
@@ -706,40 +737,49 @@
         </div>
       </form>`;
       const f = $("editForm");
-      const read = () => ({
-        name: $("eName").value.trim(), nip: $("eNip").value, email: $("eEmail").value.trim(), subject: $("eSubject").value,
-        classes: [...f.querySelectorAll(".picks input:checked")].map(i => i.value),
-      });
-      const LABEL = { name: "name", nip: "NIP", email: "email", subject: "subject", classes: "classes" };
-      const diff = v => Object.keys(LABEL).filter(k => String(v[k]) !== String(t[k]));
-      f.addEventListener("input", e => {
-        if (e.target.id === "eNip") { e.target.value = e.target.value.replace(/\D/g, ""); $("eNipCount").textContent = `${e.target.value.length} / 18`; }
+      const kindNow = () => f.querySelector('[name="eKind"]:checked').value;
+      const read = () => {
+        const kind = kindNow();
+        return {
+          kind, name: $("eName").value.trim(), email: $("eEmail").value.trim(), nip: $("eNip").value,
+          subject: kind === "staff" ? null : $("eSubject").value,
+          classes: kind === "staff" ? [] : [...$("eTeachOnly").querySelectorAll(".picks input:checked")].map(i => i.value),
+        };
+      };
+      const LABEL = { kind: "account type", name: "name", email: "email", nip: "NIP", subject: "subject", classes: "classes" };
+      const diff = v => Object.keys(LABEL).filter(k => String(v[k] ?? "") !== String(t[k] ?? ""));
+      const sync = () => {
+        const staff = kindNow() === "staff";
+        $("eTeachOnly").hidden = staff; $("eStaffNote").hidden = !staff;
         const d = diff(read());
         $("eChanges").textContent = d.length ? `Changed: ${d.map(k => LABEL[k]).join(", ")}.` : "No changes yet.";
         $("eSave").disabled = !d.length;
+      };
+      f.addEventListener("input", e => {
+        if (e.target.id === "eNip") { e.target.value = e.target.value.replace(/\D/g, ""); $("eNipCount").textContent = `${e.target.value.length} / 18`; }
+        sync();
       });
       $("eBack").addEventListener("click", () => openManage("t", id));
       f.addEventListener("submit", e => {
         e.preventDefault();
-        const v = read(), d = diff(v);
+        const v = read(), d = diff(read());
         if (!d.length) return;
-        const emailOk = /^\S+@\S+\.\S+$/.test(v.email);
-        const ok = [
-          check($("eName"), !!v.name, "eNameHelp", "How students see it, e.g. Ms. Dewi.", "Add the teacher’s name."),
-          check($("eNip"), v.nip.length === 18 && !TEACHERS.some(o => o !== t && o.nip === v.nip), "eNipHelp", "18 digits. They can log in with this.",
-            v.nip.length !== 18 ? `NIP needs 18 digits; this has ${v.nip.length}.` : "Another teacher already has this NIP."),
-          check($("eEmail"), emailOk && !TEACHERS.some(o => o !== t && o.email === v.email), "eEmailHelp", "They can also log in with this.",
-            emailOk ? "Another teacher already uses this email." : "Add a school email, like name@school."),
-        ];
-        if (ok.includes(false)) return f.querySelector('[aria-invalid="true"]').focus();
+        if (validateAccount("e", v, t).includes(false)) return f.querySelector('[aria-invalid="true"]').focus();
         const before = t.name;
         Object.assign(t, v);
+        let freed = [];
+        if (v.kind === "staff") {
+          t.admin = true;                         // office staff accounts exist to administer
+          freed = CLASSES.filter(c => c.home === id).map(c => c.name);
+          CLASSES.forEach(c => { if (c.home === id) c.home = null; });
+        }
         log("accounts", `Edited ${before}’s account: ${d.map(k => LABEL[k]).join(", ")}`);
-        renderMeters(); renderRows();
+        renderMeters(); renderRows(); renderMe();
         openManage("t", id);
-        $("mEditOut").innerHTML = `<p class="note">Saved: ${d.map(k => LABEL[k]).join(", ")}.</p>`;
+        $("mEditOut").innerHTML = `<p class="note">Saved: ${d.map(k => LABEL[k]).join(", ")}.${freed.length ? ` ${freed.join(", ")} now ${freed.length === 1 ? "needs" : "need"} a new homeroom teacher.` : ""}</p>`;
         $("mEdit").focus();
       });
+      sync();
       $("eName").focus();
     }
 
@@ -755,7 +795,11 @@
     }
     $("addBtn").addEventListener("click", () => {
       const id = VIEWS[view].dlg; resetForm(id);
-      if (id === "dlgTeacher") { $("teacherSubmit").textContent = "Create account"; $("nipCount").textContent = "0 / 18"; setHelp("tNameHelp", "How students see it, e.g. Ms. Dewi."); setHelp("tNipHelp", "18 digits."); setHelp("tEmailHelp", "Either the NIP or this email works for logging in."); }
+      if (id === "dlgTeacher") {
+        $("teacherSubmit").textContent = "Create account"; $("nipCount").textContent = "0 / 18";
+        $("tKindSlot").innerHTML = kindPicks("tKind", "teacher"); syncAddKind();
+        setHelp("tNameHelp", HELP.name); setHelp("tNipHelp", HELP.nip); setHelp("tEmailHelp", HELP.email);
+      }
       if (id === "dlgStudent") { $("studentSubmit").textContent = "Create account"; $("nisnCount").textContent = "0 / 10"; setHelp("sNisnHelp", "The 10-digit number on the student’s card."); setHelp("sNameHelp", "As written on the class list."); }
       if (id === "dlgClass") setHelp("cNameHelp", "Grade 7, 8 or 9 and a letter, e.g. 7C.");
       if (id === "dlgNews") { $("nCount").textContent = "0 / 90"; $("nUntil").value = new Date(Date.now() + 7 * DAY).toISOString().slice(0, 10); }
@@ -764,19 +808,19 @@
     const digitsOnly = (el, countId, max) => el.addEventListener("input", () => { el.value = el.value.replace(/\D/g, ""); $(countId).textContent = `${el.value.length} / ${max}`; });
     digitsOnly($("tNip"), "nipCount", 18); digitsOnly($("sNisn"), "nisnCount", 10);
 
+    const addKind = () => $("formTeacher").querySelector('[name="tKind"]:checked')?.value ?? "teacher";
+    function syncAddKind() { const staff = addKind() === "staff"; $("tTeachOnly").hidden = staff; $("tStaffNote").hidden = !staff; }
+    $("formTeacher").addEventListener("change", e => { if (e.target.name === "tKind") syncAddKind(); });
     $("formTeacher").addEventListener("submit", e => {
       e.preventDefault();
       if (!$("teacherDone").hidden) return $("dlgTeacher").close();
-      const name = $("tName").value.trim(), nip = $("tNip").value, email = $("tEmail").value.trim();
-      const ok = [
-        check($("tName"), !!name, "tNameHelp", "How students see it, e.g. Ms. Dewi.", "Add the teacher’s name."),
-        check($("tNip"), nip.length === 18 && !TEACHERS.some(t => t.nip === nip), "tNipHelp", "18 digits.", nip.length !== 18 ? `NIP needs 18 digits; this has ${nip.length}.` : "A teacher with this NIP already has an account."),
-        check($("tEmail"), /^\S+@\S+\.\S+$/.test(email) && !TEACHERS.some(t => t.email === email), "tEmailHelp", "Either the NIP or this email works for logging in.", /^\S+@\S+\.\S+$/.test(email) ? "This email already has an account." : "Add a school email, like name@school."),
-      ];
-      if (ok.includes(false)) return $("formTeacher").querySelector('[aria-invalid="true"]').focus();
-      TEACHERS.push({ id: "t" + Date.now(), name, nip, email, subject: $("tSubject").value, classes: [], admin: $("tAdmin").checked, active: true, last: null });
-      log("accounts", `Created a teacher account for ${name}${$("tAdmin").checked ? " (admin)" : ""}`);
-      $("tDoneName").textContent = name; $("tDoneTemp").textContent = tempPass();
+      const kind = addKind();
+      const v = { name: $("tName").value.trim(), email: $("tEmail").value.trim(), nip: $("tNip").value };
+      if (validateAccount("t", v).includes(false)) return $("formTeacher").querySelector('[aria-invalid="true"]').focus();
+      const staff = kind === "staff", admin = staff || $("tAdmin").checked;
+      TEACHERS.push({ id: "t" + Date.now(), kind, ...v, subject: staff ? null : $("tSubject").value, classes: [], admin, active: true, last: null });
+      log("accounts", `Created ${staff ? "an office staff" : "a teacher"} account for ${v.name}${!staff && admin ? " (admin)" : ""}`);
+      $("tDoneName").textContent = v.name; $("tDoneTemp").textContent = tempPass();
       $("teacherDone").hidden = false; $("teacherSubmit").textContent = "Done";
       renderMeters(); renderRows();
     });
@@ -873,7 +917,12 @@
     });
     $("helpBtn").addEventListener("click", () => openDlg("dlgHelp"));
 
-    renderMeters(); setView("teachers"); initChart(SERIES, { eventCol: "Lessons uploaded" });
+    function renderMe() {
+      const me = T(ME);
+      $("meName").textContent = me.name; $("meInitial").textContent = initials(me.name);
+      $("myClassesLink").hidden = me.kind !== "teacher";
+    }
+    renderMe(); renderMeters(); setView("teachers"); initChart(SERIES, { eventCol: "Lessons uploaded" });
   </script>
 </body>
 </html>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Teacher login | MTsN 32 Cambridge E-Learning</title>
-  <meta name="description" content="Teachers and admins of the MTsN 32 Cambridge Programme log in with their NIP or school email." />
+  <meta name="description" content="Teachers and Cambridge office staff of MTsN 32 log in with their email or NIP." />
   <link rel="icon" href="assets/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -40,7 +40,7 @@
       <div class="panel-in">
         <div>
           <h1 id="panelH">Record it once. <span class="hl">Every class can rewatch.</span></h1>
-          <p class="lead">The teacher login is also the admin login. From here you manage lessons and student accounts.</p>
+          <p class="lead">Teachers and Cambridge office staff log in here. Admins manage everyone’s accounts from the admin room.</p>
         </div>
 
         <ol class="how" aria-label="What teachers do here">
@@ -55,18 +55,18 @@
     <section class="form-side" aria-labelledby="formH">
       <div class="form-card">
         <span class="who">Teacher and admin login</span>
-        <h2 id="formH">Log in with your NIP or email</h2>
-        <p class="sub">Your 18-digit NIP or your school email both work.</p>
+        <h2 id="formH">Log in with your email</h2>
+        <p class="sub">Use the email on your account; Gmail works. Have an 18-digit NIP? That works too.</p>
 
         <form id="loginForm" novalidate>
           <div class="field">
-            <div class="label-row"><label for="identifier">NIP or school email</label><span class="count mono" id="idCount" aria-hidden="true"></span></div>
+            <div class="label-row"><label for="identifier">Email or NIP</label><span class="count mono" id="idCount" aria-hidden="true"></span></div>
             <div class="control">
               <input class="input" id="identifier" name="identifier" type="text" autocomplete="username" autocapitalize="off" spellcheck="false"
-                     placeholder="NIP or name@…" aria-describedby="idHelp" aria-invalid="false" required autofocus />
+                     placeholder="name@gmail.com" aria-describedby="idHelp" aria-invalid="false" required autofocus />
               <span class="slot"><svg class="icon ok" id="idOk" hidden aria-hidden="true"><use href="#i-check"/></svg></span>
             </div>
-            <p class="helper" id="idHelp" aria-live="polite">Type digits for your NIP, or an email with @.</p>
+            <p class="helper" id="idHelp" aria-live="polite">Your email, or your NIP if you have one.</p>
           </div>
 
           <div class="field">
@@ -91,7 +91,7 @@
 
           <div class="form-alert" id="formAlert" role="alert">
             <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
-            <span>That NIP or email and password don’t match. Check both, or ask a fellow Cambridge admin to reset your password.</span>
+            <span>That email or NIP and password don’t match. Check both, or ask a fellow Cambridge admin to reset your password.</span>
           </div>
 
           <button class="btn btn--push" id="submitBtn" type="submit" data-state="idle">Log in</button>
@@ -100,21 +100,21 @@
         <div class="help">
           <button class="help-q" id="forgotQ" type="button" aria-expanded="false" aria-controls="forgotA">Forgot your password?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
           <div class="help-a" id="forgotA" hidden>
-            <p>Teacher passwords are reset by another Cambridge admin. There’s no reset email. Ask a colleague in:</p>
+            <p>Passwords are reset by a Cambridge admin. There’s no reset email. Ask a colleague in:</p>
             <ul class="rooms">
               <li><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Cambridge Room</li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Teachers’ Room</li>
             </ul>
           </div>
-          <button class="help-q" type="button" aria-expanded="false" aria-controls="accountA">New teacher?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <button class="help-q" type="button" aria-expanded="false" aria-controls="accountA">New here?<svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
           <div class="help-a" id="accountA" hidden>
-            <p>Teacher accounts are created by an existing Cambridge admin, so there’s no sign-up page. Come to the Cambridge Room and a colleague will set yours up.</p>
+            <p>Accounts are created by a Cambridge admin, so there’s no sign-up page. Come to the Cambridge Room with the email you want to log in with (Gmail is fine). No NIP needed.</p>
           </div>
         </div>
 
         <p class="switch-role">Are you a student? <a href="login.html">Use the student login</a></p>
 
-        <p class="demo"><b>Demo only:</b> there are no real accounts yet. Any 18-digit NIP or valid email, with any password, logs you in. Type <code>wrong</code> as the password to see the error.</p>
+        <p class="demo"><b>Demo only:</b> there are no real accounts yet. Any valid email or 18-digit NIP, with any password, logs you in. Type <code>wrong</code> as the password to see the error.</p>
       </div>
     </section>
   </main>
