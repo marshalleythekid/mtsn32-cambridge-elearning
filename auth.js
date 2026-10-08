@@ -110,6 +110,6 @@
       return;
     }
     setState("success");
-    setTimeout(() => { location.href = "index.html"; }, 700);
+    setTimeout(() => { location.href = role === "teacher" ? "teacher-dashboard.html" : "index.html"; }, 700);
   });
 })();

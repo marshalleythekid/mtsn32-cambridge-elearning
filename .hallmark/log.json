@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-10-08",
+    "macrostructure": "Workbench (teacher dashboard)",
+    "theme": "custom (unchanged)",
+    "enrichment": "static SVG owl tip card",
+    "nav": "N3 side-rail",
+    "footer": "none (app)",
+    "studied": "image (user's Dribbble reference, DNA only)",
+    "brief": "Teacher room: students (add, reset password), lessons, class progress chart, announcements"
+  },
+  {
     "date": "2026-10-05",
     "macrostructure": "(owl refinement, no structure change)",
     "theme": "custom (unchanged)",

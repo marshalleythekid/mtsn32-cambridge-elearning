@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher room | MTsN 32 Cambridge E-Learning</title>
+  <meta name="description" content="Teachers of the MTsN 32 Cambridge Programme manage lessons, student accounts, class progress and announcements." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+  <style>
+    /* Hallmark · macrostructure: Workbench (app shell) · nav: N3 side-rail · footer: none (app)
+     * theme: custom (unchanged: cream paper, navy ink, light blue, gold action) · studied: yes · DNA-source: image (user's Dribbble reference)
+     * tone: calm, businesslike, soft · enrichment: static SVG owl tip card (no 3D)
+     * pre-emit critique: P4 H5 E4 S5 R5 V4
+     */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { overflow-x: clip; }
+    body {
+      margin: 0; font-family: var(--font-body); font-size: var(--text-md); line-height: 1.5;
+      color: var(--color-ink); background: var(--color-paper-2); -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, p { margin: 0; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    .icon { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+    /* ============ SHELL ============ */
+    .app { display: grid; grid-template-columns: 264px minmax(0, 1fr); min-height: 100vh; padding: var(--space-xs); gap: var(--space-xs); }
+    .side {
+      position: sticky; top: var(--space-xs); height: calc(100vh - 2 * var(--space-xs));
+      display: flex; flex-direction: column; gap: var(--space-sm); padding: var(--space-sm);
+      background: var(--color-paper); border: 1px solid var(--color-rule); border-radius: var(--radius-card); overflow-y: auto;
+    }
+    .scrim { display: none; }
+    .main { background: var(--color-card); border: 1px solid var(--color-rule); border-radius: var(--radius-card); min-width: 0; }
+
+    /* Sidebar */
+    .brand { display: flex; align-items: center; gap: var(--space-2xs); padding: var(--space-3xs) var(--space-3xs) 0; }
+    .brand img { width: 34px; height: 34px; }
+    .brand strong { display: block; font-size: 15px; font-weight: 800; letter-spacing: -.01em; line-height: 1.2; white-space: nowrap; }
+    .brand small { display: block; font-size: 12px; color: var(--color-muted); white-space: nowrap; }
+    .side-search {
+      display: flex; align-items: center; gap: var(--space-2xs); height: 38px; padding: 0 var(--space-xs);
+      border: 1px solid var(--color-rule-2); border-radius: var(--radius-input); background: var(--color-card); color: var(--color-muted);
+      font-size: var(--text-sm); cursor: text; width: 100%; text-align: left;
+    }
+    .side-search:hover { border-color: var(--color-muted); }
+    .side-search kbd { margin-left: auto; font-family: var(--font-mono); font-size: 11px; padding: 1px 6px; border-radius: 6px; border: 1px solid var(--color-rule-2); }
+    .nav-group { display: grid; gap: 2px; }
+    .nav-label { font-size: 12px; font-weight: 700; color: var(--color-muted); padding: var(--space-2xs) var(--space-xs) var(--space-3xs); }
+    .nav-item {
+      display: flex; align-items: center; gap: var(--space-xs); min-height: 38px; padding: 0 var(--space-xs); width: 100%;
+      border: 0; background: transparent; border-radius: 10px; font-size: var(--text-sm); font-weight: 600; color: var(--color-ink-2);
+      cursor: pointer; text-align: left; white-space: nowrap;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+    .nav-item:hover { background: var(--color-paper-3); color: var(--color-ink); }
+    .nav-item[aria-current="page"] { background: var(--color-card); color: var(--color-ink); box-shadow: 0 1px 3px var(--color-shadow); }
+    .nav-item .count { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--color-muted); }
+    .nav-item .pill { margin-left: auto; font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: var(--radius-pill); background: var(--color-action-tint); color: var(--color-ink); border: 1px solid var(--color-action); }
+    .nav-item .badge { margin-left: auto; min-width: 20px; height: 20px; display: grid; place-items: center; border-radius: var(--radius-pill); background: var(--color-pop); color: var(--color-on-dark); font-size: 11px; font-weight: 700; }
+    .dot { width: 10px; height: 10px; border-radius: 3px; background: var(--color-math); flex: none; }
+    .dot.eng { background: var(--color-eng); } .dot.sci { background: var(--color-sci); }
+    .side > * { min-width: 0; }
+    .side-bottom { margin-top: auto; display: grid; gap: var(--space-2xs); padding-top: var(--space-md); }
+    .me { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-2xs) var(--space-xs); font-size: var(--text-sm); font-weight: 700; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 800; background: var(--color-math); color: var(--color-math-ink); flex: none; }
+    .me a { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--color-accent-deep); }
+    .me a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Owl tip card */
+    .owl-card { position: relative; padding: var(--space-sm); border-radius: 14px; background: var(--color-sky); border: 1px solid var(--color-sky-rule); }
+    .owl-card svg.owl { position: absolute; right: 8px; top: -26px; width: 52px; height: 57px; }
+    .owl-card strong { display: block; font-size: var(--text-sm); font-weight: 800; padding-right: 48px; }
+    .owl-card p { font-size: 13px; color: var(--color-ink-2); margin-top: var(--space-3xs); }
+    .owl-card button { margin-top: var(--space-xs); width: 100%; }
+
+    /* ============ TOP BAR ============ */
+    .topbar { display: flex; align-items: center; gap: var(--space-sm); min-height: 56px; padding: 0 var(--space-md); border-bottom: 1px solid var(--color-rule); }
+    .topbar .menu-btn { display: none; }
+    .crumbs { display: flex; align-items: center; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--color-muted); min-width: 0; white-space: nowrap; overflow: hidden; }
+    .crumbs .sep { opacity: .6; }
+    .crumbs b { color: var(--color-ink); font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+    .top-actions { margin-left: auto; display: flex; gap: var(--space-2xs); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2xs); min-height: 38px; padding: 0 var(--space-sm);
+      border-radius: 10px; border: 1px solid var(--color-rule-2); background: var(--color-card); color: var(--color-ink);
+      font-size: var(--text-sm); font-weight: 700; cursor: pointer; white-space: nowrap; line-height: 1;
+      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+    }
+    .btn:hover { background: var(--color-paper-2); border-color: var(--color-muted); }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn--ghost { border-color: transparent; background: transparent; color: var(--color-ink-2); }
+    .btn--ghost:hover { background: var(--color-paper-2); border-color: transparent; color: var(--color-ink); }
+    .btn--push { background: var(--color-action); border-color: var(--color-action-deep); box-shadow: 0 2px 0 var(--color-action-deep); }
+    .btn--push:hover { background: color-mix(in oklch, var(--color-action) 88%, var(--color-ink)); border-color: var(--color-action-deep); }
+    .btn--push:active { transform: translateY(2px); box-shadow: 0 0 0 var(--color-action-deep); }
+    .btn--sm { min-height: 32px; padding: 0 var(--space-xs); font-size: 13px; }
+    .btn--sky { background: var(--color-card); border-color: var(--color-sky-rule); }
+
+    /* ============ CONTENT ============ */
+    .content { padding: var(--space-lg) var(--space-xl) var(--space-xl); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); max-width: 1160px; margin-inline: auto; }
+
+    /* Class header */
+    .head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-md); align-items: center; }
+    .class-mark {
+      width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center;
+      background: var(--color-math); color: var(--color-math-ink); font-weight: 800; font-size: 1.375rem; letter-spacing: -.02em;
+    }
+    .head h1 { font-size: var(--text-2xl); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; overflow-wrap: anywhere; min-width: 0; }
+    .head-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs) var(--space-xs); margin-top: var(--space-2xs); font-size: 13px; color: var(--color-muted); }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: var(--radius-pill); border: 1px solid var(--color-rule-2); background: var(--color-card); font-size: 12px; font-weight: 700; color: var(--color-ink-2); }
+    .chip--sample { border-style: dashed; color: var(--color-muted); font-weight: 600; }
+    .meters { display: flex; gap: var(--space-md); }
+    .meter { display: grid; grid-template-columns: 4px auto; gap: 2px var(--space-xs); align-items: end; }
+    .meter .rail { grid-row: span 2; width: 4px; height: 40px; border-radius: 2px; background: var(--color-rule); position: relative; overflow: hidden; }
+    .meter .rail i { position: absolute; left: 0; right: 0; bottom: 0; background: var(--color-accent-deep); border-radius: 2px; }
+    .meter.warn .rail i { background: var(--color-error); }
+    .meter span { font-size: 12px; color: var(--color-muted); white-space: nowrap; }
+    .meter b { font-size: 1.125rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .meter b small { font-size: 12px; font-weight: 600; color: var(--color-muted); }
+
+    /* Card */
+    .card { border: 1px solid var(--color-rule); border-radius: var(--radius-card); background: var(--color-card); }
+    .card-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-sm); padding: var(--space-sm) var(--space-md) 0; }
+    .card-head h2 { font-size: var(--text-md); font-weight: 800; }
+    .legend { display: flex; gap: var(--space-sm); font-size: 12px; color: var(--color-ink-2); width: 100%; margin-top: -6px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { width: 14px; height: 2px; border-radius: 1px; background: var(--color-series-1); }
+    .legend i.s2 { background: var(--color-series-2); }
+    .seg { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 10px; background: var(--color-paper-2); border: 1px solid var(--color-rule); }
+    .seg button {
+      border: 0; background: transparent; min-height: 28px; padding: 0 var(--space-xs); border-radius: 7px; cursor: pointer;
+      font-size: 12px; font-weight: 700; color: var(--color-muted); white-space: nowrap;
+    }
+    .seg button:hover { color: var(--color-ink); }
+    .seg button[aria-pressed="true"] { background: var(--color-card); color: var(--color-ink); box-shadow: 0 1px 2px var(--color-shadow); }
+
+    /* Chart */
+    .chart-wrap { position: relative; padding: var(--space-xs) var(--space-md) var(--space-sm); }
+    .chart-wrap svg { display: block; width: 100%; height: 260px; overflow: visible; }
+    .grid-line { stroke: var(--color-rule); stroke-width: 1; }
+    .axis-text { font-family: var(--font-mono); font-size: 11px; fill: var(--color-muted); }
+    .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+    .line.s1 { stroke: var(--color-series-1); } .line.s2 { stroke: var(--color-series-2); }
+    .area.s1 { fill: var(--color-series-1-tint); }
+    .end-label { font-size: 12px; font-weight: 700; fill: var(--color-ink-2); }
+    .event-line { stroke: var(--color-rule-2); stroke-dasharray: 3 4; }
+    .event-dot { fill: var(--color-card); stroke: var(--color-ink); stroke-width: 1.5; }
+    .today-line { stroke: var(--color-ink); stroke-width: 1; }
+    .cross { stroke: var(--color-ink-2); stroke-width: 1; opacity: 0; }
+    .hover-dot { stroke: var(--color-card); stroke-width: 2; opacity: 0; }
+    .hover-dot.s1 { fill: var(--color-series-1); } .hover-dot.s2 { fill: var(--color-series-2); }
+    .chart-wrap.hovering .cross, .chart-wrap.hovering .hover-dot { opacity: 1; }
+    .tip {
+      position: absolute; top: var(--space-sm); pointer-events: none; min-width: 172px; padding: var(--space-xs);
+      background: var(--color-card); border: 1px solid var(--color-rule-2); border-radius: 12px; box-shadow: 0 8px 24px var(--color-shadow);
+      font-size: 13px; opacity: 0; transform: translateY(4px); transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+    }
+    .chart-wrap.hovering .tip { opacity: 1; transform: none; }
+    .tip .t-date { font-weight: 800; margin-bottom: var(--space-3xs); }
+    .tip .t-row { display: flex; align-items: center; gap: var(--space-2xs); color: var(--color-ink-2); }
+    .tip .t-row i { width: 3px; height: 14px; border-radius: 2px; background: var(--color-series-1); }
+    .tip .t-row i.s2 { background: var(--color-series-2); }
+    .tip .t-row b { margin-left: auto; color: var(--color-ink); font-variant-numeric: tabular-nums; }
+    .tip .t-event { margin-top: var(--space-2xs); padding-top: var(--space-2xs); border-top: 1px solid var(--color-rule); font-size: 12px; color: var(--color-ink-2); }
+    .chart-foot { display: flex; justify-content: space-between; gap: var(--space-sm); padding: 0 var(--space-md) var(--space-sm); font-size: 12px; color: var(--color-muted); }
+    .chart-foot button { border: 0; background: none; padding: 0; color: var(--color-accent-deep); font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Work area: tabs + toolbar + table */
+    .work-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
+    .tabs { display: flex; gap: var(--space-3xs); }
+    .tab {
+      display: inline-flex; align-items: center; gap: var(--space-2xs); min-height: 36px; padding: 0 var(--space-sm); border-radius: 10px;
+      border: 1px solid transparent; background: transparent; cursor: pointer; font-weight: 700; font-size: var(--text-sm); color: var(--color-muted); white-space: nowrap;
+    }
+    .tab:hover { color: var(--color-ink); background: var(--color-paper-2); }
+    .tab[aria-selected="true"] { color: var(--color-ink); background: var(--color-paper-2); border-color: var(--color-rule); }
+    .tab .count { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--color-muted); }
+    .toolbar { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs); }
+    .search-in { position: relative; }
+    .search-in .icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--color-muted); width: 16px; height: 16px; }
+    .search-in input {
+      height: 36px; width: 200px; padding: 0 var(--space-xs) 0 32px; border: 1px solid var(--color-rule-2); border-radius: 10px; background: var(--color-card); font-size: var(--text-sm);
+    }
+    .search-in input:hover { border-color: var(--color-muted); }
+    .toolbar select { height: 36px; padding: 0 var(--space-xs); border: 1px solid var(--color-rule-2); border-radius: 10px; background: var(--color-card); font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
+
+    .table-wrap { position: relative; margin-top: var(--space-sm); border: 1px solid var(--color-rule); border-radius: var(--radius-card); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    th { text-align: left; font-size: 12px; font-weight: 700; color: var(--color-muted); background: var(--color-paper); padding: var(--space-xs) var(--space-sm); border-bottom: 1px solid var(--color-rule); white-space: nowrap; }
+    td { padding: var(--space-xs) var(--space-sm); border-bottom: 1px solid var(--color-rule); vertical-align: middle; white-space: nowrap; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr { transition: background-color var(--dur-fast) var(--ease-out); }
+    tbody tr:hover { background: var(--color-paper); }
+    tbody tr.added { animation: added 1.6s var(--ease-out); }
+    @keyframes added { 0%, 40% { background: var(--color-action-tint); } }
+    th.check, td.check { width: 44px; padding-right: 0; }
+    input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--color-accent-deep); cursor: pointer; }
+    td.num { font-variant-numeric: tabular-nums; }
+    .who { display: inline-flex; align-items: center; gap: var(--space-2xs); padding: 2px 10px 2px 2px; border-radius: var(--radius-pill); border: 1px solid var(--color-rule); font-weight: 600; }
+    .who .avatar { width: 24px; height: 24px; font-size: 11px; background: var(--color-sky-2); color: var(--color-ink); }
+    .prog { display: inline-flex; align-items: center; gap: var(--space-2xs); }
+    .prog .track { width: 88px; height: 6px; border-radius: 3px; background: var(--color-rule); overflow: hidden; }
+    .prog .track i { display: block; height: 100%; border-radius: 3px; background: var(--color-accent-deep); transform-origin: left; transform: scaleX(var(--p)); }
+    .prog b { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 3.2ch; }
+    .tag { display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px 2px 8px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; border: 1px solid; }
+    .tag .icon { width: 13px; height: 13px; stroke-width: 2.2; }
+    .tag.ok { color: var(--color-success); border-color: color-mix(in oklch, var(--color-success) 35%, transparent); background: color-mix(in oklch, var(--color-success) 8%, var(--color-card)); }
+    .tag.nudge { color: var(--color-error); border-color: color-mix(in oklch, var(--color-error) 35%, transparent); background: var(--color-error-tint); }
+    .tag.idle { color: var(--color-muted); border-color: var(--color-rule-2); background: var(--color-paper); }
+    .tag.live { color: var(--color-accent-deep); border-color: var(--color-sky-rule); background: var(--color-sky); }
+    td.act { text-align: right; }
+    .empty-row td { text-align: center; color: var(--color-muted); padding: var(--space-lg); white-space: normal; }
+    .table-foot { display: flex; justify-content: space-between; gap: var(--space-sm); margin-top: var(--space-xs); font-size: 12px; color: var(--color-muted); }
+
+    /* ============ DIALOGS ============ */
+    dialog {
+      width: min(440px, calc(100vw - 2 * var(--space-sm))); padding: 0; border: 1px solid var(--color-rule-2); border-radius: var(--radius-card);
+      background: var(--color-card); color: var(--color-ink); box-shadow: 0 24px 64px var(--color-shadow);
+    }
+    dialog[open] { animation: dlg-in var(--dur-med) var(--ease-out); }
+    @keyframes dlg-in { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+    dialog::backdrop { background: var(--color-scrim); }
+    .dlg-in { padding: var(--space-md); display: grid; gap: var(--space-sm); }
+    .dlg-in h2 { font-size: var(--text-lg); font-weight: 800; }
+    .dlg-in .sub { font-size: var(--text-sm); color: var(--color-ink-2); margin-top: -8px; }
+    .field { display: grid; gap: 6px; }
+    .field label { font-size: var(--text-sm); font-weight: 700; display: flex; justify-content: space-between; }
+    .field label span { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--color-muted); }
+    .field input, .field select, .field textarea {
+      min-height: 44px; padding: var(--space-2xs) var(--space-xs); border: 1px solid var(--color-rule-2); border-radius: var(--radius-input); background: var(--color-card); width: 100%;
+    }
+    .field textarea { min-height: 80px; resize: vertical; }
+    .field input:hover, .field select:hover, .field textarea:hover { border-color: var(--color-muted); }
+    .field input[aria-invalid="true"] { border-color: var(--color-error); }
+    .field .help { font-size: 12px; color: var(--color-muted); }
+    .field .help.err { color: var(--color-error); font-weight: 600; }
+    .dlg-actions { display: flex; justify-content: flex-end; gap: var(--space-2xs); margin-top: var(--space-2xs); }
+    .done { display: grid; gap: var(--space-xs); padding: var(--space-sm); border-radius: 12px; background: var(--color-sky); border: 1px solid var(--color-sky-rule); }
+    .done p { font-size: var(--text-sm); color: var(--color-ink-2); }
+    .temp { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); padding: var(--space-2xs) var(--space-xs); border-radius: 10px; background: var(--color-card); border: 1px dashed var(--color-sky-rule); }
+    .temp code { font-family: var(--font-mono); font-size: 1.125rem; font-weight: 600; letter-spacing: .04em; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1180px) {
+      .content { padding-inline: var(--space-lg); }
+      .head { grid-template-columns: auto minmax(0, 1fr); }
+      .meters { grid-column: 1 / -1; }
+    }
+    @media (max-width: 1024px) {
+      .app { grid-template-columns: minmax(0, 1fr); padding: 0; gap: 0; }
+      .main { border: 0; border-radius: 0; }
+      .side {
+        position: fixed; z-index: 30; left: 0; top: 0; height: 100vh; width: min(288px, 86vw); border-radius: 0 var(--radius-card) var(--radius-card) 0;
+        transform: translateX(-102%); transition: transform var(--dur-med) var(--ease-out); box-shadow: 0 0 48px var(--color-shadow);
+      }
+      .side.open { transform: none; }
+      .scrim { display: block; position: fixed; inset: 0; z-index: 25; background: var(--color-scrim); opacity: 0; pointer-events: none; transition: opacity var(--dur-med) var(--ease-out); }
+      .scrim.open { opacity: 1; pointer-events: auto; }
+      .topbar .menu-btn { display: inline-flex; padding: 0; width: 38px; }
+      .topbar { position: sticky; top: 0; z-index: 10; background: var(--color-card); padding-inline: var(--space-sm); }
+      .toolbar { margin-left: 0; width: 100%; }
+      .toolbar .search-in { flex: 1; } .search-in input { width: 100%; }
+    }
+    @media (max-width: 640px) {
+      .content { padding: var(--space-md) var(--space-sm) var(--space-xl); gap: var(--space-md); }
+      .class-mark { width: 48px; height: 48px; font-size: 1.0625rem; border-radius: 12px; }
+      .meters { flex-wrap: wrap; gap: var(--space-sm) var(--space-md); }
+      .top-actions .btn span { display: none; }
+      .top-actions .btn { padding: 0; width: 38px; }
+      .card-head, .chart-wrap, .chart-foot { padding-inline: var(--space-sm); }
+      .seg { margin-left: 0; }
+      .chart-wrap svg { height: 220px; }
+      .tabs { width: 100%; overflow-x: auto; }
+      .toolbar .btn--push { flex: 1; }
+      .toolbar .search-in { flex: 1 1 100%; order: -1; }
+      .crumbs .hide-sm { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0s !important; animation-duration: 150ms !important; }
+      dialog[open] { animation-name: fade; }
+      @keyframes fade { from { opacity: 0; } }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9.5 4.5 2.5-4.5 2.5z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19.5c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.8c1.8.7 3 2.3 3.5 4.7"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19h16M7 15l4-5 3 3 5-7"/></symbol>
+    <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6L7 10zM17.5 9.5a3.5 3.5 0 0 1 0 5"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.4M12 17v.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 20h14"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16v.5"/></symbol>
+    <symbol id="i-dash" viewBox="0 0 24 24"><path d="M7 12h10"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="14" r="4"/><path d="m11 11 8-8M16 6l2 2M14 8l2 2"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4m-4 4 4-4 4 4M5 13v6h14v-6"/></symbol>
+  </svg>
+
+  <div class="app">
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="side" id="side" aria-label="Teacher room">
+      <a href="index.html" class="brand" aria-label="MTsN 32 E-Learning, student site">
+        <img src="assets/logo.png" alt="" />
+        <span><strong>MTsN 32 E-Learning</strong><small>Teacher room</small></span>
+      </a>
+      <button class="side-search" type="button" id="sideSearch"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Find a student…<kbd>/</kbd></button>
+
+      <nav class="nav-group" aria-label="Sections">
+        <button class="nav-item" type="button" data-go="overview" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Overview</button>
+        <button class="nav-item" type="button" data-go="lessons"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Lessons<span class="count" data-count="lessons"></span></button>
+        <button class="nav-item" type="button" data-go="students"><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>Students<span class="count" data-count="students"></span></button>
+        <button class="nav-item" type="button" data-go="progress"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>Class progress</button>
+        <button class="nav-item" type="button" data-go="news"><svg class="icon" aria-hidden="true"><use href="#i-megaphone"/></svg>Announcements<span class="pill">New</span></button>
+      </nav>
+
+      <div class="nav-group" aria-label="My classes">
+        <p class="nav-label">My classes</p>
+        <button class="nav-item" type="button" aria-current="page" data-class="8A"><span class="dot"></span>8A · Mathematics<span class="count" data-count="students"></span></button>
+        <button class="nav-item" type="button" data-class="8B"><span class="dot"></span>8B · Mathematics<span class="count">—</span></button>
+        <button class="nav-item" type="button" data-class="9A"><span class="dot"></span>9A · Mathematics<span class="count">—</span></button>
+      </div>
+
+      <div class="side-bottom">
+        <div class="owl-card" id="owlCard">
+          <svg class="owl" viewBox="0 0 200 220" aria-hidden="true">
+            <ellipse cx="100" cy="130" rx="70" ry="78" fill="var(--color-owl-body)"/>
+            <ellipse cx="100" cy="150" rx="46" ry="52" fill="var(--color-owl-belly)"/>
+            <path d="M44 70 58 34 78 62ZM156 70 142 34 122 62Z" fill="var(--color-owl-body)"/>
+            <circle cx="76" cy="92" r="24" fill="var(--color-card)"/><circle cx="124" cy="92" r="24" fill="var(--color-card)"/>
+            <circle cx="78" cy="94" r="10" fill="var(--color-ink)"/><circle cx="122" cy="94" r="10" fill="var(--color-ink)"/>
+            <circle cx="76" cy="92" r="27" fill="none" stroke="var(--color-ink)" stroke-width="4"/><circle cx="124" cy="92" r="27" fill="none" stroke="var(--color-ink)" stroke-width="4"/>
+            <path d="M92 110h16l-8 14z" fill="var(--color-action)"/>
+          </svg>
+          <strong>Owl tip</strong>
+          <p id="owlTip"></p>
+          <button class="btn btn--sm btn--sky" type="button" id="owlAction">Show them</button>
+        </div>
+        <button class="nav-item" type="button" id="helpBtn"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>Password resets</button>
+        <button class="nav-item" type="button"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>Notifications<span class="badge" aria-label="2 new">2</span></button>
+        <div class="me"><span class="avatar" aria-hidden="true">A</span>Ms. Aisyah<a href="teacher.html">Log out</a></div>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <!-- ================= MAIN ================= -->
+    <div class="main">
+      <header class="topbar">
+        <button class="btn btn--ghost menu-btn" type="button" id="menuBtn" aria-label="Open menu" aria-controls="side" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <span class="hide-sm">Teacher room</span><svg class="icon sep hide-sm" aria-hidden="true"><use href="#i-chev"/></svg>
+          <span>Mathematics</span><svg class="icon sep" aria-hidden="true"><use href="#i-chev"/></svg>
+          <b aria-current="page">Class 8A</b>
+        </nav>
+        <div class="top-actions">
+          <a class="btn btn--ghost" href="index.html"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg><span>Student view</span></a>
+          <button class="btn btn--ghost" type="button" id="shareBtn"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg><span>Share class link</span></button>
+        </div>
+      </header>
+
+      <main class="content" id="top">
+        <!-- Class header + three meters -->
+        <section class="head" aria-labelledby="classH">
+          <div class="class-mark" aria-hidden="true">8A</div>
+          <div>
+            <h1 id="classH">Class 8A · Mathematics</h1>
+            <div class="head-meta">
+              <span class="chip">Cambridge Lower Secondary</span>
+              <span>Ms. Aisyah</span><span aria-hidden="true">·</span><span>Last lesson 2 days ago</span>
+              <span class="chip chip--sample" title="Numbers on this page are examples until the school database is connected">Sample data</span>
+            </div>
+          </div>
+          <div class="meters" id="meters"></div>
+        </section>
+
+        <!-- Chart: lesson views -->
+        <section class="card" id="progress" aria-labelledby="chartH">
+          <div class="card-head">
+            <h2 id="chartH">Lesson views</h2>
+            <div class="seg" role="group" aria-label="Time range">
+              <button type="button" data-range="7" aria-pressed="false">Week</button>
+              <button type="button" data-range="28" aria-pressed="true">4 weeks</button>
+            </div>
+            <div class="legend" aria-hidden="true"><span><i></i>Opened</span><span><i class="s2"></i>Watched to the end</span></div>
+          </div>
+          <div class="chart-wrap" id="chartWrap">
+            <svg id="chart" role="img" aria-labelledby="chartH chartDesc"></svg>
+            <p class="sr" id="chartDesc"></p>
+            <div class="tip" id="tip" aria-hidden="true"></div>
+          </div>
+          <div class="chart-foot">
+            <span>Dots on the line below the chart mark the days you uploaded a lesson.</span>
+            <button type="button" id="asTable">See as a table</button>
+          </div>
+        </section>
+
+        <!-- Work area -->
+        <section aria-labelledby="workH">
+          <h2 class="sr" id="workH">Manage class 8A</h2>
+          <div class="work-head">
+            <div class="tabs" role="tablist" aria-label="Manage">
+              <button class="tab" role="tab" type="button" id="tab-students" data-tab="students" aria-selected="true" aria-controls="panel">Students<span class="count" data-count="students"></span></button>
+              <button class="tab" role="tab" type="button" id="tab-lessons" data-tab="lessons" aria-selected="false" aria-controls="panel" tabindex="-1">Lessons<span class="count" data-count="lessons"></span></button>
+              <button class="tab" role="tab" type="button" id="tab-news" data-tab="news" aria-selected="false" aria-controls="panel" tabindex="-1">Announcements<span class="count" data-count="news"></span></button>
+            </div>
+            <div class="toolbar">
+              <label class="sr" for="filterSel">Filter</label>
+              <select id="filterSel"></select>
+              <div class="search-in"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><label class="sr" for="q">Search</label><input id="q" type="search" placeholder="Search…" autocomplete="off" /></div>
+              <button class="btn" type="button" id="exportBtn"><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg>Export</button>
+              <button class="btn btn--push" type="button" id="addBtn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span>Add student</span></button>
+            </div>
+          </div>
+          <div class="table-wrap" id="panel" role="tabpanel" aria-labelledby="tab-students" tabindex="0">
+            <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+          </div>
+          <div class="table-foot"><span id="tableCount"></span><span id="tableNote"></span></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= DIALOGS ================= -->
+  <dialog id="dlgStudent" aria-labelledby="dlgStudentH">
+    <form class="dlg-in" method="dialog" novalidate id="formStudent">
+      <h2 id="dlgStudentH">Add a student</h2>
+      <p class="sub">The student logs in with their NISN and the temporary password you give them.</p>
+      <div class="field">
+        <label for="fNisn">NISN <span id="nisnCount">0 / 10</span></label>
+        <input id="fNisn" inputmode="numeric" maxlength="10" autocomplete="off" aria-describedby="nisnHelp" required />
+        <p class="help" id="nisnHelp">The 10-digit number on the student’s card.</p>
+      </div>
+      <div class="field">
+        <label for="fName">Full name</label>
+        <input id="fName" autocomplete="off" aria-describedby="nameHelp" required />
+        <p class="help" id="nameHelp">As written on the class list.</p>
+      </div>
+      <div class="field">
+        <label for="fClass">Class</label>
+        <select id="fClass"><option>8A</option><option>8B</option><option>9A</option></select>
+      </div>
+      <div class="done" hidden id="studentDone">
+        <p><b id="doneName"></b> can log in now. Give them this temporary password; they choose their own after the first login.</p>
+        <div class="temp"><code id="doneTemp"></code><button class="btn btn--sm" type="button" data-copy="doneTemp"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div>
+      </div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--push" type="submit" id="studentSubmit">Create account</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgReset" aria-labelledby="dlgResetH">
+    <form class="dlg-in" method="dialog" id="formReset">
+      <h2 id="dlgResetH">Reset password</h2>
+      <p class="sub" id="resetSub"></p>
+      <div class="done" hidden id="resetDone">
+        <p>New temporary password. Tell it to the student in person; the old one stops working now.</p>
+        <div class="temp"><code id="resetTemp"></code><button class="btn btn--sm" type="button" data-copy="resetTemp"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div>
+      </div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--push" type="submit" id="resetSubmit"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>Reset password</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgLesson" aria-labelledby="dlgLessonH">
+    <form class="dlg-in" method="dialog" novalidate id="formLesson">
+      <h2 id="dlgLessonH">Upload a lesson</h2>
+      <p class="sub">Paste the link to your recording. It shows up for class 8A under Mathematics.</p>
+      <div class="field"><label for="lTitle">Lesson title</label><input id="lTitle" autocomplete="off" required /></div>
+      <div class="field"><label for="lUnit">Unit</label><input id="lUnit" inputmode="numeric" maxlength="2" autocomplete="off" required /></div>
+      <div class="field"><label for="lLink">Video link</label><input id="lLink" type="url" placeholder="https://…" autocomplete="off" aria-describedby="linkHelp" required /><p class="help" id="linkHelp">A YouTube or Google Drive link works.</p></div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--ghost" type="submit" value="draft">Save as draft</button>
+        <button class="btn btn--push" type="submit" value="publish">Publish</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgNews" aria-labelledby="dlgNewsH">
+    <form class="dlg-in" method="dialog" novalidate id="formNews">
+      <h2 id="dlgNewsH">Post an announcement</h2>
+      <p class="sub">It runs in the blue bar at the top of the student page.</p>
+      <div class="field"><label for="nText">Message <span id="nCount">0 / 90</span></label><textarea id="nText" maxlength="90" required></textarea></div>
+      <div class="field"><label for="nUntil">Show until</label><input id="nUntil" type="date" required /></div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--push" type="submit">Post</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgHelp" aria-labelledby="dlgHelpH">
+    <div class="dlg-in">
+      <h2 id="dlgHelpH">How password resets work</h2>
+      <p class="sub">There is no reset email. Students come to the Cambridge Room or the Teachers’ Room.</p>
+      <ol style="margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:var(--text-sm)">
+        <li>Check the student’s card or NISN.</li>
+        <li>Find them in <b>Students</b> and press <b>Reset password</b>.</li>
+        <li>Tell them the temporary password. They choose a new one when they log in.</li>
+      </ol>
+      <div class="dlg-actions"><button class="btn btn--push" type="button" data-close>Got it</button></div>
+    </div>
+  </dialog>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const DAY = 864e5;
+    const dateText = (d, o = { day: "numeric", month: "short" }) => new Date(Date.now() - d * DAY).toLocaleDateString("en-GB", o);
+    const ago = d => d === 0 ? "Today" : d === 1 ? "Yesterday" : d == null ? "Never" : `${d} days ago`;
+
+    /* ---------- Sample data (replace with data from your backend later) ---------- */
+    const LESSONS = [
+      { id: "mth-6", title: "Angles in Triangles",      unit: 6, dur: "19:10", daysAgo: 2,  views: 9,  avg: 71, status: "published" },
+      { id: "mth-5", title: "Ratio and Proportion",     unit: 5, dur: "18:45", daysAgo: 6,  views: 11, avg: 64, status: "published" },
+      { id: "mth-4", title: "Solving Linear Equations", unit: 4, dur: "20:15", daysAgo: 12, views: 12, avg: 58, status: "published" },
+      { id: "mth-3", title: "Fractions and Decimals",   unit: 3, dur: "22:30", daysAgo: 21, views: 12, avg: 82, status: "published" },
+      { id: "mth-7", title: "Area of Compound Shapes",  unit: 7, dur: "—",     daysAgo: null, views: 0, avg: 0, status: "draft" },
+    ];
+    const STUDENTS = [
+      ["0098123401", "Alya Zahra", 1, 92], ["0098123402", "Bima Nugroho", 0, 81], ["0098123403", "Citra Anggraini", 3, 74],
+      ["0098123404", "Dimas Saputra", 9, 22], ["0098123405", "Fikri Ramadhan", 1, 66], ["0098123406", "Hafiz Maulana", null, 0],
+      ["0098123407", "Keisha Lestari", 2, 88], ["0098123408", "Nadia Putri", 0, 95], ["0098123409", "Raka Pratama", 11, 18],
+      ["0098123410", "Rizky Hidayat", 4, 57], ["0098123411", "Salsa Aulia", 1, 79], ["0098123412", "Tiara Kusuma", 7, 31],
+    ].map(([nisn, name, last, progress]) => ({ nisn, name, last, progress }));
+    const NEWS = [
+      { text: "Unit 6 · Angles in Triangles is up. Watch before Thursday’s quiz.", until: -3, status: "live" },
+      { text: "Bring a protractor to class on Monday.", until: -5, status: "live" },
+      { text: "Unit 5 homework is due Friday.", until: 4, status: "ended" },
+    ];
+    const statusOf = s => s.last == null ? "idle" : (s.last > 6 || s.progress < 35) ? "nudge" : "ok";
+    const TAG = {
+      ok:    ["ok", "i-check", "On track"],
+      nudge: ["nudge", "i-alert", "Needs a nudge"],
+      idle:  ["idle", "i-dash", "Not started"],
+      published: ["ok", "i-check", "Published"],
+      draft: ["idle", "i-dash", "Draft"],
+      live:  ["live", "i-megaphone", "Running"],
+      ended: ["idle", "i-dash", "Ended"],
+    };
+    const tag = k => { const [c, i, t] = TAG[k]; return `<span class="tag ${c}"><svg class="icon" aria-hidden="true"><use href="#${i}"/></svg>${t}</span>`; };
+    const initials = n => n.split(" ").map(w => w[0]).slice(0, 2).join("");
+
+    /* ---------- Meters (the reference's three small scores, made honest) ---------- */
+    function renderMeters() {
+      const n = STUDENTS.length;
+      const week = STUDENTS.filter(s => s.last != null && s.last <= 6).length;
+      const avg = Math.round(STUDENTS.reduce((a, s) => a + s.progress, 0) / n);
+      const nudge = STUDENTS.filter(s => statusOf(s) === "nudge").length;
+      const idle = STUDENTS.filter(s => statusOf(s) === "idle").length;
+      $("meters").innerHTML = [
+        ["Watched this week", `${week}<small> / ${n}</small>`, week / n, ""],
+        ["Average progress", `${avg}<small>%</small>`, avg / 100, ""],
+        ["Need a nudge", `${nudge}<small> students</small>`, nudge / n, "warn"],
+      ].map(([l, v, p, c]) => `<div class="meter ${c}"><span class="rail"><i style="height:${Math.round(p * 100)}%"></i></span><span>${l}</span><b>${v}</b></div>`).join("");
+      $("owlTip").textContent = `${nudge} students haven’t watched much lately${idle ? `, and ${idle} haven’t started yet` : ""}. A short reminder in class usually helps.`;
+      document.querySelectorAll('[data-count="students"]').forEach(e => e.textContent = n);
+      document.querySelectorAll('[data-count="lessons"]').forEach(e => e.textContent = LESSONS.length);
+      document.querySelectorAll('[data-count="news"]').forEach(e => e.textContent = NEWS.filter(x => x.status === "live").length);
+    }
+
+    /* ---------- Chart: opened vs watched to the end, one axis ---------- */
+    const SERIES = Array.from({ length: 28 }, (_, i) => {
+      const d = 27 - i;                                   // days ago
+      const up = LESSONS.find(l => l.daysAgo === d);
+      const since = LESSONS.filter(l => l.daysAgo != null && l.daysAgo >= d).map(l => l.daysAgo - d).sort((a, b) => a - b)[0] ?? 9;
+      const wkend = new Date(Date.now() - d * DAY).getDay() % 6 === 0;
+      const opened = Math.max(1, Math.round((up ? 9 : 0) + 8 * Math.exp(-since / 2.2) + (wkend ? 1 : 3) + ((i * 7) % 3)));
+      const finished = Math.max(0, Math.round(opened * (0.42 + ((i * 5) % 4) * 0.06)));
+      return { d, opened, finished, up };
+    });
+    let range = 28;
+    function drawChart() {
+      const svg = $("chart"), W = svg.clientWidth || 800, H = svg.clientHeight || 260;
+      const pad = { l: 28, r: 92, t: 12, b: 44 };
+      const data = SERIES.slice(-range);
+      const max = Math.max(...data.map(p => p.opened)) * 1.15;
+      const x = i => pad.l + (i / (data.length - 1)) * (W - pad.l - pad.r);
+      const y = v => pad.t + (1 - v / max) * (H - pad.t - pad.b);
+      const base = H - pad.b;
+      const path = k => data.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p[k]).toFixed(1)}`).join("");
+      const ticks = [0, Math.round(max / 2), Math.round(max * 0.9)];
+      const step = range > 7 ? (W < 520 ? 14 : 7) : (W < 520 ? 2 : 1);
+      let s = ticks.map(t => `<line class="grid-line" x1="${pad.l}" x2="${W - pad.r}" y1="${y(t)}" y2="${y(t)}"/><text class="axis-text" x="${pad.l - 8}" y="${y(t) + 4}" text-anchor="end">${t}</text>`).join("");
+      s += `<path class="area s1" d="${path("opened")}L${x(data.length - 1)},${base}L${x(0)},${base}Z"/>`;
+      s += `<path class="line s1" d="${path("opened")}"/><path class="line s2" d="${path("finished")}"/>`;
+      const last = data[data.length - 1], lx = x(data.length - 1) + 10;
+      let y1 = y(last.opened), y2 = y(last.finished); if (y2 - y1 < 16) { const m = (y1 + y2) / 2; y1 = m - 8; y2 = m + 8; }
+      s += `<text class="end-label" x="${lx}" y="${y1 + 4}">Opened ${last.opened}</text><text class="end-label" x="${lx}" y="${y2 + 4}">To the end ${last.finished}</text>`;
+      // event rail
+      s += `<line class="grid-line" x1="${pad.l}" x2="${W - pad.r}" y1="${base + 14}" y2="${base + 14}"/>`;
+      data.forEach((p, i) => {
+        if (p.up) s += `<line class="event-line" x1="${x(i)}" x2="${x(i)}" y1="${pad.t}" y2="${base + 14}"/><circle class="event-dot" cx="${x(i)}" cy="${base + 14}" r="4.5"/>`;
+        if ((data.length - 1 - i) % step === 0) s += `<text class="axis-text" x="${x(i)}" y="${base + 34}" text-anchor="middle">${p.d === 0 ? "Today" : dateText(p.d)}</text>`;
+      });
+      s += `<line class="today-line" x1="${x(data.length - 1)}" x2="${x(data.length - 1)}" y1="${pad.t}" y2="${base + 14}"/>`;
+      s += `<line class="cross" id="cross" y1="${pad.t}" y2="${base}"/><circle class="hover-dot s1" id="hd1" r="5"/><circle class="hover-dot s2" id="hd2" r="5"/>`;
+      s += `<rect id="hit" x="${pad.l}" y="0" width="${W - pad.l - pad.r}" height="${H}" fill="transparent"/>`;
+      svg.innerHTML = s;
+      const tot = data.reduce((a, p) => a + p.opened, 0), fin = data.reduce((a, p) => a + p.finished, 0);
+      $("chartDesc").textContent = `Over the last ${range} days, lessons were opened ${tot} times and watched to the end ${fin} times. Views rise on days a new lesson is uploaded.`;
+      const wrap = $("chartWrap"), tip = $("tip");
+      const show = i => {
+        const p = data[i], cx = x(i);
+        $("cross").setAttribute("x1", cx); $("cross").setAttribute("x2", cx);
+        $("hd1").setAttribute("cx", cx); $("hd1").setAttribute("cy", y(p.opened));
+        $("hd2").setAttribute("cx", cx); $("hd2").setAttribute("cy", y(p.finished));
+        tip.innerHTML = `<p class="t-date">${p.d === 0 ? "Today" : dateText(p.d, { weekday: "short", day: "numeric", month: "short" })}</p>
+          <p class="t-row"><i></i>Opened<b>${p.opened}</b></p><p class="t-row"><i class="s2"></i>Watched to the end<b>${p.finished}</b></p>
+          ${p.up ? `<p class="t-event">Uploaded: Unit ${p.up.unit} · ${esc(p.up.title)}</p>` : ""}`;
+        const ox = svg.getBoundingClientRect().left - wrap.getBoundingClientRect().left, tw = tip.offsetWidth || 180;
+        tip.style.left = `${ox + (cx + 16 + tw > W ? cx - 16 - tw : cx + 16)}px`;
+        wrap.classList.add("hovering");
+      };
+      const hit = $("hit");
+      hit.addEventListener("pointermove", e => {
+        const r = svg.getBoundingClientRect(), px = e.clientX - r.left;
+        show(Math.max(0, Math.min(data.length - 1, Math.round((px - pad.l) / (W - pad.l - pad.r) * (data.length - 1)))));
+      });
+      hit.addEventListener("pointerleave", () => wrap.classList.remove("hovering"));
+    }
+    document.querySelectorAll("[data-range]").forEach(b => b.addEventListener("click", () => {
+      range = +b.dataset.range;
+      document.querySelectorAll("[data-range]").forEach(o => o.setAttribute("aria-pressed", o === b));
+      drawChart();
+    }));
+    let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(drawChart, 120); });
+
+    /* ---------- Work area: students / lessons / announcements ---------- */
+    const VIEWS = {
+      students: {
+        add: "Add student", dlg: "dlgStudent",
+        filters: [["all", "All students"], ["nudge", "Needs a nudge"], ["ok", "On track"], ["idle", "Not started"]],
+        head: `<tr><th class="check"><input type="checkbox" aria-label="Select all students" data-all /></th><th>NISN</th><th>Student</th><th>Last watched</th><th>Progress</th><th>Status</th><th><span class="sr">Actions</span></th></tr>`,
+        rows: () => STUDENTS,
+        match: (s, f, q) => (f === "all" || statusOf(s) === f) && (!q || (s.name + s.nisn).toLowerCase().includes(q)),
+        row: s => `<tr data-nisn="${s.nisn}"><td class="check"><input type="checkbox" aria-label="Select ${esc(s.name)}" /></td>
+          <td class="mono">${s.nisn}</td><td><span class="who"><span class="avatar" aria-hidden="true">${initials(s.name)}</span>${esc(s.name)}</span></td>
+          <td>${ago(s.last)}</td><td><span class="prog"><span class="track"><i style="--p:${s.progress / 100}"></i></span><b>${s.progress}%</b></span></td>
+          <td>${tag(statusOf(s))}</td><td class="act"><button class="btn btn--sm btn--ghost" type="button" data-reset="${s.nisn}"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>Reset password</button></td></tr>`,
+        csv: s => [s.nisn, s.name, ago(s.last), s.progress + "%", TAG[statusOf(s)][2]],
+        csvHead: ["NISN", "Student", "Last watched", "Progress", "Status"],
+        noun: "students",
+      },
+      lessons: {
+        add: "Upload lesson", dlg: "dlgLesson",
+        filters: [["all", "All lessons"], ["published", "Published"], ["draft", "Drafts"]],
+        head: `<tr><th>Unit</th><th>Lesson</th><th>Length</th><th>Opened by</th><th>Avg. watched</th><th>Uploaded</th><th>Status</th><th><span class="sr">Actions</span></th></tr>`,
+        rows: () => LESSONS,
+        match: (l, f, q) => (f === "all" || l.status === f) && (!q || l.title.toLowerCase().includes(q)),
+        row: l => `<tr><td class="num">Unit ${l.unit}</td><td><b>${esc(l.title)}</b></td><td class="mono">${l.dur}</td>
+          <td class="num">${l.status === "draft" ? "—" : `${l.views} / ${STUDENTS.length}`}</td>
+          <td>${l.status === "draft" ? "—" : `<span class="prog"><span class="track"><i style="--p:${l.avg / 100}"></i></span><b>${l.avg}%</b></span>`}</td>
+          <td>${l.daysAgo == null ? "—" : ago(l.daysAgo)}</td><td>${tag(l.status)}</td>
+          <td class="act"><button class="btn btn--sm btn--ghost" type="button">Edit</button></td></tr>`,
+        csv: l => [l.unit, l.title, l.dur, l.views, l.avg + "%", ago(l.daysAgo), l.status],
+        csvHead: ["Unit", "Lesson", "Length", "Opened by", "Avg. watched", "Uploaded", "Status"],
+        noun: "lessons",
+      },
+      news: {
+        add: "Post announcement", dlg: "dlgNews",
+        filters: [["all", "All announcements"], ["live", "Running"], ["ended", "Ended"]],
+        head: `<tr><th>Message</th><th>Shows until</th><th>Status</th><th><span class="sr">Actions</span></th></tr>`,
+        rows: () => NEWS,
+        match: (n, f, q) => (f === "all" || n.status === f) && (!q || n.text.toLowerCase().includes(q)),
+        row: (n, i) => `<tr><td style="white-space:normal;min-width:280px">${esc(n.text)}</td><td>${dateText(n.until, { weekday: "short", day: "numeric", month: "short" })}</td><td>${tag(n.status)}</td>
+          <td class="act">${n.status === "live" ? `<button class="btn btn--sm btn--ghost" type="button" data-end="${i}">End now</button>` : ""}</td></tr>`,
+        csv: n => [n.text, dateText(n.until), n.status],
+        csvHead: ["Message", "Shows until", "Status"],
+        noun: "announcements",
+      },
+    };
+    let view = "students";
+    function setView(v, focus) {
+      view = v;
+      document.querySelectorAll(".tab").forEach(t => { const on = t.dataset.tab === v; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; if (on && focus) t.focus(); });
+      $("panel").setAttribute("aria-labelledby", "tab-" + v);
+      $("filterSel").innerHTML = VIEWS[v].filters.map(([k, l]) => `<option value="${k}">${l}</option>`).join("");
+      $("addBtn").querySelector("span").textContent = VIEWS[v].add;
+      $("q").value = "";
+      $("thead").innerHTML = VIEWS[v].head;
+      renderRows();
+    }
+    function visibleRows() {
+      const V = VIEWS[view], f = $("filterSel").value, q = $("q").value.trim().toLowerCase();
+      return V.rows().map((r, i) => [r, i]).filter(([r]) => V.match(r, f, q));
+    }
+    function renderRows(addedKey) {
+      const V = VIEWS[view], list = visibleRows();
+      $("tbody").innerHTML = list.length ? list.map(([r, i]) => V.row(r, i)).join("")
+        : `<tr class="empty-row"><td colspan="8">No ${V.noun} match. Clear the search or pick another filter.</td></tr>`;
+      $("tableCount").textContent = `Showing ${list.length} of ${V.rows().length} ${V.noun}`;
+      $("tableNote").textContent = view === "news" ? "Running announcements appear in the student page’s blue bar." : "";
+      if (addedKey) $("tbody").querySelector(`[data-nisn="${addedKey}"]`)?.classList.add("added");
+    }
+    document.querySelector(".tabs").addEventListener("click", e => { const t = e.target.closest(".tab"); if (t) setView(t.dataset.tab); });
+    document.querySelector(".tabs").addEventListener("keydown", e => {
+      if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+      const keys = Object.keys(VIEWS), i = keys.indexOf(view);
+      setView(keys[(i + (e.key === "ArrowRight" ? 1 : -1) + keys.length) % keys.length], true);
+    });
+    $("filterSel").addEventListener("change", () => renderRows());
+    $("q").addEventListener("input", () => renderRows());
+    $("thead").addEventListener("change", e => { if (e.target.matches("[data-all]")) $("tbody").querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = e.target.checked); });
+
+    /* Export: download what's on screen as CSV */
+    $("exportBtn").addEventListener("click", () => {
+      const V = VIEWS[view];
+      const lines = [V.csvHead, ...visibleRows().map(([r]) => V.csv(r))].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(","));
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
+      a.download = `8A-${V.noun}.csv`; a.click(); URL.revokeObjectURL(a.href);
+    });
+
+    /* ---------- Dialogs ---------- */
+    const tempPass = () => ["owl", "leaf", "book", "star", "moon"][Math.floor(Math.random() * 5)] + "-" + String(Math.floor(1000 + Math.random() * 9000));
+    let opener;
+    function openDlg(id) { opener = document.activeElement; $(id).showModal(); }
+    document.querySelectorAll("dialog").forEach(d => {
+      d.addEventListener("click", e => { if (e.target === d || e.target.closest("[data-close]")) d.close(); });
+      d.addEventListener("close", () => { opener?.focus(); });
+    });
+    document.addEventListener("click", e => {
+      const c = e.target.closest("[data-copy]"); if (!c) return;
+      navigator.clipboard?.writeText($(c.dataset.copy).textContent);
+      c.lastChild.textContent = "Copied"; setTimeout(() => c.lastChild.textContent = "Copy", 1400);
+    });
+    $("addBtn").addEventListener("click", () => {
+      const id = VIEWS[view].dlg, f = $(id).querySelector("form");
+      f.reset(); f.querySelectorAll("[aria-invalid]").forEach(i => i.setAttribute("aria-invalid", "false"));
+      if (id === "dlgStudent") { $("studentDone").hidden = true; $("studentSubmit").textContent = "Create account"; $("nisnCount").textContent = "0 / 10"; setHelp("nisnHelp", "The 10-digit number on the student’s card."); }
+      if (id === "dlgNews") { $("nCount").textContent = "0 / 90"; $("nUntil").value = new Date(Date.now() + 7 * DAY).toISOString().slice(0, 10); }
+      openDlg(id);
+    });
+    function setHelp(id, text, err) { const h = $(id); h.textContent = text; h.classList.toggle("err", !!err); }
+
+    // Add student
+    $("fNisn").addEventListener("input", e => { e.target.value = e.target.value.replace(/\D/g, ""); $("nisnCount").textContent = `${e.target.value.length} / 10`; });
+    $("formStudent").addEventListener("submit", e => {
+      e.preventDefault();
+      if (!$("studentDone").hidden) return $("dlgStudent").close();
+      const nisn = $("fNisn").value, name = $("fName").value.trim();
+      let ok = true;
+      if (nisn.length !== 10) { ok = false; $("fNisn").setAttribute("aria-invalid", "true"); setHelp("nisnHelp", `NISN needs 10 digits; this has ${nisn.length}.`, true); }
+      else if (STUDENTS.some(s => s.nisn === nisn)) { ok = false; $("fNisn").setAttribute("aria-invalid", "true"); setHelp("nisnHelp", "A student with this NISN already has an account. Use Reset password instead.", true); }
+      else { $("fNisn").setAttribute("aria-invalid", "false"); setHelp("nisnHelp", "The 10-digit number on the student’s card."); }
+      if (!name) { ok = false; $("fName").setAttribute("aria-invalid", "true"); setHelp("nameHelp", "Add the student’s full name.", true); }
+      else { $("fName").setAttribute("aria-invalid", "false"); setHelp("nameHelp", "As written on the class list."); }
+      if (!ok) return (e.target.querySelector('[aria-invalid="true"]')).focus();
+      STUDENTS.push({ nisn, name, last: null, progress: 0 });
+      $("doneName").textContent = name; $("doneTemp").textContent = tempPass();
+      $("studentDone").hidden = false; $("studentSubmit").textContent = "Done";
+      renderMeters(); renderRows(nisn);
+    });
+
+    // Reset password
+    let resetting;
+    $("tbody").addEventListener("click", e => {
+      const r = e.target.closest("[data-reset]");
+      if (r) {
+        resetting = STUDENTS.find(s => s.nisn === r.dataset.reset);
+        $("resetSub").textContent = `${resetting.name} · NISN ${resetting.nisn}. Check their student card first.`;
+        $("resetDone").hidden = true; $("resetSubmit").innerHTML = '<svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>Reset password';
+        openDlg("dlgReset");
+      }
+      const end = e.target.closest("[data-end]");
+      if (end) { NEWS[+end.dataset.end].status = "ended"; renderMeters(); renderRows(); }
+    });
+    $("formReset").addEventListener("submit", e => {
+      e.preventDefault();
+      if (!$("resetDone").hidden) return $("dlgReset").close();
+      $("resetTemp").textContent = tempPass(); $("resetDone").hidden = false; $("resetSubmit").textContent = "Done";
+    });
+
+    // Upload lesson
+    $("formLesson").addEventListener("submit", e => {
+      e.preventDefault();
+      const t = $("lTitle"), u = $("lUnit"), l = $("lLink");
+      const bad = [[t, !t.value.trim()], [u, !/^\d{1,2}$/.test(u.value)], [l, !/^https?:\/\/\S+$/.test(l.value)]];
+      bad.forEach(([el, b]) => el.setAttribute("aria-invalid", b));
+      const first = bad.find(([, b]) => b); if (first) return first[0].focus();
+      const publish = e.submitter?.value !== "draft";
+      LESSONS.unshift({ id: "new-" + Date.now(), title: t.value.trim(), unit: +u.value, dur: "—", daysAgo: publish ? 0 : null, views: 0, avg: 0, status: publish ? "published" : "draft" });
+      $("dlgLesson").close(); renderMeters(); renderRows();
+    });
+
+    // Announcement
+    $("nText").addEventListener("input", e => $("nCount").textContent = `${e.target.value.length} / 90`);
+    $("formNews").addEventListener("submit", e => {
+      e.preventDefault();
+      const t = $("nText"); if (!t.value.trim()) { t.setAttribute("aria-invalid", "true"); return t.focus(); }
+      const days = Math.round((new Date($("nUntil").value) - Date.now()) / DAY);
+      NEWS.unshift({ text: t.value.trim(), until: -Math.max(0, days), status: "live" });
+      $("dlgNews").close(); renderMeters(); renderRows();
+    });
+
+    /* ---------- Sidebar ---------- */
+    const side = $("side"), scrim = $("scrim");
+    function menu(open) { side.classList.toggle("open", open); scrim.classList.toggle("open", open); $("menuBtn").setAttribute("aria-expanded", open); if (open) side.querySelector(".nav-item").focus(); }
+    $("menuBtn").addEventListener("click", () => menu(true));
+    scrim.addEventListener("click", () => menu(false));
+    addEventListener("keydown", e => {
+      if (e.key === "Escape" && side.classList.contains("open")) { menu(false); $("menuBtn").focus(); }
+      if (e.key === "/" && !e.target.closest("input, textarea, select")) { e.preventDefault(); setView("students"); $("q").focus(); }
+    });
+    document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
+      document.querySelectorAll("[data-go]").forEach(o => o === b ? o.setAttribute("aria-current", "page") : o.removeAttribute("aria-current"));
+      const g = b.dataset.go;
+      if (g === "overview") $("top").scrollIntoView({ behavior: "smooth" });
+      else if (g === "progress") $("progress").scrollIntoView({ behavior: "smooth" });
+      else { setView(g); $("panel").scrollIntoView({ behavior: "smooth", block: "center" }); }
+      menu(false);
+    }));
+    $("sideSearch").addEventListener("click", () => { menu(false); setView("students"); $("q").focus(); });
+    $("owlAction").addEventListener("click", () => { setView("students"); $("filterSel").value = "nudge"; renderRows(); $("panel").scrollIntoView({ behavior: "smooth", block: "center" }); menu(false); });
+    $("helpBtn").addEventListener("click", () => openDlg("dlgHelp"));
+    $("asTable").addEventListener("click", () => {
+      const rows = SERIES.slice(-range).map(p => `<tr><td>${p.d === 0 ? "Today" : dateText(p.d)}</td><td class="num">${p.opened}</td><td class="num">${p.finished}</td><td>${p.up ? esc(p.up.title) : ""}</td></tr>`).join("");
+      let t = $("chartTable");
+      if (t) { t.remove(); $("asTable").textContent = "See as a table"; return; }
+      $("chartWrap").insertAdjacentHTML("afterend", `<div class="table-wrap" id="chartTable" style="margin:0 var(--space-md) var(--space-sm);max-height:260px;overflow:auto"><table><thead><tr><th>Day</th><th>Opened</th><th>Watched to the end</th><th>Lesson uploaded</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+      $("asTable").textContent = "Hide table";
+    });
+    $("shareBtn").addEventListener("click", e => {
+      navigator.clipboard?.writeText(location.origin + "/#library");
+      const s = e.currentTarget.querySelector("span"); s.textContent = "Link copied"; setTimeout(() => s.textContent = "Share class link", 1400);
+    });
+
+    renderMeters(); setView("students"); drawChart();
+  </script>
+</body>
+</html>

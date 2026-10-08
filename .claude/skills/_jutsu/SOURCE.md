@@ -1,0 +1,1 @@
+cast, paint, bunshin and _jutsu are vendored from https://github.com/AThevon/genjutsu (skills/) at commit dbe5ed3, v4.1.1, MIT License (see LICENSE-genjutsu). ui-ux-pro-max keeps its upstream license in LICENSE-upstream.txt.
