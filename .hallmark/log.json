@@ -1,6 +1,15 @@
 [
   {
     "date": "2026-10-08",
+    "macrostructure": "Workbench (admin room, same system as teacher room)",
+    "theme": "custom (unchanged)",
+    "enrichment": "static SVG owl tip card",
+    "nav": "N3 side-rail",
+    "footer": "none (app)",
+    "brief": "Admin room: teacher + student accounts, CSV import, classes, lesson hiding, announcements, activity log; shared dashboard.css/js"
+  },
+  {
+    "date": "2026-10-08",
     "macrostructure": "Workbench (teacher dashboard)",
     "theme": "custom (unchanged)",
     "enrichment": "static SVG owl tip card",

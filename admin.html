@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin room | MTsN 32 Cambridge E-Learning</title>
+  <meta name="description" content="Cambridge admins of MTsN 32 manage teacher and student accounts, classes, lessons and announcements." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <style>
+    /* Hallmark · admin room: same Workbench system as the teacher room (dashboard.css); only admin-specific pieces below */
+    .class-mark.school { background: var(--color-card); border: 1px solid var(--color-rule); }
+    .class-mark.school img { width: 46px; height: 46px; }
+    .chip--admin { border-color: var(--color-action); background: var(--color-action-tint); color: var(--color-ink); }
+    .tag.admin { color: var(--color-ink); border-color: var(--color-action); background: var(--color-action-tint); }
+    .subj { display: inline-flex; align-items: center; gap: 6px; }
+    .classes { color: var(--color-muted); font-size: 13px; }
+    .row-off td { color: var(--color-muted); }
+    .row-off .who { opacity: .7; }
+    .you { font-size: 11px; font-weight: 700; color: var(--color-muted); margin-left: 4px; }
+
+    /* Bulk bar: appears when students are selected */
+    .bulk {
+      display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs) var(--space-xs); margin-top: var(--space-sm);
+      padding: var(--space-2xs) var(--space-xs); border-radius: 12px; background: var(--color-sky); border: 1px solid var(--color-sky-rule); font-size: var(--text-sm);
+    }
+    .bulk[hidden] { display: none; }
+    .bulk b { font-weight: 800; margin-right: var(--space-2xs); }
+    .bulk select { height: 32px; padding: 0 var(--space-xs); border: 1px solid var(--color-sky-rule); border-radius: 10px; background: var(--color-card); font-size: 13px; font-weight: 600; }
+    .bulk .btn--ghost { margin-left: auto; }
+
+    /* Manage dialog */
+    .person { display: flex; align-items: center; gap: var(--space-xs); }
+    .person .avatar { width: 44px; height: 44px; font-size: 16px; background: var(--color-sky-2); color: var(--color-ink); }
+    .person h2 { font-size: var(--text-lg); }
+    .person p { font-size: 13px; color: var(--color-muted); }
+    .acts { display: grid; border: 1px solid var(--color-rule); border-radius: 14px; overflow: hidden; }
+    .act { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2xs) var(--space-sm); align-items: center; padding: var(--space-xs) var(--space-sm); border-bottom: 1px solid var(--color-rule); }
+    .act:last-child { border-bottom: 0; }
+    .act b { display: block; font-size: var(--text-sm); }
+    .act span { display: block; font-size: 12px; color: var(--color-muted); }
+    .act select { height: 34px; padding: 0 var(--space-xs); border: 1px solid var(--color-rule-2); border-radius: 10px; background: var(--color-card); font-size: 13px; font-weight: 600; }
+    .act .out { grid-column: 1 / -1; }
+    .act .out:empty { display: none; }
+    .note { font-size: 12px; color: var(--color-ink-2); }
+    .note button { border: 0; background: none; padding: 0; color: var(--color-accent-deep); font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .btn--danger { color: var(--color-error); border-color: color-mix(in oklch, var(--color-error) 35%, transparent); }
+    .btn--danger:hover { background: var(--color-error-tint); border-color: var(--color-error); }
+    .check-row { display: flex; gap: var(--space-2xs); align-items: flex-start; font-size: var(--text-sm); }
+    .check-row input { margin-top: 3px; }
+    .check-row span { color: var(--color-muted); display: block; font-size: 12px; }
+
+    /* Import */
+    .drop { display: grid; gap: var(--space-2xs); padding: var(--space-sm); border: 1.5px dashed var(--color-rule-2); border-radius: 12px; background: var(--color-paper); font-size: var(--text-sm); }
+    .drop code { font-family: var(--font-mono); font-size: 12px; background: var(--color-card); padding: 2px 6px; border-radius: 6px; border: 1px solid var(--color-rule); }
+    .preview { display: grid; gap: var(--space-3xs); font-size: var(--text-sm); max-height: 160px; overflow: auto; }
+    .preview .bad { color: var(--color-error); }
+    .preview .good { color: var(--color-success); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9.5 4.5 2.5-4.5 2.5z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19.5c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.8c1.8.7 3 2.3 3.5 4.7"/></symbol>
+    <symbol id="i-teacher" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 20c.9-3.6 3.6-5.5 7-5.5s6.1 1.9 7 5.5M9 14.8l3 2.7 3-2.7"/></symbol>
+    <symbol id="i-door" viewBox="0 0 24 24"><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17M3 21h18M15 12h.01"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19h16M7 15l4-5 3 3 5-7"/></symbol>
+    <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6L7 10zM17.5 9.5a3.5 3.5 0 0 1 0 5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.4M12 17v.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 20h14"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M5 20h14"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A9.7 9.7 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-3 3.9M6.6 6.6A17 17 0 0 0 2.5 12S6 19 12 19a9.4 9.4 0 0 0 4.4-1.1M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16v.5"/></symbol>
+    <symbol id="i-dash" viewBox="0 0 24 24"><path d="M7 12h10"/></symbol>
+    <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="14" r="4"/><path d="m11 11 8-8M16 6l2 2M14 8l2 2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></symbol>
+  </svg>
+
+  <div class="app">
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="side" id="side" aria-label="Admin room">
+      <a href="index.html" class="brand" aria-label="MTsN 32 E-Learning, student site">
+        <img src="assets/logo.png" alt="" />
+        <span><strong>MTsN 32 E-Learning</strong><small>Admin room</small></span>
+      </a>
+      <button class="side-search" type="button" id="sideSearch"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Find someone…<kbd>/</kbd></button>
+
+      <nav class="nav-group" aria-label="Sections">
+        <button class="nav-item" type="button" data-go="overview" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Overview</button>
+        <button class="nav-item" type="button" data-go="teachers"><svg class="icon" aria-hidden="true"><use href="#i-teacher"/></svg>Teachers<span class="count" data-count="teachers"></span></button>
+        <button class="nav-item" type="button" data-go="students"><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>Students<span class="count" data-count="students"></span></button>
+        <button class="nav-item" type="button" data-go="classes"><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Classes<span class="count" data-count="classes"></span></button>
+        <button class="nav-item" type="button" data-go="lessons"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Lessons<span class="count" data-count="lessons"></span></button>
+        <button class="nav-item" type="button" data-go="news"><svg class="icon" aria-hidden="true"><use href="#i-megaphone"/></svg>Announcements<span class="count" data-count="news"></span></button>
+        <button class="nav-item" type="button" data-go="log"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Activity log</button>
+      </nav>
+
+      <div class="nav-group" aria-label="Other rooms">
+        <p class="nav-label">Switch room</p>
+        <a class="nav-item" href="teacher-dashboard.html"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>My classes</a>
+        <a class="nav-item" href="index.html"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg>Student view</a>
+      </div>
+
+      <div class="side-bottom">
+        <div class="owl-card">
+          <svg class="owl" viewBox="0 0 200 220" aria-hidden="true">
+            <ellipse cx="100" cy="130" rx="70" ry="78" fill="var(--color-owl-body)"/>
+            <ellipse cx="100" cy="150" rx="46" ry="52" fill="var(--color-owl-belly)"/>
+            <path d="M44 70 58 34 78 62ZM156 70 142 34 122 62Z" fill="var(--color-owl-body)"/>
+            <circle cx="76" cy="92" r="24" fill="var(--color-card)"/><circle cx="124" cy="92" r="24" fill="var(--color-card)"/>
+            <circle cx="78" cy="94" r="10" fill="var(--color-ink)"/><circle cx="122" cy="94" r="10" fill="var(--color-ink)"/>
+            <circle cx="76" cy="92" r="27" fill="none" stroke="var(--color-ink)" stroke-width="4"/><circle cx="124" cy="92" r="27" fill="none" stroke="var(--color-ink)" stroke-width="4"/>
+            <path d="M92 110h16l-8 14z" fill="var(--color-action)"/>
+          </svg>
+          <strong>Owl tip</strong>
+          <p id="owlTip"></p>
+          <button class="btn btn--sm btn--sky" type="button" id="owlAction">Show them</button>
+        </div>
+        <button class="nav-item" type="button" id="helpBtn"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>What admins can do</button>
+        <div class="me"><span class="avatar" aria-hidden="true">A</span>Ms. Aisyah<a href="teacher.html">Log out</a></div>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <!-- ================= MAIN ================= -->
+    <div class="main">
+      <header class="topbar">
+        <button class="btn btn--ghost menu-btn" type="button" id="menuBtn" aria-label="Open menu" aria-controls="side" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <span class="hide-sm">Admin room</span><svg class="icon sep hide-sm" aria-hidden="true"><use href="#i-chev"/></svg>
+          <b aria-current="page">Cambridge Programme</b>
+        </nav>
+        <div class="top-actions">
+          <a class="btn btn--ghost" href="index.html"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg><span>Student view</span></a>
+          <button class="btn btn--ghost" type="button" id="importTop"><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg><span>Import students</span></button>
+        </div>
+      </header>
+
+      <main class="content" id="top">
+        <!-- School header + three meters -->
+        <section class="head" aria-labelledby="schoolH">
+          <div class="class-mark school" aria-hidden="true"><img src="assets/logo.png" alt="" /></div>
+          <div>
+            <h1 id="schoolH">Cambridge Programme</h1>
+            <div class="head-meta">
+              <span class="chip chip--admin"><svg class="icon" aria-hidden="true" style="width:14px;height:14px"><use href="#i-shield"/></svg>Admin</span>
+              <span id="headSummary"></span>
+              <span class="chip chip--sample" title="Numbers on this page are examples until the school database is connected">Sample data</span>
+            </div>
+          </div>
+          <div class="meters" id="meters"></div>
+        </section>
+
+        <!-- Chart: school-wide lesson views -->
+        <section class="card" id="progress" aria-labelledby="chartH">
+          <div class="card-head">
+            <h2 id="chartH">Lesson views, all classes</h2>
+            <div class="seg" role="group" aria-label="Time range">
+              <button type="button" data-range="7" aria-pressed="false">Week</button>
+              <button type="button" data-range="28" aria-pressed="true">4 weeks</button>
+            </div>
+            <div class="legend" aria-hidden="true"><span><i></i>Opened</span><span><i class="s2"></i>Watched to the end</span></div>
+          </div>
+          <div class="chart-wrap" id="chartWrap">
+            <svg id="chart" role="img" aria-labelledby="chartH chartDesc"></svg>
+            <p class="sr" id="chartDesc"></p>
+            <div class="tip" id="tip" aria-hidden="true"></div>
+          </div>
+          <div class="chart-foot">
+            <span>Dots on the line below the chart mark the days a teacher uploaded a lesson.</span>
+            <button type="button" id="asTable">See as a table</button>
+          </div>
+        </section>
+
+        <!-- Work area -->
+        <section aria-labelledby="workH">
+          <h2 class="sr" id="workH">Manage the programme</h2>
+          <div class="work-head">
+            <div class="tabs" role="tablist" aria-label="Manage">
+              <button class="tab" role="tab" type="button" id="tab-teachers" data-tab="teachers" aria-selected="true" aria-controls="panel">Teachers<span class="count" data-count="teachers"></span></button>
+              <button class="tab" role="tab" type="button" id="tab-students" data-tab="students" aria-selected="false" aria-controls="panel" tabindex="-1">Students<span class="count" data-count="students"></span></button>
+              <button class="tab" role="tab" type="button" id="tab-classes" data-tab="classes" aria-selected="false" aria-controls="panel" tabindex="-1">Classes<span class="count" data-count="classes"></span></button>
+              <button class="tab" role="tab" type="button" id="tab-lessons" data-tab="lessons" aria-selected="false" aria-controls="panel" tabindex="-1">Lessons<span class="count" data-count="lessons"></span></button>
+              <button class="tab" role="tab" type="button" id="tab-news" data-tab="news" aria-selected="false" aria-controls="panel" tabindex="-1">Announcements<span class="count" data-count="news"></span></button>
+              <button class="tab" role="tab" type="button" id="tab-log" data-tab="log" aria-selected="false" aria-controls="panel" tabindex="-1">Activity</button>
+            </div>
+            <div class="toolbar">
+              <label class="sr" for="filterSel">Filter</label>
+              <select id="filterSel"></select>
+              <div class="search-in"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><label class="sr" for="q">Search</label><input id="q" type="search" placeholder="Search…" autocomplete="off" /></div>
+              <button class="btn" type="button" id="exportBtn"><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg>Export</button>
+              <button class="btn" type="button" id="importBtn" hidden><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg>Import</button>
+              <button class="btn btn--push" type="button" id="addBtn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg><span>Add teacher</span></button>
+            </div>
+          </div>
+          <div class="bulk" id="bulk" hidden>
+            <b id="bulkCount"></b>
+            <label class="sr" for="bulkClass">Move selected to class</label>
+            <select id="bulkClass"></select>
+            <button class="btn btn--sm" type="button" id="bulkMove"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg>Move</button>
+            <button class="btn btn--sm btn--danger" type="button" id="bulkDisable"><svg class="icon" aria-hidden="true"><use href="#i-ban"/></svg>Disable accounts</button>
+            <button class="btn btn--sm btn--ghost" type="button" id="bulkClear">Clear selection</button>
+          </div>
+          <div class="table-wrap" id="panel" role="tabpanel" aria-labelledby="tab-teachers" tabindex="0">
+            <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+          </div>
+          <div class="table-foot"><span id="tableCount" aria-live="polite"></span><span id="tableNote"></span></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= DIALOGS ================= -->
+  <!-- Manage one account (teacher or student): filled by script -->
+  <dialog id="dlgManage" aria-labelledby="manageH"><div class="dlg-in" id="manageBody"></div></dialog>
+
+  <dialog id="dlgTeacher" aria-labelledby="dlgTeacherH">
+    <form class="dlg-in" method="dialog" novalidate id="formTeacher">
+      <h2 id="dlgTeacherH">Add a teacher</h2>
+      <p class="sub">They log in on the teacher page with their NIP or school email and the temporary password.</p>
+      <div class="field"><label for="tName">Full name</label><input id="tName" autocomplete="off" placeholder="Ms. / Mr. …" aria-describedby="tNameHelp" /><p class="help" id="tNameHelp">How students see it, e.g. Ms. Dewi.</p></div>
+      <div class="field"><label for="tNip">NIP <span id="nipCount">0 / 18</span></label><input id="tNip" inputmode="numeric" maxlength="18" autocomplete="off" aria-describedby="tNipHelp" /><p class="help" id="tNipHelp">18 digits.</p></div>
+      <div class="field"><label for="tEmail">School email</label><input id="tEmail" type="email" autocomplete="off" aria-describedby="tEmailHelp" /><p class="help" id="tEmailHelp">Either the NIP or this email works for logging in.</p></div>
+      <div class="field"><label for="tSubject">Subject</label><select id="tSubject"><option value="math">Mathematics</option><option value="eng">English</option><option value="sci">Science</option></select></div>
+      <label class="check-row"><input type="checkbox" id="tAdmin" /><div>Also an admin<span>Can manage accounts, classes and lessons for the whole programme.</span></div></label>
+      <div class="done" hidden id="teacherDone">
+        <p><b id="tDoneName"></b> can log in now with this temporary password. They choose their own after the first login.</p>
+        <div class="temp"><code id="tDoneTemp"></code><button class="btn btn--sm" type="button" data-copy="tDoneTemp"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div>
+      </div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--push" type="submit" id="teacherSubmit">Create account</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgStudent" aria-labelledby="dlgStudentH">
+    <form class="dlg-in" method="dialog" novalidate id="formStudent">
+      <h2 id="dlgStudentH">Add a student</h2>
+      <p class="sub">The student logs in with their NISN and the temporary password you give them.</p>
+      <div class="field"><label for="sNisn">NISN <span id="nisnCount">0 / 10</span></label><input id="sNisn" inputmode="numeric" maxlength="10" autocomplete="off" aria-describedby="sNisnHelp" /><p class="help" id="sNisnHelp">The 10-digit number on the student’s card.</p></div>
+      <div class="field"><label for="sName">Full name</label><input id="sName" autocomplete="off" aria-describedby="sNameHelp" /><p class="help" id="sNameHelp">As written on the class list.</p></div>
+      <div class="field"><label for="sClass">Class</label><select id="sClass" data-classes></select></div>
+      <div class="done" hidden id="studentDone">
+        <p><b id="sDoneName"></b> can log in now. Give them this temporary password; they choose their own after the first login.</p>
+        <div class="temp"><code id="sDoneTemp"></code><button class="btn btn--sm" type="button" data-copy="sDoneTemp"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div>
+      </div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--push" type="submit" id="studentSubmit">Create account</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgImport" aria-labelledby="dlgImportH">
+    <form class="dlg-in" method="dialog" novalidate id="formImport">
+      <h2 id="dlgImportH">Import students</h2>
+      <p class="sub">For a new school year: add a whole class list at once.</p>
+      <div class="drop">
+        <span>A CSV file with one student per line: <code>nisn,name,class</code></span>
+        <span>Example: <code>0098123413,Putri Wulandari,8A</code></span>
+        <label class="sr" for="importFile">CSV file</label>
+        <input type="file" id="importFile" accept=".csv,text/csv" />
+      </div>
+      <div class="field"><label for="importText">Or paste the lines here</label><textarea id="importText" placeholder="0098123413,Putri Wulandari,8A"></textarea></div>
+      <div class="preview" id="importPreview" aria-live="polite"></div>
+      <div class="done" hidden id="importDone">
+        <p id="importDoneText"></p>
+        <button class="btn btn--sm" type="button" id="importPasswords"><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg>Download temporary passwords (CSV)</button>
+      </div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--push" type="submit" id="importSubmit" disabled>Add students</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgClass" aria-labelledby="dlgClassH">
+    <form class="dlg-in" method="dialog" novalidate id="formClass">
+      <h2 id="dlgClassH">Add a class</h2>
+      <div class="field"><label for="cName">Class name</label><input id="cName" maxlength="3" autocomplete="off" placeholder="7C" aria-describedby="cNameHelp" /><p class="help" id="cNameHelp">Grade 7, 8 or 9 and a letter, e.g. 7C.</p></div>
+      <div class="field"><label for="cHome">Homeroom teacher</label><select id="cHome" data-teachers></select></div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--push" type="submit">Add class</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgNews" aria-labelledby="dlgNewsH">
+    <form class="dlg-in" method="dialog" novalidate id="formNews">
+      <h2 id="dlgNewsH">Post a school announcement</h2>
+      <p class="sub">It runs in the blue bar at the top of the student page for every class.</p>
+      <div class="field"><label for="nText">Message <span id="nCount">0 / 90</span></label><textarea id="nText" maxlength="90"></textarea></div>
+      <div class="field"><label for="nUntil">Show until</label><input id="nUntil" type="date" /></div>
+      <div class="dlg-actions">
+        <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn--push" type="submit">Post</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgHelp" aria-labelledby="dlgHelpH">
+    <div class="dlg-in">
+      <h2 id="dlgHelpH">What admins can do</h2>
+      <ul style="display:grid;gap:6px;font-size:var(--text-sm);list-style:disc;padding-left:1.2em">
+        <li><b>Teachers:</b> add accounts, reset passwords, make someone an admin, disable an account when a teacher leaves.</li>
+        <li><b>Students:</b> add one by one or import a class list, reset passwords, move to another class, disable when they leave.</li>
+        <li><b>Classes:</b> add classes and set the homeroom teacher.</li>
+        <li><b>Lessons:</b> hide a lesson from students without deleting it.</li>
+        <li><b>Announcements:</b> post to every class, end any announcement.</li>
+        <li><b>Activity log:</b> every account change is recorded with who did it.</li>
+      </ul>
+      <p class="sub" style="margin:0">Students and teachers who forgot a password come to the Cambridge Room or the Teachers’ Room. There is no reset email.</p>
+      <div class="dlg-actions"><button class="btn btn--push" type="button" data-close>Got it</button></div>
+    </div>
+  </dialog>
+
+  <script src="dashboard.js"></script>
+  <script>
+    /* ---------- Sample data (replace with data from your backend later) ---------- */
+    const ME = "aisyah";
+    const SUBJECTS = { math: "Mathematics", eng: "English", sci: "Science" };
+    const TEACHERS = [
+      { id: "aisyah", name: "Ms. Aisyah", nip: "198703122010012004", email: "aisyah@mtsn32.example", subject: "math", classes: ["8A", "8B", "9A"], admin: true,  active: true, last: 0 },
+      { id: "hendra", name: "Mr. Hendra", nip: "198105202008011007", email: "hendra@mtsn32.example", subject: "math", classes: ["7A", "7B"],       admin: true,  active: true, last: 5 },
+      { id: "fajar",  name: "Mr. Fajar",  nip: "199002142015031002", email: "fajar@mtsn32.example",  subject: "eng",  classes: ["7A", "8A", "8B"], admin: false, active: true, last: 1 },
+      { id: "dewi",   name: "Ms. Dewi",   nip: "198811302014022001", email: "dewi@mtsn32.example",   subject: "eng",  classes: ["7B", "9A"],       admin: false, active: true, last: 34 },
+      { id: "rina",   name: "Ms. Rina",   nip: "199207082019032003", email: "rina@mtsn32.example",   subject: "sci",  classes: ["7A", "7B", "8A"], admin: false, active: true, last: 0 },
+      { id: "budi",   name: "Mr. Budi",   nip: "198512012011011005", email: "budi@mtsn32.example",   subject: "sci",  classes: ["8B", "9A"],       admin: false, active: true, last: 3 },
+    ];
+    const CLASSES = [
+      { name: "7A", home: "hendra" }, { name: "7B", home: "dewi" }, { name: "8A", home: "aisyah" }, { name: "8B", home: "fajar" }, { name: "9A", home: "budi" },
+    ];
+    const FIRST = ["Adit", "Bagas", "Cahya", "Dina", "Eka", "Farah", "Gilang", "Hana", "Intan", "Joko", "Kevin", "Laila", "Malik", "Nabila", "Oki", "Putri", "Rahma", "Sinta", "Taufik", "Umar", "Vina", "Wulan", "Yusuf", "Zaki"];
+    const LAST = ["Saputra", "Wijaya", "Lestari", "Hidayat", "Pratama", "Rahman", "Kusuma", "Siregar", "Nasution", "Hakim", "Utami", "Firmansyah"];
+    const NAMES_8A = ["Alya Zahra", "Bima Nugroho", "Citra Anggraini", "Dimas Saputra", "Fikri Ramadhan", "Hafiz Maulana", "Keisha Lestari", "Nadia Putri", "Raka Pratama", "Rizky Hidayat", "Salsa Aulia", "Tiara Kusuma"];
+    const STUDENTS = [];
+    CLASSES.forEach((c, ci) => {
+      for (let i = 0; i < 12; i++) {
+        const k = ci * 12 + i;
+        const name = c.name === "8A" ? NAMES_8A[i] : `${FIRST[(k * 7) % FIRST.length]} ${LAST[(k * 5 + ci) % LAST.length]}`;
+        const nisn = c.name === "8A" ? `00981234${String(i + 1).padStart(2, "0")}` : `00${97 + Math.floor(ci / 3)}${String(4000 + k * 37).padStart(6, "0")}`;
+        const last = (k * 11) % 13 === 0 ? null : (k * 3) % 12;
+        STUDENTS.push({ nisn, name, cls: c.name, last, progress: last == null ? 0 : 15 + (k * 29) % 82, active: !(k === 41) });
+      }
+    });
+    const LESSONS = [
+      { title: "States of Matter",         subject: "sci",  unit: 3, teacher: "rina",   daysAgo: 0,  views: 31, status: "published" },
+      { title: "Writing a Formal Letter",  subject: "eng",  unit: 5, teacher: "fajar",  daysAgo: 1,  views: 27, status: "published" },
+      { title: "Angles in Triangles",      subject: "math", unit: 6, teacher: "aisyah", daysAgo: 2,  views: 33, status: "published" },
+      { title: "Forces and Motion",        subject: "sci",  unit: 4, teacher: "budi",   daysAgo: 3,  views: 22, status: "published" },
+      { title: "Ratio and Proportion",     subject: "math", unit: 5, teacher: "aisyah", daysAgo: 6,  views: 35, status: "published" },
+      { title: "Persuasive Writing",       subject: "eng",  unit: 3, teacher: "fajar",  daysAgo: 8,  views: 30, status: "published" },
+      { title: "Poetry: Imagery and Tone", subject: "eng",  unit: 4, teacher: "fajar",  daysAgo: 10, views: 26, status: "published" },
+      { title: "Solving Linear Equations", subject: "math", unit: 4, teacher: "aisyah", daysAgo: 12, views: 36, status: "published" },
+      { title: "The Particle Model",       subject: "sci",  unit: 2, teacher: "budi",   daysAgo: 13, views: 24, status: "published" },
+      { title: "Reading for Main Idea",    subject: "eng",  unit: 2, teacher: "fajar",  daysAgo: 16, views: 34, status: "published" },
+      { title: "Cells and Organisms",      subject: "sci",  unit: 1, teacher: "rina",   daysAgo: 18, views: 38, status: "published" },
+      { title: "Fractions and Decimals",   subject: "math", unit: 3, teacher: "aisyah", daysAgo: 21, views: 36, status: "published" },
+      { title: "Number Patterns (old recording)", subject: "math", unit: 2, teacher: "hendra", daysAgo: 25, views: 4, status: "hidden" },
+    ];
+    const NEWS = [
+      { text: "Science Unit 3 · States of Matter is up.", by: "rina", until: -6, status: "live" },
+      { text: "Mid-term Cambridge checkpoint practice starts next week.", by: "aisyah", until: -10, status: "live" },
+      { text: "Bring a protractor to class on Monday.", by: "aisyah", until: -5, status: "live" },
+      { text: "Library closed on Friday afternoon.", by: "hendra", until: 3, status: "ended" },
+    ];
+    const LOG = [
+      { d: 0, who: "rina",   type: "lessons",   what: "Uploaded Science Unit 3 · States of Matter" },
+      { d: 0, who: "fajar",  type: "passwords", what: "Reset the password for Raka Pratama (8A)" },
+      { d: 1, who: "aisyah", type: "accounts",  what: "Created 3 student accounts in 9A" },
+      { d: 2, who: "hendra", type: "lessons",   what: "Hid “Number Patterns (old recording)”" },
+      { d: 3, who: "budi",   type: "passwords", what: "Reset the password for a student in 9A" },
+      { d: 5, who: "aisyah", type: "accounts",  what: "Disabled one account in 9A (moved school)" },
+      { d: 8, who: "hendra", type: "accounts",  what: "Made Ms. Aisyah an admin" },
+    ];
+
+    const T = id => TEACHERS.find(t => t.id === id);
+    const tName = id => T(id)?.name ?? "—";
+    const dot = s => `<span class="dot ${s === "math" ? "" : s}"></span>`;
+    Object.assign(TAG, {
+      active:   ["ok", "i-check", "Active"],
+      disabled: ["idle", "i-ban", "Disabled"],
+      admin:    ["admin", "i-shield", "Admin"],
+      teacher:  ["idle", "i-teacher", "Teacher"],
+      hidden:   ["idle", "i-eye-off", "Hidden"],
+      away:     ["nudge", "i-alert", "Over a month ago"],
+      accounts: ["live", "i-users", "Account"],
+      passwords:["idle", "i-key", "Password"],
+      lessons:  ["ok", "i-play", "Lesson"],
+      news:     ["live", "i-megaphone", "Announcement"],
+    });
+    function log(type, what) { LOG.unshift({ d: 0, who: ME, type, what, now: true }); if (view === "log") renderRows(); }
+
+    /* ---------- Header, meters, owl ---------- */
+    function renderMeters() {
+      const tAct = TEACHERS.filter(t => t.active), sAct = STUDENTS.filter(s => s.active);
+      const tMonth = tAct.filter(t => t.last <= 30).length;
+      const sWeek = sAct.filter(s => s.last != null && s.last <= 6).length;
+      const pub = LESSONS.filter(l => l.status === "published").length;
+      $("meters").innerHTML = [
+        ["Teachers active this month", `${tMonth}<small> / ${tAct.length}</small>`, tMonth / tAct.length],
+        ["Students active this week", `${sWeek}<small> / ${sAct.length}</small>`, sWeek / sAct.length],
+        ["Lessons published", `${pub}`, 1],
+      ].map(([l, v, p]) => `<div class="meter"><span class="rail"><i style="height:${Math.round(p * 100)}%"></i></span><span>${l}</span><b>${v}</b></div>`).join("");
+      $("headSummary").textContent = `${CLASSES.length} classes · ${tAct.length} teachers · ${sAct.length} students`;
+      const away = tAct.filter(t => t.last > 30), never = sAct.filter(s => s.last == null);
+      $("owlTip").textContent = away.length
+        ? `${away.map(t => t.name).join(", ")} ${away.length === 1 ? "hasn’t" : "haven’t"} logged in for a month, and ${never.length} students have never opened a lesson.`
+        : `${never.length} students have never opened a lesson. Their class teachers may want to check in.`;
+      const counts = { teachers: tAct.length, students: sAct.length, classes: CLASSES.length, lessons: LESSONS.length, news: NEWS.filter(n => n.status === "live").length };
+      Object.entries(counts).forEach(([k, n]) => document.querySelectorAll(`[data-count="${k}"]`).forEach(e => e.textContent = n));
+      document.querySelectorAll("[data-classes]").forEach(s => { const v = s.value; s.innerHTML = CLASSES.map(c => `<option>${c.name}</option>`).join(""); if (v) s.value = v; });
+      document.querySelectorAll("[data-teachers]").forEach(s => s.innerHTML = TEACHERS.filter(t => t.active).map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join(""));
+      $("bulkClass").innerHTML = `<option value="">Move to class…</option>` + CLASSES.map(c => `<option>${c.name}</option>`).join("");
+    }
+
+    /* ---------- Chart: school-wide ---------- */
+    const SERIES = Array.from({ length: 28 }, (_, i) => {
+      const d = 27 - i;
+      const ups = LESSONS.filter(l => l.daysAgo === d && l.status === "published");
+      const since = LESSONS.filter(l => l.daysAgo >= d && l.status === "published").map(l => l.daysAgo - d).sort((a, b) => a - b)[0] ?? 9;
+      const wkend = new Date(Date.now() - d * DAY).getDay() % 6 === 0;
+      const opened = Math.round(ups.length * 14 + 16 * Math.exp(-since / 2.5) + (wkend ? 6 : 14) + ((i * 7) % 5));
+      const finished = Math.round(opened * (0.45 + ((i * 5) % 4) * 0.05));
+      return { d, opened, finished, event: ups.map(l => `Uploaded: ${SUBJECTS[l.subject]} Unit ${l.unit} · ${l.title} (${tName(l.teacher)})`).join(" · ") };
+    });
+
+    /* ---------- Work area ---------- */
+    const manageBtn = (kind, id) => `<button class="btn btn--sm" type="button" data-manage="${kind}:${id}">Manage</button>`;
+    const VIEWS = {
+      teachers: {
+        add: "Add teacher", dlg: "dlgTeacher",
+        filters: [["all", "All teachers"], ["admin", "Admins"], ["away", "Not logged in for a month"], ["disabled", "Disabled accounts"]],
+        head: `<tr><th>Teacher</th><th>Logs in with</th><th>Teaches</th><th>Role</th><th>Last login</th><th>Account</th><th><span class="sr">Actions</span></th></tr>`,
+        rows: () => TEACHERS,
+        match: (t, f, q) => (f === "all" ? true : f === "admin" ? t.admin : f === "away" ? t.active && t.last > 30 : !t.active)
+          && (!q || (t.name + t.nip + t.email).toLowerCase().includes(q)),
+        row: t => `<tr class="${t.active ? "" : "row-off"}">
+          <td><span class="who"><span class="avatar" aria-hidden="true">${initials(t.name)}</span>${esc(t.name)}</span>${t.id === ME ? '<span class="you">(you)</span>' : ""}</td>
+          <td><span class="mono" style="display:block;font-size:13px">${t.nip}</span><span class="classes">${esc(t.email)}</span></td><td><span class="subj">${dot(t.subject)}${SUBJECTS[t.subject]}</span><span class="classes" style="display:block">${t.classes.join(", ") || "No classes yet"}</span></td>
+          <td>${tag(t.admin ? "admin" : "teacher")}</td><td>${t.active && t.last > 30 ? tag("away") : ago(t.last)}</td>
+          <td>${tag(t.active ? "active" : "disabled")}</td><td class="act">${manageBtn("t", t.id)}</td></tr>`,
+        csvHead: ["NIP", "Teacher", "Email", "Subject", "Classes", "Role", "Last login", "Account"],
+        csv: t => [t.nip, t.name, t.email, SUBJECTS[t.subject], t.classes.join(" "), t.admin ? "Admin" : "Teacher", ago(t.last), t.active ? "Active" : "Disabled"],
+        noun: "teachers",
+      },
+      students: {
+        add: "Add student", dlg: "dlgStudent", select: true,
+        filters: () => [["all", "All classes"], ...CLASSES.map(c => [c.name, "Class " + c.name]), ["never", "Never opened a lesson"], ["disabled", "Disabled accounts"]],
+        head: `<tr><th class="check"><input type="checkbox" aria-label="Select all shown students" data-all /></th><th>NISN</th><th>Student</th><th>Class</th><th>Last watched</th><th>Progress</th><th>Account</th><th><span class="sr">Actions</span></th></tr>`,
+        rows: () => STUDENTS,
+        match: (s, f, q) => (f === "all" ? true : f === "never" ? s.active && s.last == null : f === "disabled" ? !s.active : s.cls === f)
+          && (!q || (s.name + s.nisn).toLowerCase().includes(q)),
+        row: s => `<tr class="${s.active ? "" : "row-off"}" data-nisn="${s.nisn}"><td class="check"><input type="checkbox" aria-label="Select ${esc(s.name)}" data-pick="${s.nisn}" /></td>
+          <td class="mono">${s.nisn}</td><td><span class="who"><span class="avatar" aria-hidden="true">${initials(s.name)}</span>${esc(s.name)}</span></td>
+          <td>${s.cls}</td><td>${ago(s.last)}</td>
+          <td><span class="prog"><span class="track"><i style="--p:${s.progress / 100}"></i></span><b>${s.progress}%</b></span></td>
+          <td>${tag(s.active ? "active" : "disabled")}</td><td class="act">${manageBtn("s", s.nisn)}</td></tr>`,
+        csvHead: ["NISN", "Student", "Class", "Last watched", "Progress", "Account"],
+        csv: s => [s.nisn, s.name, s.cls, ago(s.last), s.progress + "%", s.active ? "Active" : "Disabled"],
+        noun: "students",
+      },
+      classes: {
+        add: "Add class", dlg: "dlgClass",
+        filters: [["all", "All grades"], ["7", "Grade 7"], ["8", "Grade 8"], ["9", "Grade 9"]],
+        head: `<tr><th>Class</th><th>Homeroom teacher</th><th>Subject teachers</th><th>Students</th><th>Active this week</th><th><span class="sr">Actions</span></th></tr>`,
+        rows: () => CLASSES,
+        match: (c, f, q) => (f === "all" || c.name[0] === f) && (!q || c.name.toLowerCase().includes(q)),
+        row: c => {
+          const st = STUDENTS.filter(s => s.cls === c.name && s.active), wk = st.filter(s => s.last != null && s.last <= 6).length;
+          const teach = TEACHERS.filter(t => t.active && t.classes.includes(c.name));
+          return `<tr><td><b>${c.name}</b></td><td>${esc(tName(c.home))}</td>
+            <td style="white-space:normal;min-width:240px">${teach.map(t => `<span class="subj" style="margin-right:10px">${dot(t.subject)}${esc(t.name)}</span>`).join("") || "—"}</td>
+            <td class="num">${st.length}</td><td class="num">${st.length ? `${wk} / ${st.length}` : "—"}</td>
+            <td class="act"><button class="btn btn--sm btn--ghost" type="button" data-class-students="${c.name}">See students</button></td></tr>`;
+        },
+        csvHead: ["Class", "Homeroom teacher", "Students"],
+        csv: c => [c.name, tName(c.home), STUDENTS.filter(s => s.cls === c.name && s.active).length],
+        noun: "classes",
+      },
+      lessons: {
+        filters: [["all", "All subjects"], ["math", "Mathematics"], ["eng", "English"], ["sci", "Science"], ["hidden", "Hidden lessons"]],
+        head: `<tr><th>Subject</th><th>Lesson</th><th>Teacher</th><th>Opened by</th><th>Uploaded</th><th>Status</th><th><span class="sr">Actions</span></th></tr>`,
+        rows: () => LESSONS,
+        match: (l, f, q) => (f === "all" || (f === "hidden" ? l.status === "hidden" : l.subject === f)) && (!q || (l.title + tName(l.teacher)).toLowerCase().includes(q)),
+        row: (l, i) => `<tr class="${l.status === "hidden" ? "row-off" : ""}"><td><span class="subj">${dot(l.subject)}${SUBJECTS[l.subject]}</span></td>
+          <td><b>Unit ${l.unit} · ${esc(l.title)}</b></td><td>${esc(tName(l.teacher))}</td><td class="num">${l.views} students</td>
+          <td>${ago(l.daysAgo)}</td><td>${tag(l.status)}</td>
+          <td class="act"><button class="btn btn--sm btn--ghost" type="button" data-hide="${i}"><svg class="icon" aria-hidden="true"><use href="#${l.status === "hidden" ? "i-eye" : "i-eye-off"}"/></svg>${l.status === "hidden" ? "Show again" : "Hide"}</button></td></tr>`,
+        csvHead: ["Subject", "Unit", "Lesson", "Teacher", "Opened by", "Uploaded", "Status"],
+        csv: l => [SUBJECTS[l.subject], l.unit, l.title, tName(l.teacher), l.views, ago(l.daysAgo), l.status],
+        noun: "lessons",
+      },
+      news: {
+        add: "Post announcement", dlg: "dlgNews",
+        filters: [["all", "All announcements"], ["live", "Running"], ["ended", "Ended"]],
+        head: `<tr><th>Message</th><th>Posted by</th><th>Shows until</th><th>Status</th><th><span class="sr">Actions</span></th></tr>`,
+        rows: () => NEWS,
+        match: (n, f, q) => (f === "all" || n.status === f) && (!q || n.text.toLowerCase().includes(q)),
+        row: (n, i) => `<tr><td style="white-space:normal;min-width:260px">${esc(n.text)}</td><td>${n.by === "school" ? "School admin" : esc(tName(n.by))}</td>
+          <td>${dateText(n.until, { weekday: "short", day: "numeric", month: "short" })}</td><td>${tag(n.status)}</td>
+          <td class="act">${n.status === "live" ? `<button class="btn btn--sm btn--ghost" type="button" data-end="${i}">End now</button>` : ""}</td></tr>`,
+        csvHead: ["Message", "Posted by", "Shows until", "Status"],
+        csv: n => [n.text, n.by === "school" ? "School admin" : tName(n.by), dateText(n.until), n.status],
+        noun: "announcements",
+      },
+      log: {
+        filters: [["all", "Everything"], ["accounts", "Accounts"], ["passwords", "Passwords"], ["lessons", "Lessons"], ["news", "Announcements"]],
+        head: `<tr><th>When</th><th>Who</th><th>What</th><th>Type</th></tr>`,
+        rows: () => LOG,
+        match: (e, f, q) => (f === "all" || e.type === f) && (!q || (e.what + tName(e.who)).toLowerCase().includes(q)),
+        row: e => `<tr><td>${e.now ? "Just now" : ago(e.d)}</td><td>${esc(tName(e.who))}${e.who === ME ? '<span class="you">(you)</span>' : ""}</td>
+          <td style="white-space:normal;min-width:260px">${esc(e.what)}</td><td>${tag(e.type)}</td></tr>`,
+        csvHead: ["When", "Who", "What", "Type"],
+        csv: e => [e.now ? "Just now" : ago(e.d), tName(e.who), e.what, e.type],
+        noun: "entries",
+      },
+    };
+    let view = "teachers";
+    const picked = new Set();
+    function setView(v, focus, filter) {
+      view = v; picked.clear();
+      const V = VIEWS[v];
+      document.querySelectorAll(".tab").forEach(t => { const on = t.dataset.tab === v; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; if (on && focus) t.focus(); });
+      $("panel").setAttribute("aria-labelledby", "tab-" + v);
+      $("filterSel").innerHTML = (typeof V.filters === "function" ? V.filters() : V.filters).map(([k, l]) => `<option value="${k}">${l}</option>`).join("");
+      if (filter) $("filterSel").value = filter;
+      $("addBtn").hidden = !V.add;
+      if (V.add) $("addBtn").querySelector("span").textContent = V.add;
+      $("importBtn").hidden = v !== "students";
+      $("q").value = "";
+      $("thead").innerHTML = V.head;
+      renderRows();
+    }
+    function visibleRows() {
+      const V = VIEWS[view], f = $("filterSel").value, q = $("q").value.trim().toLowerCase();
+      return V.rows().map((r, i) => [r, i]).filter(([r]) => V.match(r, f, q));
+    }
+    function renderRows(flashKey) {
+      const V = VIEWS[view], list = visibleRows();
+      $("tbody").innerHTML = list.length ? list.map(([r, i]) => V.row(r, i)).join("")
+        : `<tr class="empty-row"><td colspan="8">No ${V.noun} match. Clear the search or pick another filter.</td></tr>`;
+      $("tableCount").textContent = `Showing ${list.length} of ${V.rows().length} ${V.noun}`;
+      $("tableNote").textContent = view === "log" ? "Every account and password change is recorded here." : view === "lessons" ? "Hidden lessons stay saved; students just can’t see them." : "";
+      if (flashKey) $("tbody").querySelector(`[data-nisn="${flashKey}"]`)?.classList.add("added");
+      if (V.select) $("tbody").querySelectorAll("[data-pick]").forEach(c => c.checked = picked.has(c.dataset.pick));
+      renderBulk();
+    }
+    function renderBulk() {
+      $("bulk").hidden = !picked.size;
+      $("bulkCount").textContent = `${picked.size} selected`;
+      const all = $("thead").querySelector("[data-all]");
+      if (all) { const shown = [...$("tbody").querySelectorAll("[data-pick]")]; all.checked = shown.length > 0 && shown.every(c => c.checked); }
+    }
+    document.querySelector(".tabs").addEventListener("click", e => { const t = e.target.closest(".tab"); if (t) setView(t.dataset.tab); });
+    document.querySelector(".tabs").addEventListener("keydown", e => {
+      if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+      const keys = Object.keys(VIEWS), i = keys.indexOf(view);
+      setView(keys[(i + (e.key === "ArrowRight" ? 1 : -1) + keys.length) % keys.length], true);
+    });
+    $("filterSel").addEventListener("change", () => renderRows());
+    $("q").addEventListener("input", () => renderRows());
+
+    /* Selection + bulk actions (students) */
+    $("panel").addEventListener("change", e => {
+      if (e.target.matches("[data-all]")) $("tbody").querySelectorAll("[data-pick]").forEach(c => { c.checked = e.target.checked; c.checked ? picked.add(c.dataset.pick) : picked.delete(c.dataset.pick); });
+      if (e.target.matches("[data-pick]")) e.target.checked ? picked.add(e.target.dataset.pick) : picked.delete(e.target.dataset.pick);
+      renderBulk();
+    });
+    $("bulkMove").addEventListener("click", () => {
+      const to = $("bulkClass").value; if (!to) return $("bulkClass").focus();
+      const n = picked.size;
+      STUDENTS.forEach(s => { if (picked.has(s.nisn)) s.cls = to; });
+      log("accounts", `Moved ${n} student${n === 1 ? "" : "s"} to ${to}`);
+      picked.clear(); renderMeters(); renderRows();
+    });
+    $("bulkDisable").addEventListener("click", () => {
+      const keys = [...picked];
+      STUDENTS.forEach(s => { if (picked.has(s.nisn)) s.active = false; });
+      log("accounts", `Disabled ${keys.length} student account${keys.length === 1 ? "" : "s"}`);
+      picked.clear(); renderMeters(); renderRows();
+      $("tableCount").innerHTML = `${keys.length} account${keys.length === 1 ? "" : "s"} disabled. <button type="button" class="link-undo" id="undoBulk" style="border:0;background:none;padding:0;color:var(--color-accent-deep);font-weight:700;cursor:pointer;text-decoration:underline">Undo</button>`;
+      $("undoBulk").addEventListener("click", () => { STUDENTS.forEach(s => { if (keys.includes(s.nisn)) s.active = true; }); log("accounts", `Undid: enabled ${keys.length} student account${keys.length === 1 ? "" : "s"} again`); renderMeters(); renderRows(); });
+    });
+    $("bulkClear").addEventListener("click", () => { picked.clear(); renderRows(); });
+
+    /* Row actions */
+    $("tbody").addEventListener("click", e => {
+      const m = e.target.closest("[data-manage]"); if (m) { const [k, id] = m.dataset.manage.split(":"); openManage(k, id); }
+      const h = e.target.closest("[data-hide]");
+      if (h) { const l = LESSONS[+h.dataset.hide]; l.status = l.status === "hidden" ? "published" : "hidden"; log("lessons", `${l.status === "hidden" ? "Hid" : "Showed again"} “${l.title}”`); renderMeters(); renderRows(); }
+      const en = e.target.closest("[data-end]"); if (en) { const n = NEWS[+en.dataset.end]; n.status = "ended"; log("news", `Ended the announcement “${n.text}”`); renderMeters(); renderRows(); }
+      const cs = e.target.closest("[data-class-students]"); if (cs) setView("students", false, cs.dataset.classStudents);
+    });
+
+    /* Export what's on screen */
+    $("exportBtn").addEventListener("click", () => {
+      const V = VIEWS[view];
+      downloadCsv(`mtsn32-${V.noun}.csv`, [V.csvHead, ...visibleRows().map(([r]) => V.csv(r))]);
+    });
+    function downloadCsv(name, rows) {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" }));
+      a.download = name; a.click(); URL.revokeObjectURL(a.href);
+    }
+
+    /* ---------- Manage one account ---------- */
+    function openManage(kind, id) {
+      const p = kind === "t" ? T(id) : STUDENTS.find(s => s.nisn === id);
+      const self = kind === "t" && id === ME;
+      const admins = TEACHERS.filter(t => t.admin && t.active).length;
+      const sub = kind === "t" ? `${SUBJECTS[p.subject]} · NIP ${p.nip} · ${esc(p.email)}` : `Class ${p.cls} · NISN ${p.nisn}`;
+      const rows = [
+        `<div class="act"><div><b>Reset password</b><span>Gives a new temporary password. The old one stops working.</span></div>
+          <button class="btn btn--sm" type="button" id="mReset" ${p.active ? "" : "disabled"}><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>Reset</button><div class="out" id="mResetOut"></div></div>`,
+      ];
+      if (kind === "s") rows.push(`<div class="act"><div><b>Class</b><span>Moves the student and their progress.</span></div>
+          <label class="sr" for="mClass">Class</label><select id="mClass">${CLASSES.map(c => `<option${c.name === p.cls ? " selected" : ""}>${c.name}</option>`).join("")}</select><div class="out" id="mClassOut"></div></div>`);
+      if (kind === "t") rows.push(`<div class="act"><div><b>Admin access</b><span>${self ? "You can’t remove your own admin access. Ask another admin." : p.admin && admins === 1 ? "This is the only admin. Make someone else an admin first." : "Can manage every account, class and lesson."}</span></div>
+          <button class="btn btn--sm" type="button" id="mRole" ${self || (p.admin && admins === 1) || !p.active ? "disabled" : ""}><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>${p.admin ? "Remove admin" : "Make admin"}</button><div class="out" id="mRoleOut"></div></div>`);
+      rows.push(`<div class="act"><div><b>${p.active ? "Disable account" : "Account disabled"}</b><span>${self ? "You can’t disable your own account." : p.active ? (kind === "t" ? "For a teacher who left. Their lessons stay up." : "For a student who left. Their history is kept.") : "They can’t log in. Enable to let them back in."}</span></div>
+          <button class="btn btn--sm ${p.active ? "btn--danger" : ""}" type="button" id="mActive" ${self ? "disabled" : ""}><svg class="icon" aria-hidden="true"><use href="#${p.active ? "i-ban" : "i-check"}"/></svg>${p.active ? "Disable" : "Enable"}</button><div class="out" id="mActiveOut"></div></div>`);
+      $("manageBody").innerHTML = `<div class="person"><span class="avatar" aria-hidden="true">${initials(p.name)}</span><div><h2 id="manageH">${esc(p.name)}</h2><p>${sub}</p></div></div>
+        <div class="acts">${rows.join("")}</div>
+        <div class="dlg-actions"><button class="btn btn--push" type="button" data-close>Done</button></div>`;
+      const who = kind === "t" ? p.name : `${p.name} (${p.cls})`;
+      $("mReset").addEventListener("click", () => {
+        const pw = tempPass();
+        $("mResetOut").innerHTML = `<div class="temp"><code id="mTemp">${pw}</code><button class="btn btn--sm" type="button" data-copy="mTemp"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div><p class="note" style="margin-top:6px">Tell it to them in person.</p>`;
+        log("passwords", `Reset the password for ${who}`);
+      });
+      $("mClass")?.addEventListener("change", e => {
+        const from = p.cls; p.cls = e.target.value;
+        $("mClassOut").innerHTML = `<p class="note">Moved from ${from} to ${p.cls}.</p>`;
+        log("accounts", `Moved ${p.name} from ${from} to ${p.cls}`); renderMeters(); renderRows();
+      });
+      $("mRole")?.addEventListener("click", () => {
+        p.admin = !p.admin; log("accounts", `${p.admin ? "Made" : "Removed admin access from"} ${p.name}${p.admin ? " an admin" : ""}`);
+        renderRows(); openManage(kind, id); $("mRoleOut").innerHTML = `<p class="note">${p.admin ? "Now an admin." : "Admin access removed."}</p>`; $("mRole").focus();
+      });
+      $("mActive").addEventListener("click", () => {
+        p.active = !p.active; log("accounts", `${p.active ? "Enabled" : "Disabled"} the account of ${who}`);
+        renderMeters(); renderRows(); openManage(kind, id);
+        $("mActiveOut").innerHTML = `<p class="note">${p.active ? "Account enabled." : "Account disabled."} <button type="button" id="mUndo">Undo</button></p>`;
+        $("mUndo").addEventListener("click", () => $("mActive").click());
+        $("mActive").focus();
+      });
+      if (!$("dlgManage").open) openDlg("dlgManage");
+    }
+
+    /* ---------- Add dialogs ---------- */
+    function resetForm(id) {
+      const f = $(id).querySelector("form"); f.reset();
+      f.querySelectorAll("[aria-invalid]").forEach(i => i.setAttribute("aria-invalid", "false"));
+      f.querySelectorAll(".help.err").forEach(h => h.classList.remove("err"));
+      f.querySelectorAll(".done").forEach(d => d.hidden = true);
+    }
+    function check(input, ok, helpId, okText, errText) {
+      input.setAttribute("aria-invalid", !ok); setHelp(helpId, ok ? okText : errText, !ok); return ok;
+    }
+    $("addBtn").addEventListener("click", () => {
+      const id = VIEWS[view].dlg; resetForm(id);
+      if (id === "dlgTeacher") { $("teacherSubmit").textContent = "Create account"; $("nipCount").textContent = "0 / 18"; setHelp("tNameHelp", "How students see it, e.g. Ms. Dewi."); setHelp("tNipHelp", "18 digits."); setHelp("tEmailHelp", "Either the NIP or this email works for logging in."); }
+      if (id === "dlgStudent") { $("studentSubmit").textContent = "Create account"; $("nisnCount").textContent = "0 / 10"; setHelp("sNisnHelp", "The 10-digit number on the student’s card."); setHelp("sNameHelp", "As written on the class list."); }
+      if (id === "dlgClass") setHelp("cNameHelp", "Grade 7, 8 or 9 and a letter, e.g. 7C.");
+      if (id === "dlgNews") { $("nCount").textContent = "0 / 90"; $("nUntil").value = new Date(Date.now() + 7 * DAY).toISOString().slice(0, 10); }
+      openDlg(id);
+    });
+    const digitsOnly = (el, countId, max) => el.addEventListener("input", () => { el.value = el.value.replace(/\D/g, ""); $(countId).textContent = `${el.value.length} / ${max}`; });
+    digitsOnly($("tNip"), "nipCount", 18); digitsOnly($("sNisn"), "nisnCount", 10);
+
+    $("formTeacher").addEventListener("submit", e => {
+      e.preventDefault();
+      if (!$("teacherDone").hidden) return $("dlgTeacher").close();
+      const name = $("tName").value.trim(), nip = $("tNip").value, email = $("tEmail").value.trim();
+      const ok = [
+        check($("tName"), !!name, "tNameHelp", "How students see it, e.g. Ms. Dewi.", "Add the teacher’s name."),
+        check($("tNip"), nip.length === 18 && !TEACHERS.some(t => t.nip === nip), "tNipHelp", "18 digits.", nip.length !== 18 ? `NIP needs 18 digits; this has ${nip.length}.` : "A teacher with this NIP already has an account."),
+        check($("tEmail"), /^\S+@\S+\.\S+$/.test(email) && !TEACHERS.some(t => t.email === email), "tEmailHelp", "Either the NIP or this email works for logging in.", /^\S+@\S+\.\S+$/.test(email) ? "This email already has an account." : "Add a school email, like name@school."),
+      ];
+      if (ok.includes(false)) return $("formTeacher").querySelector('[aria-invalid="true"]').focus();
+      TEACHERS.push({ id: "t" + Date.now(), name, nip, email, subject: $("tSubject").value, classes: [], admin: $("tAdmin").checked, active: true, last: null });
+      log("accounts", `Created a teacher account for ${name}${$("tAdmin").checked ? " (admin)" : ""}`);
+      $("tDoneName").textContent = name; $("tDoneTemp").textContent = tempPass();
+      $("teacherDone").hidden = false; $("teacherSubmit").textContent = "Done";
+      renderMeters(); renderRows();
+    });
+
+    $("formStudent").addEventListener("submit", e => {
+      e.preventDefault();
+      if (!$("studentDone").hidden) return $("dlgStudent").close();
+      const nisn = $("sNisn").value, name = $("sName").value.trim(), cls = $("sClass").value;
+      const ok = [
+        check($("sNisn"), nisn.length === 10 && !STUDENTS.some(s => s.nisn === nisn), "sNisnHelp", "The 10-digit number on the student’s card.", nisn.length !== 10 ? `NISN needs 10 digits; this has ${nisn.length}.` : "This NISN already has an account. Use Manage › Reset password instead."),
+        check($("sName"), !!name, "sNameHelp", "As written on the class list.", "Add the student’s full name."),
+      ];
+      if (ok.includes(false)) return $("formStudent").querySelector('[aria-invalid="true"]').focus();
+      STUDENTS.push({ nisn, name, cls, last: null, progress: 0, active: true });
+      log("accounts", `Created a student account for ${name} (${cls})`);
+      $("sDoneName").textContent = name; $("sDoneTemp").textContent = tempPass();
+      $("studentDone").hidden = false; $("studentSubmit").textContent = "Done";
+      renderMeters(); renderRows(nisn);
+    });
+
+    $("formClass").addEventListener("submit", e => {
+      e.preventDefault();
+      const name = $("cName").value.trim().toUpperCase();
+      const valid = /^[7-9][A-Z]$/.test(name), dup = CLASSES.some(c => c.name === name);
+      if (!check($("cName"), valid && !dup, "cNameHelp", "", dup ? `Class ${name} already exists.` : "Use grade 7, 8 or 9 and one letter, e.g. 7C.")) return $("cName").focus();
+      CLASSES.push({ name, home: $("cHome").value }); CLASSES.sort((a, b) => a.name.localeCompare(b.name));
+      log("accounts", `Added class ${name} (homeroom: ${tName($("cHome").value)})`);
+      $("dlgClass").close(); renderMeters(); renderRows();
+    });
+
+    $("nText").addEventListener("input", e => $("nCount").textContent = `${e.target.value.length} / 90`);
+    $("formNews").addEventListener("submit", e => {
+      e.preventDefault();
+      const t = $("nText"); if (!t.value.trim()) { t.setAttribute("aria-invalid", "true"); return t.focus(); }
+      const days = Math.round((new Date($("nUntil").value) - Date.now()) / DAY);
+      NEWS.unshift({ text: t.value.trim(), by: ME, until: -Math.max(0, days), status: "live" });
+      log("news", `Posted “${t.value.trim()}”`);
+      $("dlgNews").close(); renderMeters(); renderRows();
+    });
+
+    /* ---------- Import students (CSV) ---------- */
+    let importRows = [], imported = [];
+    function parseImport(text) {
+      const seen = new Set(STUDENTS.map(s => s.nisn)), good = [], bad = [];
+      text.split(/\r?\n/).map(l => l.trim()).filter(Boolean).forEach((line, i) => {
+        const [nisn = "", name = "", cls = ""] = line.split(",").map(x => x.trim().replace(/^"|"$/g, ""));
+        if (i === 0 && /nisn/i.test(nisn)) return;            // header row
+        const why = !/^\d{10}$/.test(nisn) ? `NISN needs 10 digits (has ${nisn.replace(/\D/g, "").length})`
+          : seen.has(nisn) ? "this NISN already has an account"
+          : !name ? "no name" : !CLASSES.some(c => c.name === cls.toUpperCase()) ? `class “${cls}” doesn’t exist` : "";
+        if (why) bad.push(`Line ${i + 1}: ${why}`); else { seen.add(nisn); good.push({ nisn, name, cls: cls.toUpperCase() }); }
+      });
+      importRows = good;
+      $("importPreview").innerHTML = (good.length ? `<p class="good">${good.length} student${good.length === 1 ? "" : "s"} ready to add.</p>` : "") + bad.map(b => `<p class="bad">${esc(b)}</p>`).join("");
+      $("importSubmit").disabled = !good.length;
+      $("importSubmit").textContent = good.length ? `Add ${good.length} student${good.length === 1 ? "" : "s"}` : "Add students";
+    }
+    function openImport() {
+      resetForm("dlgImport"); importRows = []; $("importPreview").innerHTML = ""; $("importSubmit").disabled = true; $("importSubmit").textContent = "Add students";
+      openDlg("dlgImport");
+    }
+    $("importBtn").addEventListener("click", openImport);
+    $("importTop").addEventListener("click", () => { setView("students"); openImport(); });
+    $("importText").addEventListener("input", e => parseImport(e.target.value));
+    $("importFile").addEventListener("change", async e => { const f = e.target.files[0]; if (!f) return; const t = await f.text(); $("importText").value = t; parseImport(t); });
+    $("formImport").addEventListener("submit", e => {
+      e.preventDefault();
+      if (!$("importDone").hidden) return $("dlgImport").close();
+      imported = importRows.map(r => ({ ...r, pw: tempPass() }));
+      imported.forEach(r => STUDENTS.push({ nisn: r.nisn, name: r.name, cls: r.cls, last: null, progress: 0, active: true }));
+      log("accounts", `Imported ${imported.length} student account${imported.length === 1 ? "" : "s"}`);
+      $("importDoneText").textContent = `${imported.length} student${imported.length === 1 ? "" : "s"} added. Download their temporary passwords and hand them out in class.`;
+      $("importDone").hidden = false; $("importSubmit").textContent = "Done"; $("importSubmit").disabled = false;
+      renderMeters(); renderRows();
+    });
+    $("importPasswords").addEventListener("click", () => downloadCsv("temporary-passwords.csv", [["NISN", "Student", "Class", "Temporary password"], ...imported.map(r => [r.nisn, r.name, r.cls, r.pw])]));
+
+    /* ---------- Sidebar ---------- */
+    addEventListener("keydown", e => {
+      if (e.key === "/" && !e.target.closest("input, textarea, select") && !document.querySelector("dialog[open]")) { e.preventDefault(); $("q").focus(); }
+    });
+    document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
+      document.querySelectorAll("[data-go]").forEach(o => o === b ? o.setAttribute("aria-current", "page") : o.removeAttribute("aria-current"));
+      const g = b.dataset.go;
+      if (g === "overview") $("top").scrollIntoView({ behavior: "smooth" });
+      else { setView(g); $("panel").scrollIntoView({ behavior: "smooth", block: "center" }); }
+      menu(false);
+    }));
+    $("sideSearch").addEventListener("click", () => { menu(false); $("q").focus(); });
+    $("owlAction").addEventListener("click", () => {
+      const away = TEACHERS.some(t => t.active && t.last > 30);
+      away ? setView("teachers", false, "away") : setView("students", false, "never");
+      $("panel").scrollIntoView({ behavior: "smooth", block: "center" }); menu(false);
+    });
+    $("helpBtn").addEventListener("click", () => openDlg("dlgHelp"));
+
+    renderMeters(); setView("teachers"); initChart(SERIES, { eventCol: "Lessons uploaded" });
+  </script>
+</body>
+</html>
