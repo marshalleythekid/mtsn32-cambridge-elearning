@@ -39,14 +39,14 @@
     .person .avatar { width: 44px; height: 44px; font-size: 16px; background: var(--color-sky-2); color: var(--color-ink); }
     .person h2 { font-size: var(--text-lg); }
     .person p { font-size: 13px; color: var(--color-muted); }
-    .acts { display: grid; border: 1px solid var(--color-rule); border-radius: 14px; overflow: hidden; }
-    .act { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2xs) var(--space-sm); align-items: center; padding: var(--space-xs) var(--space-sm); border-bottom: 1px solid var(--color-rule); }
-    .act:last-child { border-bottom: 0; }
-    .act b { display: block; font-size: var(--text-sm); }
-    .act span { display: block; font-size: 12px; color: var(--color-muted); }
-    .act select { height: 34px; padding: 0 var(--space-xs); border: 1px solid var(--color-rule-2); border-radius: 10px; background: var(--color-card); font-size: 13px; font-weight: 600; }
-    .act .out { grid-column: 1 / -1; }
-    .act .out:empty { display: none; }
+    .mrows { display: grid; border: 1px solid var(--color-rule); border-radius: 14px; overflow: hidden; }
+    .mrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2xs) var(--space-sm); align-items: center; padding: var(--space-xs) var(--space-sm); border-bottom: 1px solid var(--color-rule); }
+    .mrow:last-child { border-bottom: 0; }
+    .mrow b { display: block; font-size: var(--text-sm); }
+    .mrow span { display: block; font-size: 12px; color: var(--color-muted); }
+    .mrow select { height: 34px; padding: 0 var(--space-xs); border: 1px solid var(--color-rule-2); border-radius: 10px; background: var(--color-card); font-size: 13px; font-weight: 600; }
+    .mrow .out { grid-column: 1 / -1; }
+    .mrow .out:empty { display: none; }
     .note { font-size: 12px; color: var(--color-ink-2); }
     .note button { border: 0; background: none; padding: 0; color: var(--color-accent-deep); font-weight: 700; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
     .btn--danger { color: var(--color-error); border-color: color-mix(in oklch, var(--color-error) 35%, transparent); }
@@ -54,6 +54,23 @@
     .check-row { display: flex; gap: var(--space-2xs); align-items: flex-start; font-size: var(--text-sm); }
     .check-row input { margin-top: 3px; }
     .check-row span { color: var(--color-muted); display: block; font-size: 12px; }
+
+    /* Edit teacher: class picks */
+    .picks { display: flex; flex-wrap: wrap; gap: var(--space-2xs); border: 0; margin: 0; padding: 0; }
+    .picks legend { font-size: var(--text-sm); font-weight: 700; margin-bottom: 6px; padding: 0; }
+    .pick { position: relative; }
+    .pick input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+    .pick span {
+      display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 var(--space-xs); border-radius: 10px;
+      border: 1px solid var(--color-rule-2); background: var(--color-card); font-size: var(--text-sm); font-weight: 700; color: var(--color-ink-2);
+      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+    .pick span .icon { width: 14px; height: 14px; stroke-width: 2.4; display: none; }
+    .pick:hover span { border-color: var(--color-muted); }
+    .pick input:checked + span { background: var(--color-sky); border-color: var(--color-accent-deep); color: var(--color-ink); }
+    .pick input:checked + span .icon { display: block; }
+    .pick input:focus-visible + span { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .changes { font-size: 12px; color: var(--color-muted); }
 
     /* Import */
     .drop { display: grid; gap: var(--space-2xs); padding: var(--space-sm); border: 1.5px dashed var(--color-rule-2); border-radius: 12px; background: var(--color-paper); font-size: var(--text-sm); }
@@ -89,6 +106,7 @@
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
     <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></symbol>
     <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></symbol>
   </svg>
 
@@ -628,20 +646,23 @@
       const self = kind === "t" && id === ME;
       const admins = TEACHERS.filter(t => t.admin && t.active).length;
       const sub = kind === "t" ? `${SUBJECTS[p.subject]} · NIP ${p.nip} · ${esc(p.email)}` : `Class ${p.cls} · NISN ${p.nisn}`;
-      const rows = [
-        `<div class="act"><div><b>Reset password</b><span>Gives a new temporary password. The old one stops working.</span></div>
-          <button class="btn btn--sm" type="button" id="mReset" ${p.active ? "" : "disabled"}><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>Reset</button><div class="out" id="mResetOut"></div></div>`,
-      ];
-      if (kind === "s") rows.push(`<div class="act"><div><b>Class</b><span>Moves the student and their progress.</span></div>
+      const rows = [];
+      if (kind === "t") rows.push(`<div class="mrow"><div><b>Account details</b><span>Name, NIP, email, subject and classes.</span></div>
+          <button class="btn btn--sm" type="button" id="mEdit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Edit</button><div class="out" id="mEditOut"></div></div>`);
+      rows.push(
+        `<div class="mrow"><div><b>Reset password</b><span>Gives a new temporary password. The old one stops working.</span></div>
+          <button class="btn btn--sm" type="button" id="mReset" ${p.active ? "" : "disabled"}><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>Reset</button><div class="out" id="mResetOut"></div></div>`);
+      if (kind === "s") rows.push(`<div class="mrow"><div><b>Class</b><span>Moves the student and their progress.</span></div>
           <label class="sr" for="mClass">Class</label><select id="mClass">${CLASSES.map(c => `<option${c.name === p.cls ? " selected" : ""}>${c.name}</option>`).join("")}</select><div class="out" id="mClassOut"></div></div>`);
-      if (kind === "t") rows.push(`<div class="act"><div><b>Admin access</b><span>${self ? "You can’t remove your own admin access. Ask another admin." : p.admin && admins === 1 ? "This is the only admin. Make someone else an admin first." : "Can manage every account, class and lesson."}</span></div>
+      if (kind === "t") rows.push(`<div class="mrow"><div><b>Admin access</b><span>${self ? "You can’t remove your own admin access. Ask another admin." : p.admin && admins === 1 ? "This is the only admin. Make someone else an admin first." : "Can manage every account, class and lesson."}</span></div>
           <button class="btn btn--sm" type="button" id="mRole" ${self || (p.admin && admins === 1) || !p.active ? "disabled" : ""}><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>${p.admin ? "Remove admin" : "Make admin"}</button><div class="out" id="mRoleOut"></div></div>`);
-      rows.push(`<div class="act"><div><b>${p.active ? "Disable account" : "Account disabled"}</b><span>${self ? "You can’t disable your own account." : p.active ? (kind === "t" ? "For a teacher who left. Their lessons stay up." : "For a student who left. Their history is kept.") : "They can’t log in. Enable to let them back in."}</span></div>
+      rows.push(`<div class="mrow"><div><b>${p.active ? "Disable account" : "Account disabled"}</b><span>${self ? "You can’t disable your own account." : p.active ? (kind === "t" ? "For a teacher who left. Their lessons stay up." : "For a student who left. Their history is kept.") : "They can’t log in. Enable to let them back in."}</span></div>
           <button class="btn btn--sm ${p.active ? "btn--danger" : ""}" type="button" id="mActive" ${self ? "disabled" : ""}><svg class="icon" aria-hidden="true"><use href="#${p.active ? "i-ban" : "i-check"}"/></svg>${p.active ? "Disable" : "Enable"}</button><div class="out" id="mActiveOut"></div></div>`);
       $("manageBody").innerHTML = `<div class="person"><span class="avatar" aria-hidden="true">${initials(p.name)}</span><div><h2 id="manageH">${esc(p.name)}</h2><p>${sub}</p></div></div>
-        <div class="acts">${rows.join("")}</div>
+        <div class="mrows">${rows.join("")}</div>
         <div class="dlg-actions"><button class="btn btn--push" type="button" data-close>Done</button></div>`;
       const who = kind === "t" ? p.name : `${p.name} (${p.cls})`;
+      $("mEdit")?.addEventListener("click", () => editTeacher(id));
       $("mReset").addEventListener("click", () => {
         const pw = tempPass();
         $("mResetOut").innerHTML = `<div class="temp"><code id="mTemp">${pw}</code><button class="btn btn--sm" type="button" data-copy="mTemp"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div><p class="note" style="margin-top:6px">Tell it to them in person.</p>`;
@@ -664,6 +685,62 @@
         $("mActive").focus();
       });
       if (!$("dlgManage").open) openDlg("dlgManage");
+    }
+
+    /* ---------- Edit a teacher's details (inside the Manage dialog) ---------- */
+    function editTeacher(id) {
+      const t = T(id), self = id === ME;
+      $("manageBody").innerHTML = `<form id="editForm" novalidate style="display:grid;gap:var(--space-sm)">
+        <div><h2 id="manageH">Edit ${esc(t.name)}</h2><p class="sub" style="margin-top:4px">${self ? "These are your own details." : "Changes apply the next time they log in."}</p></div>
+        <div class="field"><label for="eName">Full name</label><input id="eName" value="${esc(t.name)}" autocomplete="off" aria-describedby="eNameHelp" /><p class="help" id="eNameHelp">How students see it, e.g. Ms. Dewi.</p></div>
+        <div class="field"><label for="eNip">NIP <span id="eNipCount">${t.nip.length} / 18</span></label><input id="eNip" value="${t.nip}" inputmode="numeric" maxlength="18" autocomplete="off" aria-describedby="eNipHelp" /><p class="help" id="eNipHelp">18 digits. They can log in with this.</p></div>
+        <div class="field"><label for="eEmail">School email</label><input id="eEmail" type="email" value="${esc(t.email)}" autocomplete="off" aria-describedby="eEmailHelp" /><p class="help" id="eEmailHelp">They can also log in with this.</p></div>
+        <div class="field"><label for="eSubject">Subject</label><select id="eSubject">${Object.entries(SUBJECTS).map(([k, v]) => `<option value="${k}"${k === t.subject ? " selected" : ""}>${v}</option>`).join("")}</select></div>
+        <fieldset class="picks"><legend>Teaches these classes</legend>
+          ${CLASSES.map(c => `<label class="pick"><input type="checkbox" value="${c.name}"${t.classes.includes(c.name) ? " checked" : ""} /><span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>${c.name}</span></label>`).join("")}
+        </fieldset>
+        <p class="changes" id="eChanges" aria-live="polite">No changes yet.</p>
+        <div class="dlg-actions">
+          <button class="btn btn--ghost" type="button" id="eBack">Back</button>
+          <button class="btn btn--push" type="submit" id="eSave" disabled>Save changes</button>
+        </div>
+      </form>`;
+      const f = $("editForm");
+      const read = () => ({
+        name: $("eName").value.trim(), nip: $("eNip").value, email: $("eEmail").value.trim(), subject: $("eSubject").value,
+        classes: [...f.querySelectorAll(".picks input:checked")].map(i => i.value),
+      });
+      const LABEL = { name: "name", nip: "NIP", email: "email", subject: "subject", classes: "classes" };
+      const diff = v => Object.keys(LABEL).filter(k => String(v[k]) !== String(t[k]));
+      f.addEventListener("input", e => {
+        if (e.target.id === "eNip") { e.target.value = e.target.value.replace(/\D/g, ""); $("eNipCount").textContent = `${e.target.value.length} / 18`; }
+        const d = diff(read());
+        $("eChanges").textContent = d.length ? `Changed: ${d.map(k => LABEL[k]).join(", ")}.` : "No changes yet.";
+        $("eSave").disabled = !d.length;
+      });
+      $("eBack").addEventListener("click", () => openManage("t", id));
+      f.addEventListener("submit", e => {
+        e.preventDefault();
+        const v = read(), d = diff(v);
+        if (!d.length) return;
+        const emailOk = /^\S+@\S+\.\S+$/.test(v.email);
+        const ok = [
+          check($("eName"), !!v.name, "eNameHelp", "How students see it, e.g. Ms. Dewi.", "Add the teacher’s name."),
+          check($("eNip"), v.nip.length === 18 && !TEACHERS.some(o => o !== t && o.nip === v.nip), "eNipHelp", "18 digits. They can log in with this.",
+            v.nip.length !== 18 ? `NIP needs 18 digits; this has ${v.nip.length}.` : "Another teacher already has this NIP."),
+          check($("eEmail"), emailOk && !TEACHERS.some(o => o !== t && o.email === v.email), "eEmailHelp", "They can also log in with this.",
+            emailOk ? "Another teacher already uses this email." : "Add a school email, like name@school."),
+        ];
+        if (ok.includes(false)) return f.querySelector('[aria-invalid="true"]').focus();
+        const before = t.name;
+        Object.assign(t, v);
+        log("accounts", `Edited ${before}’s account: ${d.map(k => LABEL[k]).join(", ")}`);
+        renderMeters(); renderRows();
+        openManage("t", id);
+        $("mEditOut").innerHTML = `<p class="note">Saved: ${d.map(k => LABEL[k]).join(", ")}.</p>`;
+        $("mEdit").focus();
+      });
+      $("eName").focus();
     }
 
     /* ---------- Add dialogs ---------- */
