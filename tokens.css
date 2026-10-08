@@ -50,6 +50,11 @@
   --color-leaf:      oklch(58% 0.12 145);
   --color-leaf-2:    oklch(70% 0.13 132);
 
+  /* Chart series (teacher dashboard; validated for colour-blind separation + 3:1 on card) */
+  --color-series-1:      oklch(50% 0.15 250);  /* opened */
+  --color-series-1-tint: oklch(50% 0.15 250 / 0.07);
+  --color-series-2:      oklch(64% 0.14 70);   /* watched to the end */
+
   /* Subjects: one colour each */
   --color-math:     oklch(52% 0.15 250);
   --color-math-ink: oklch(97% 0.01 250);
